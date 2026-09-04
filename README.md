@@ -61,7 +61,7 @@ error de configuración aparece aquí y no a los 40 minutos de una GPU rentada.
 .github/workflows/   CI: ruff, pytest, humo, build de la API y límite de 400 MB
 configs/             Configuración Hydra: data/, model/, train/ y composiciones raíz
 src/melanoma/        Paquete Python: data, models (fábrica timm), train, eval, explain, export, utils
-services/api/        API de inferencia FastAPI + onnxruntime (sin torch) y su Dockerfile
+services/api/        API de inferencia FastAPI + onnxruntime (grupo `api`, sin torch ni core) y su Dockerfile
 apps/web/            Frontend (fase posterior)
 data/manifests/      Manifiestos CSV del dataset (no versionados)
 data/splits/         Particiones train/val/test (no versionadas)

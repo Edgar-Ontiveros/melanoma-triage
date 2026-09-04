@@ -1,10 +1,11 @@
-# Imagen de la API de inferencia. Solo core + api (fastapi, uvicorn, onnxruntime).
-# Nunca torch/timm/lightning: el CI falla si la imagen supera 400 MB.
+# Imagen de la API de inferencia. Solo el grupo `api` del lockfile (fastapi, uvicorn,
+# pydantic, onnxruntime, pillow, python-multipart, numpy). Sin `core`: nada de pandas,
+# hydra ni omegaconf. Nunca torch/timm/lightning: el CI falla si la imagen supera 400 MB.
 FROM ghcr.io/astral-sh/uv:python3.12-bookworm-slim AS builder
 WORKDIR /build
 COPY pyproject.toml uv.lock ./
-# Exporta solo las dependencias de core + api (sin el proyecto, sin dev, sin train).
-RUN uv export --frozen --no-dev --no-emit-project --extra api -o requirements.txt \
+# Exporta exactamente el grupo `api` (sin el proyecto ni sus dependencias, sin dev, sin train).
+RUN uv export --frozen --only-group api --no-emit-project -o requirements.txt \
     && uv venv /opt/venv \
     && uv pip install --python /opt/venv/bin/python --no-cache -r requirements.txt
 

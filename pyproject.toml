@@ -5,7 +5,7 @@ description = "Clasificador educativo de lesiones cutáneas (triage asistido, no
 readme = "README.md"
 license = { file = "LICENSE" }
 requires-python = ">=3.12,<3.13"
-# Grupo `core`: lo que necesita cualquier componente del proyecto.
+# Grupo `core`: base de entrenamiento y evaluación (paquete `melanoma`). La API NO depende de él.
 dependencies = [
     "numpy>=2.0",
     "pandas>=2.2",
@@ -27,16 +27,21 @@ train = [
     "scikit-learn>=1.5",
     "wandb>=0.18",
 ]
-# Grupo `api`: inferencia ONNX. Prohibido torch, timm o lightning (lo vigila
-# tests/test_api_no_torch_import.py y el límite de 400 MB de la imagen en CI).
+
+[dependency-groups]
+# Grupo `api`: inferencia ONNX. Conjunto explícito y mínimo, INDEPENDIENTE de `core`:
+# la imagen de la API no lleva pandas, hydra ni omegaconf. Prohibido torch, timm o
+# lightning (lo vigila tests/test_api_no_torch_import.py y el límite de 400 MB en CI).
+# Se exporta con `uv export --only-group api --no-emit-project`.
 api = [
     "fastapi>=0.115",
     "uvicorn>=0.30",
+    "pydantic>=2.0",
     "onnxruntime>=1.19",
+    "pillow>=10.0",
     "python-multipart>=0.0.12",
+    "numpy>=2.0",
 ]
-
-[dependency-groups]
 dev = [
     "pytest>=8.3",
     "pytest-cov>=5.0",
