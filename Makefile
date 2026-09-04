@@ -3,7 +3,8 @@ CUDA ?= cu126
 TORCH_CUDA_INDEX = https://download.pytorch.org/whl/$(CUDA)
 UV_RUN = uv run --no-sync
 
-.PHONY: setup setup-gpu lint format test smoke ci docker-api docker-size clean
+.PHONY: setup setup-gpu lint format test smoke ci docker-api docker-size clean \
+	data-verify data-manifest data-dedup data-splits data-resize data-eda data-all kaggle-dataset
 
 ## Entorno local (WSL/Ubuntu): core + train + dev con ruedas CPU del lockfile.
 setup:
@@ -41,3 +42,23 @@ docker-size: docker-api
 
 clean:
 	rm -rf outputs .pytest_cache .ruff_cache .coverage htmlcov
+
+## ---- Pipeline de datos F1 (config en configs/data/isic2020.yaml). Orden: verify → manifest →
+## dedup → splits → resize → eda. `data-all` los encadena.
+data-verify:
+	$(UV_RUN) python scripts/verify_download.py
+data-manifest:
+	$(UV_RUN) python scripts/build_manifest.py
+data-dedup:
+	$(UV_RUN) python scripts/dedup_report.py
+data-splits:
+	$(UV_RUN) python scripts/make_splits.py
+data-resize:
+	$(UV_RUN) python scripts/resize_images.py
+data-eda:
+	$(UV_RUN) python scripts/eda_report.py
+data-all: data-verify data-manifest data-dedup data-splits data-resize data-eda
+
+## Dataset privado de Kaggle (solo manifiesto + splits). Requiere KAGGLE_USERNAME y ~/.kaggle/kaggle.json.
+kaggle-dataset:
+	scripts/kaggle_dataset.sh $(MODE)

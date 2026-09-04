@@ -20,6 +20,7 @@ lightning_logs/
 wandb/
 logs/*
 !logs/.gitkeep
+!logs/test_set_access.log
 
 # Datos y pesos: nunca al repositorio
 data/raw/
@@ -28,7 +29,14 @@ data/**/*.jpg
 data/**/*.png
 data/**/*.csv
 !data/manifests/.gitkeep
+!data/manifests/isic2020.csv
 !data/splits/.gitkeep
+!data/splits/*.txt
+!data/splits/SHA256SUMS
+# Reportes: se versionan md y figuras; los intermedios pesados no
+reports/*.npy
+# Kaggle: el dataset se arma en kaggle/dataset/ a partir de archivos ya versionados
+kaggle/dataset/
 *.ckpt
 *.pt
 *.pth

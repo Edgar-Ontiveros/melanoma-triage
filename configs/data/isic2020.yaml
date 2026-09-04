@@ -1,0 +1,72 @@
+# ISIC 2020, conjunto de entrenamiento. Hereda las claves de `default` (image_size, batch_size,
+# num_workers) y agrega todo lo que parametriza el pipeline de datos de F1:
+# rutas, umbral de pHash, proporciones de split, semilla, redimensionado y calidad JPEG.
+# Regla del proyecto: nada de esto puede aparecer como literal dentro de src/.
+defaults:
+  - default
+  - _self_
+
+name: isic2020
+
+# --- Rutas (relativas a la raíz del repositorio; los scripts corren con hydra.job.chdir=false)
+raw_dir: ${data.root}/raw/isic2020
+images_zip: ${data.raw_dir}/ISIC_2020_Training_JPEG.zip
+images_dir: ${data.raw_dir}/train
+ground_truth_csv: ${data.raw_dir}/ISIC_2020_Training_GroundTruth_v2.csv
+official_duplicates_csv: ${data.raw_dir}/ISIC_2020_Training_Duplicates.csv
+manifest_path: ${data.root}/manifests/isic2020.csv
+splits_dir: ${data.root}/splits
+reports_dir: reports
+figures_dir: ${data.reports_dir}/figures
+test_access_log: logs/test_set_access.log
+
+# --- Fuente oficial de descarga (ISIC Challenge, bucket S3 del organizador)
+source:
+  base_url: https://isic-challenge-data.s3.amazonaws.com/2020
+  # Content-Length y ETag reportados por S3 el 2026-09-04. Se comprueban tras descargar.
+  zip_bytes: 24707698022
+  zip_etag: 013145107654177e7dd94091fdf27e9c-2946
+
+# --- Conteos publicados (DOI 10.34970/2020-ds01; Rotemberg et al., Sci Data 8, 34, 2021)
+expected:
+  images: 33126
+  positives: 584
+  patients: 2056
+  prevalence_pct: 1.76
+
+# --- Deduplicación
+hashing:
+  workers: 12
+phash:
+  hash_size: 8            # 8x8 = 64 bits
+  # Distancia de Hamming máxima para considerar casi-duplicado. La spec partía de 8; con los
+  # datos reales se fijó en 0: ver la tabla por distancia en reports/dedup_report.md.
+  threshold: 0
+  report_max_distance: 16 # los pares hasta esta distancia se guardan para el reporte
+  decode_size: 256        # decodificación JPEG reducida (draft) antes del hash
+  contact_sheet_pairs: 20
+  thumb_px: 224
+
+# --- Splits agrupados por paciente
+split:
+  fractions:
+    train: 0.70
+    val: 0.15
+    test: 0.15
+  seed: 20260904
+  min_test_positives: 80
+  names: [train, val, test]
+
+# --- Redimensionado
+resize:
+  long_side: 512
+  jpeg_quality: 95
+  out_dir: ${data.root}/processed/isic2020_512
+  workers: 12
+
+# --- Verificación de procedencia (local vs. Kaggle)
+verify:
+  sample_size: 200
+  seed: 20260904
+  kaggle_competition_dir: /kaggle/input/siim-isic-melanoma-classification/jpeg/train
+  kaggle_splits_dir: /kaggle/input/melanoma-isic2020-splits

@@ -27,3 +27,10 @@ def smoke_cfg() -> DictConfig:
     """Composición de la prueba de humo (`configs/smoke.yaml`)."""
     with initialize_config_dir(config_dir=str(CONFIGS), version_base="1.3"):
         return compose(config_name="smoke")
+
+
+@pytest.fixture(scope="session")
+def prepare_cfg() -> DictConfig:
+    """Composición del pipeline de datos (`configs/prepare.yaml`, grupo `data: isic2020`)."""
+    with initialize_config_dir(config_dir=str(CONFIGS), version_base="1.3"):
+        return compose(config_name="prepare")

@@ -1,0 +1,11 @@
+# Config raíz del pipeline de datos (F1). Solo compone el grupo `data`:
+# `uv run python scripts/build_manifest.py` o cualquier script de scripts/ que prepare datos.
+defaults:
+  - data: isic2020
+  - _self_
+
+hydra:
+  run:
+    dir: outputs/prepare/${now:%Y-%m-%d}/${now:%H-%M-%S}
+  job:
+    chdir: false
