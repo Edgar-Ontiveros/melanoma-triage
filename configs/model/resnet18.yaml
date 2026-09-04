@@ -1,0 +1,5 @@
+# Backbone pequeño para pruebas y humo. Sin pesos preentrenados: no descarga nada.
+backbone: resnet18
+pretrained: false
+dropout: 0.0
+num_classes: 1

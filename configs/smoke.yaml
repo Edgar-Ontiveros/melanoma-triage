@@ -1,0 +1,24 @@
+# Prueba de humo: misma composición que una corrida real, con overrides para que
+# termine en CPU en menos de 2 minutos. Datos sintéticos en memoria, sin descargas.
+defaults:
+  - data: default
+  - model: resnet18
+  - train: default
+  - _self_
+
+data:
+  image_size: 224
+  batch_size: 8
+  num_workers: 0
+  synthetic_samples: 50
+
+train:
+  max_epochs: 2
+  precision: 32
+  accelerator: cpu
+
+hydra:
+  run:
+    dir: outputs/smoke/${now:%Y-%m-%d}/${now:%H-%M-%S}
+  job:
+    chdir: false

@@ -1,0 +1,7 @@
+seed: 42
+max_epochs: 30
+lr: 3.0e-4
+weight_decay: 1.0e-2
+precision: bf16-mixed
+deterministic: true
+accelerator: auto

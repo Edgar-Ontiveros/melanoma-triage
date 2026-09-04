@@ -1,0 +1,4 @@
+backbone: resnet50.a1_in1k
+pretrained: true
+dropout: 0.2
+num_classes: 1

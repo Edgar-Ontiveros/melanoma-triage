@@ -1,0 +1,13 @@
+# Config raíz. Compone data + model + train. Cualquier valor puede sobreescribirse
+# desde la línea de comandos: `python scripts/train.py model=resnet50_224 train.lr=1e-4`.
+defaults:
+  - data: default
+  - model: effnetv2s_384
+  - train: default
+  - _self_
+
+hydra:
+  run:
+    dir: outputs/${now:%Y-%m-%d}/${now:%H-%M-%S}
+  job:
+    chdir: false

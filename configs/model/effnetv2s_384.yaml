@@ -1,0 +1,4 @@
+backbone: tf_efficientnetv2_s.in21k_ft_in1k
+pretrained: true
+dropout: 0.2
+num_classes: 1

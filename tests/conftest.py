@@ -1,0 +1,29 @@
+from __future__ import annotations
+
+from pathlib import Path
+
+import pytest
+from hydra import compose, initialize_config_dir
+from omegaconf import DictConfig
+
+ROOT = Path(__file__).resolve().parents[1]
+CONFIGS = ROOT / "configs"
+
+
+@pytest.fixture(scope="session")
+def root_dir() -> Path:
+    return ROOT
+
+
+@pytest.fixture()
+def cfg() -> DictConfig:
+    """Composición principal (`configs/config.yaml`)."""
+    with initialize_config_dir(config_dir=str(CONFIGS), version_base="1.3"):
+        return compose(config_name="config")
+
+
+@pytest.fixture()
+def smoke_cfg() -> DictConfig:
+    """Composición de la prueba de humo (`configs/smoke.yaml`)."""
+    with initialize_config_dir(config_dir=str(CONFIGS), version_base="1.3"):
+        return compose(config_name="smoke")

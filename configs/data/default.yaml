@@ -1,0 +1,6 @@
+root: data
+manifest_path: data/manifests/isic2020.csv
+splits_dir: data/splits
+image_size: 384
+batch_size: 32
+num_workers: 4

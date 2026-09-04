@@ -1,0 +1,39 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Instalar entorno (core + train + dev, ruedas CPU)
+        run: uv sync --extra train --group dev --frozen
+
+      - name: ruff format --check
+        run: uv run --no-sync ruff format --check .
+
+      - name: ruff check
+        run: uv run --no-sync ruff check .
+
+      - name: pytest con cobertura
+        run: uv run --no-sync pytest --cov --cov-report=term-missing
+
+      - name: Prueba de humo (CPU, datos sintéticos)
+        run: uv run --no-sync python scripts/smoke_train.py
+
+      - name: docker build de la API
+        run: docker build -f services/api/Dockerfile -t melanoma-api .
+
+      - name: Tamaño de la imagen de la API (máx. 400 MB)
+        run: python3 scripts/check_image_size.py melanoma-api 400

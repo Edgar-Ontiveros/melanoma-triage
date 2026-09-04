@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+build/
+dist/
+
+# Herramientas
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.pre-commit-cache/
+
+# Salidas de corridas (Hydra, Lightning, wandb)
+outputs/
+multirun/
+lightning_logs/
+wandb/
+logs/*
+!logs/.gitkeep
+
+# Datos y pesos: nunca al repositorio
+data/raw/
+data/processed/
+data/**/*.jpg
+data/**/*.png
+data/**/*.csv
+!data/manifests/.gitkeep
+!data/splits/.gitkeep
+*.ckpt
+*.pt
+*.pth
+*.onnx
+
+# Editor / SO
+.vscode/
+.idea/
+.DS_Store
