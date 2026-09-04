@@ -389,6 +389,23 @@ def main(cfg: DictConfig) -> None:
         "casi-duplicados por recodificación (ninguno: todo par a distancia 0 con bytes "
         "distintos es una lesión distinta).",
         "",
+        "### Por qué pHash falla en dermatoscopia",
+        "",
+        "pHash reduce la imagen a 32x32 píxeles en escala de grises, aplica una DCT y conserva "
+        "solo el bloque 8x8 de frecuencias más bajas, binarizado contra su mediana. Es decir, "
+        "por diseño resume la **estructura global** de la imagen y descarta el detalle fino. "
+        "En dermatoscopia esa estructura global la impone el método de captura: lesión "
+        "centrada, fondo de piel uniforme, iluminación y escala fijas por el dermatoscopio. "
+        "Vista a 32x32, casi toda imagen del dataset es «una mancha oscura en el centro de un "
+        "fondo claro», y por eso lesiones de pacientes distintos coinciden bit a bit en el hash "
+        "(30 pares cruzados a distancia 0) y la distribución de distancias no tiene ningún "
+        "hueco que separe duplicados de parecidos. La señal que distingue una lesión de otra "
+        "(retículo, glóbulos, velo, vasos, borde) vive en frecuencias altas que pHash tira. El "
+        "método funciona en fotografía general porque ahí la composición varía; aquí es "
+        "constante. La pasada se mantiene activa en el pipeline por su valor probatorio: "
+        "demuestra que no existen casi-duplicados por recodificación, reescalado o recompresión "
+        "más allá de los pares byte-idénticos.",
+        "",
         "## Los 433 grupos byte-idénticos frente a los 425 de la referencia",
         "",
         f"- Tamaño de los grupos SHA256: {exact_sizes_txt} → los {len(exact)} grupos son "

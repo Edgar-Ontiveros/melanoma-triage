@@ -2,7 +2,7 @@
 
 Generado por `scripts/dedup_report.py`. Manifiesto: `data/manifests/isic2020.csv` (33,126 imágenes).
 pHash 8x8 (64 bits), decodificación reducida a 256 px, umbral de Hamming **0** (`configs/data/isic2020.yaml`, `data.phash.threshold`).
-Tiempos: hashing 0.0 min (12 procesos), 548,649,375 pares de distancias en 88 s.
+Tiempos: hashing 0.0 min (12 procesos), 548,649,375 pares de distancias en 92 s.
 
 ## Pasada 1 — duplicados exactos (SHA256)
 
@@ -157,6 +157,10 @@ Lo que muestran las hojas de contactos:
 
 **Recomendación: `data.phash.threshold = 0`**, ahora sostenida por el barrido: es el único umbral en el que el grupo mayor se mantiene por debajo de 10 imágenes, todos los pares oficiales ya están a esa distancia, y un solo paso más (2) produce encadenamiento sin recuperar ningún duplicado adicional verificable. Con umbral 0 pHash aporta 19 grupos más que SHA256; son falsos positivos visuales, pero fusionar a esos 23 pacientes en unidades de split no cuesta nada, así que se conservan como cruzados por prudencia. La consecuencia honesta es que, en ISIC 2020, la deduplicación efectiva la hace SHA256; pHash queda como verificación de que no hay casi-duplicados por recodificación (ninguno: todo par a distancia 0 con bytes distintos es una lesión distinta).
 
+### Por qué pHash falla en dermatoscopia
+
+pHash reduce la imagen a 32x32 píxeles en escala de grises, aplica una DCT y conserva solo el bloque 8x8 de frecuencias más bajas, binarizado contra su mediana. Es decir, por diseño resume la **estructura global** de la imagen y descarta el detalle fino. En dermatoscopia esa estructura global la impone el método de captura: lesión centrada, fondo de piel uniforme, iluminación y escala fijas por el dermatoscopio. Vista a 32x32, casi toda imagen del dataset es «una mancha oscura en el centro de un fondo claro», y por eso lesiones de pacientes distintos coinciden bit a bit en el hash (30 pares cruzados a distancia 0) y la distribución de distancias no tiene ningún hueco que separe duplicados de parecidos. La señal que distingue una lesión de otra (retículo, glóbulos, velo, vasos, borde) vive en frecuencias altas que pHash tira. El método funciona en fotografía general porque ahí la composición varía; aquí es constante. La pasada se mantiene activa en el pipeline por su valor probatorio: demuestra que no existen casi-duplicados por recodificación, reescalado o recompresión más allá de los pares byte-idénticos.
+
 ## Los 433 grupos byte-idénticos frente a los 425 de la referencia
 
 - Tamaño de los grupos SHA256: 433 grupos de 2 → los 433 grupos son pares, es decir, 433 imágenes duplicadas y 866 implicadas.
@@ -175,7 +179,7 @@ Lo que muestran las hojas de contactos:
 | ISIC_6063252, ISIC_7195645 | IP_3564160   | IL_6590948  | True              | 0, 0     |
 | ISIC_1642492, ISIC_8776686 | IP_5295861   | IL_3459064  | True              | 0, 0     |
 
-- `lesion_id` repetidos en el manifiesto: 425. De los pares oficiales, 8 tienen `lesion_id` distinto pese a ser el mismo archivo (inconsistencia de metadatos de la fuente): [['ISIC_2754949', 'ISIC_5300278'], ['ISIC_9218360', 'ISIC_9913406'], ['ISIC_1979109', 'ISIC_9933282'], ['ISIC_1578998', 'ISIC_4139260'], ['ISIC_2138357', 'ISIC_5097912'], ['ISIC_1300006', 'ISIC_9126974'], ['ISIC_3218501', 'ISIC_7718526'], ['ISIC_6151153', 'ISIC_8329627']].
+- `lesion_id` repetidos en el manifiesto: 425. De los pares oficiales, 8 tienen `lesion_id` distinto pese a ser el mismo archivo (inconsistencia de metadatos de la fuente): [['ISIC_3218501', 'ISIC_7718526'], ['ISIC_2138357', 'ISIC_5097912'], ['ISIC_1300006', 'ISIC_9126974'], ['ISIC_6151153', 'ISIC_8329627'], ['ISIC_9218360', 'ISIC_9913406'], ['ISIC_1979109', 'ISIC_9933282'], ['ISIC_2754949', 'ISIC_5300278'], ['ISIC_1578998', 'ISIC_4139260']].
 
 Conclusión: la diferencia son 8 pares reales que la referencia no lista, no un artefacto de conteo. La deduplicación de este proyecto usa los 433.
 

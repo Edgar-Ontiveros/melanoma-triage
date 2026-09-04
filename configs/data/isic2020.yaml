@@ -39,8 +39,9 @@ hashing:
   workers: 12
 phash:
   hash_size: 8            # 8x8 = 64 bits
-  # Distancia de Hamming máxima para considerar casi-duplicado. La spec partía de 8; con los
-  # datos reales se fijó en 0: ver la tabla por distancia en reports/dedup_report.md.
+  # Distancia de Hamming máxima para considerar casi-duplicado. La spec partía de 8; el
+  # barrido 0/2/4/6/8 de reports/dedup_report.md lo fijó en 0 (confirmado 2026-09-04). La
+  # pasada sigue activa por su valor probatorio: no hay casi-duplicados por recodificación.
   threshold: 0
   report_max_distance: 16 # los pares hasta esta distancia se guardan para el reporte
   decode_size: 256        # decodificación JPEG reducida (draft) antes del hash
