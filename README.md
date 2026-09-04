@@ -117,8 +117,10 @@ módulo de `src/` puede referenciarlo: lo vigila `tests/test_test_split_isolatio
 
 El entrenamiento corre en Kaggle. Ahí se adjunta la distribución oficial de la competencia
 (`siim-isic-melanoma-classification`) y un dataset privado con solo el manifiesto y los splits
-(`make kaggle-dataset KAGGLE_USERNAME=<usuario>`). `notebooks/kaggle_setup.ipynb` verifica el
-SHA256 de 200 imágenes contra el manifiesto y falla si alguno no coincide.
+(`make kaggle-dataset KAGGLE_USERNAME=<usuario>`; publicado como
+`edgaronti26/melanoma-isic2020-splits`). `notebooks/kaggle_setup.ipynb` verifica el SHA256 de
+200 imágenes contra el manifiesto y falla si alguno no coincide; corrido el 2026-09-04 con
+200/200 coincidencias (ver `docs/DATA.md`).
 
 ## Licencias y atribución
 
@@ -142,7 +144,7 @@ SHA256 de 200 imágenes contra el manifiesto y falla si alguno no coincide.
 | Fase | Contenido | Estado |
 |---|---|---|
 | F0 | Esqueleto, entorno, CI, prueba de humo | Cerrada (`docs/specs/F0.md`) |
-| F1 | Manifiesto, deduplicación, splits por paciente, bloqueo del test, Kaggle | Cerrada en local; pendiente correr `notebooks/kaggle_setup.ipynb` en Kaggle (`docs/specs/F1.md`) |
+| F1 | Manifiesto, deduplicación, splits por paciente, bloqueo del test, Kaggle | Completa: 10/10 criterios en verde, cerrada el 2026-09-04 (`docs/specs/F1.md`) |
 | F2 | Entrenamiento y evaluación | Pendiente |
 | F3 | GPU rentada, exportación ONNX, API | Pendiente |
 | F4 | Grad-CAM, evaluación externa (DDI) | Pendiente |

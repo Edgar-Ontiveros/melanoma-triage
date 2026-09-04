@@ -70,8 +70,19 @@ Por qué esta fuente y no la copia de Kaggle:
 Se usó `GroundTruth_v2.csv` (octubre de 2020) porque agrega `lesion_id` y corrige valores de
 la primera versión; los conteos oficiales coinciden en ambas.
 
-**Resultado de la verificación local vs. Kaggle (200 imágenes):** _pendiente de correr el
-notebook en Kaggle; anotar aquí la fecha y el resultado._
+**Resultado de la verificación local vs. Kaggle (200 imágenes):** corrida el **2026-09-04**
+en Kaggle con `notebooks/kaggle_setup.ipynb`, competencia `siim-isic-melanoma-classification`
+y dataset privado `edgaronti26/melanoma-isic2020-splits`. Salida completa:
+
+```
+{'train': 22911, 'val': 4963, 'test': 5252}
+manifiesto y splits íntegros
+muestra: 200  faltantes: 0  hashes distintos: 0
+OK: 200/200 imágenes de Kaggle coinciden byte a byte con el manifiesto
+```
+
+Conclusión: la copia de Kaggle y la descarga oficial de ISIC son byte-idénticas en la muestra;
+la cadena de procedencia laptop → Kaggle queda verificada.
 
 ## Duplicados
 
@@ -91,7 +102,9 @@ tratan como una sola unidad al partir. Detalles y justificación del umbral en
 
 Las imágenes originales (`data/raw/`) y redimensionadas (`data/processed/`) **no** se
 versionan ni se suben a Kaggle: en Kaggle se adjunta la distribución oficial de la
-competencia y el dataset privado `melanoma-isic2020-splits` con el manifiesto y los splits.
+competencia y el dataset privado
+[`edgaronti26/melanoma-isic2020-splits`](https://www.kaggle.com/datasets/edgaronti26/melanoma-isic2020-splits)
+(manifiesto, tres splits y `SHA256SUMS`, 10 MB; publicado el 2026-09-04).
 
 ## Presupuesto de acceso al conjunto de prueba
 

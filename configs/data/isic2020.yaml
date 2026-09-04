@@ -75,5 +75,7 @@ resize:
 verify:
   sample_size: 200
   seed: 20260904
-  kaggle_competition_dir: /kaggle/input/siim-isic-melanoma-classification/jpeg/train
-  kaggle_splits_dir: /kaggle/input/melanoma-isic2020-splits
+  # Estructura de /kaggle/input/ vigente desde 2026-09: separa por tipo y la ruta del dataset
+  # lleva el usuario propietario.
+  kaggle_competition_dir: /kaggle/input/competitions/siim-isic-melanoma-classification/jpeg/train
+  kaggle_splits_dir: /kaggle/input/datasets/edgaronti26/melanoma-isic2020-splits

@@ -2,7 +2,7 @@
   "title": "melanoma-isic2020-splits",
   "id": "KAGGLE_USERNAME/melanoma-isic2020-splits",
   "licenses": [{"name": "CC-BY-NC-SA-4.0"}],
-  "subtitle": "Manifiesto con SHA256 y splits agrupados por paciente para ISIC 2020 (proyecto melanoma)",
+  "subtitle": "Manifiesto SHA256 y splits por paciente para ISIC 2020 (proyecto melanoma)",
   "description": "Manifiesto (data/manifests/isic2020.csv) y splits train/val/test agrupados por paciente generados en https://github.com/Edgar-Ontiveros/melanoma-triage. No contiene imagenes: en Kaggle se adjunta la competencia oficial siim-isic-melanoma-classification. Datos derivados del SIIM-ISIC 2020 Challenge Dataset, CC-BY-NC 4.0, https://doi.org/10.34970/2020-ds01",
-  "keywords": ["medicine", "image", "melanoma"]
+  "keywords": ["medicine", "image"]
 }
