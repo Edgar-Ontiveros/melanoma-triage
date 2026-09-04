@@ -31,7 +31,7 @@ train = [
 [dependency-groups]
 # Grupo `api`: inferencia ONNX. Conjunto explícito y mínimo, INDEPENDIENTE de `core`:
 # la imagen de la API no lleva pandas, hydra ni omegaconf. Prohibido torch, timm o
-# lightning (lo vigila tests/test_api_no_torch_import.py y el límite de 400 MB en CI).
+# lightning (lo vigila tests/test_api_dependency_isolation.py y el límite de 400 MB en CI).
 # Se exporta con `uv export --only-group api --no-emit-project`.
 api = [
     "fastapi>=0.115",

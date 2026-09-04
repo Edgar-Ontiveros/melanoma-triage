@@ -1,7 +1,9 @@
-"""Prueba estructural: nada bajo services/api/ importa torch, timm ni lightning.
+"""Prueba estructural: aislamiento de dependencias de services/api/.
 
-Dos capas: análisis estático del AST (importaciones directas) e importación real en
-un subproceso limpio (importaciones transitivas, vía `sys.modules`).
+Nada bajo services/api/ importa torch, torchvision, timm, lightning ni el paquete
+`melanoma` (que arrastraría hydra y omegaconf). Dos capas: análisis estático del AST
+(importaciones directas) e importación real en un subproceso limpio (importaciones
+transitivas, vía `sys.modules`).
 """
 
 from __future__ import annotations
@@ -13,7 +15,7 @@ from pathlib import Path
 
 import pytest
 
-FORBIDDEN = ("torch", "timm", "lightning", "torchvision")
+FORBIDDEN = ("torch", "torchvision", "timm", "lightning", "melanoma")
 
 
 def _api_modules(root_dir: Path) -> list[Path]:
@@ -35,14 +37,14 @@ def test_api_has_modules(root_dir: Path) -> None:
     assert _api_modules(root_dir), "services/api/ no tiene módulos Python"
 
 
-def test_api_no_torch_import_static(root_dir: Path) -> None:
+def test_api_dependency_isolation_static(root_dir: Path) -> None:
     for path in _api_modules(root_dir):
         bad = _imports_of(path) & set(FORBIDDEN)
         assert not bad, f"{path.relative_to(root_dir)} importa {sorted(bad)}"
 
 
 @pytest.mark.parametrize("path", [p for p in _api_modules(Path(__file__).resolve().parents[1])])
-def test_api_no_torch_import_transitive(root_dir: Path, path: Path) -> None:
+def test_api_dependency_isolation_transitive(root_dir: Path, path: Path) -> None:
     rel = path.relative_to(root_dir).with_suffix("")
     parts = list(rel.parts)
     if parts[-1] == "__init__":
