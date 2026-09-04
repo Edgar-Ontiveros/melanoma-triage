@@ -46,6 +46,12 @@ phash:
   decode_size: 256        # decodificación JPEG reducida (draft) antes del hash
   contact_sheet_pairs: 20
   thumb_px: 224
+  cache: true             # reutiliza reports/phash_cache.npz si los image_id coinciden
+  # Barrido de umbrales para calibrar (todos ≤ report_max_distance)
+  sweep_thresholds: [0, 2, 4, 6, 8]
+  sweep_max_group: 10     # umbral "razonable": el grupo mayor tiene menos de estas imágenes
+  sweep_sample_groups: 10 # grupos al azar en la hoja de contactos de grupos
+  sweep_seed: 20260904
 
 # --- Splits agrupados por paciente
 split:

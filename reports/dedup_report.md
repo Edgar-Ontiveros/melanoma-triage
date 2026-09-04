@@ -2,7 +2,7 @@
 
 Generado por `scripts/dedup_report.py`. Manifiesto: `data/manifests/isic2020.csv` (33,126 imágenes).
 pHash 8x8 (64 bits), decodificación reducida a 256 px, umbral de Hamming **0** (`configs/data/isic2020.yaml`, `data.phash.threshold`).
-Tiempos: hashing 2.2 min (12 procesos), 548,649,375 pares de distancias en 89 s.
+Tiempos: hashing 0.0 min (12 procesos), 548,649,375 pares de distancias en 88 s.
 
 ## Pasada 1 — duplicados exactos (SHA256)
 
@@ -108,9 +108,19 @@ Hasta 20 pares por categoría, ordenados por distancia ascendente.
 - Intra-paciente: `reports/figures/dedup_intra.jpg` (20 pares)
 - Cruzados: `reports/figures/dedup_cross.jpg` (20 pares)
 
-## Justificación del umbral
+## Barrido de umbrales
 
-Pares hasta la distancia máxima reportada, desglosados. `oficiales` son pares de la lista de ISIC; `cruzados` son pares entre pacientes distintos:
+Mismos pHash, distintos umbrales de Hamming (`data.phash.sweep_thresholds`). `grupos_gt_10` cuenta grupos con 10 o más imágenes; `pct_dataset` es la fracción de las 33,126 imágenes que queda dentro de algún grupo:
+
+|   umbral |   pares |   grupos |   grupo_mayor |   grupos_gt_10 |   intra_paciente |   cruzados |   imagenes |   pct_dataset |
+|---------:|--------:|---------:|--------------:|---------------:|-----------------:|-----------:|-----------:|--------------:|
+|        0 |     464 |      452 |             4 |              0 |              434 |         18 |        909 |          2.74 |
+|        2 |    1530 |      558 |           133 |              6 |              426 |        132 |       1617 |          4.88 |
+|        4 |   12758 |      671 |          1041 |             11 |              395 |        276 |       3800 |         11.47 |
+|        6 |   70591 |      699 |          6246 |              9 |              342 |        357 |       7897 |         23.84 |
+|        8 |  265886 |      725 |         12394 |              1 |              274 |        451 |      13997 |         42.25 |
+
+Desglose de los pares por distancia (`oficiales` = lista de ISIC; `cruzados` = pacientes distintos):
 
 |   distance |   pares |   byte_identicos |   mismo_paciente |   oficiales |   cruzados |   cruzados_acum |   oficiales_acum |
 |-----------:|--------:|-----------------:|-----------------:|------------:|-----------:|----------------:|-----------------:|
@@ -124,13 +134,50 @@ Pares hasta la distancia máxima reportada, desglosados. `oficiales` son pares d
 |         14 | 2546735 |                0 |             7786 |           0 |    2538949 |         4512279 |              425 |
 |         16 | 5100682 |                0 |            13019 |           0 |    5087663 |         9599942 |              425 |
 
-Lectura de la tabla con los datos reales (2026-09-04):
+### Inspección visual de grupos
 
-- Los 425 pares oficiales están a distancia **0** y además son **byte-idénticos**; la pasada 1 (SHA256) ya los recupera al 100 %.
-- No hay ningún hueco en la distribución: a partir de la distancia 2 aparecen cientos de pares cruzados y a distancia 8 cientos de miles, ninguno oficial. Con umbral 8 los grupos abarcaban 13,997 imágenes y 451 grupos cruzados, es decir, casi la mitad del dataset quedaba encadenada en una sola unidad de split.
-- Inspección visual de muestras de pares cruzados a distancias 0, 2, 4 y 6: son lesiones distintas (mancha oscura centrada sobre piel clara). pHash resume una miniatura de 32x32 en frecuencias bajas y esa composición es la misma en casi todas las imágenes dermatoscópicas, así que la distancia no separa lesión repetida de lesión parecida.
+Umbral más alto con grupo mayor < 10 imágenes: **0**. Hojas de contactos (una fila por grupo, muestreo con semilla 20260904):
 
-**Decisión:** `data.phash.threshold = 0`. Solo cuentan como casi-duplicados los pares con pHash idéntico. Los grupos cruzados que quedan a esa distancia son falsos positivos visuales, pero fusionar sus pacientes en una misma unidad de split no cuesta nada y elimina la duda; por eso se conservan como cruzados.
+- `reports/figures/dedup_groups_t0.jpg`: 10 grupos al azar entre TODOS los del umbral 0
+- `reports/figures/dedup_groups_t0_no_exactos.jpg`: 10 grupos al azar del umbral 0 excluyendo pares byte-idénticos (19 grupos candidatos)
+- `reports/figures/dedup_groups_t2_no_exactos.jpg`: 10 grupos al azar del umbral 2 con menos de 10 imágenes, excluyendo pares byte-idénticos (131 candidatos)
+
+## Recomendación de umbral
+
+Lo que muestra el barrido:
+
+- **Umbral 0** (pHash idéntico): 464 pares, 452 grupos, el mayor de 4 imágenes. 433 grupos son los pares byte-idénticos; los otros 19 (43 imágenes) son pares con pHash igual y bytes distintos, 18 de ellos entre pacientes distintos.
+- **Umbral 2**: el grupo mayor salta de 4 a 133 imágenes y aparecen 132 grupos cruzados. Ningún par oficial vive a distancia 2 (todos están a 0).
+- **Umbral 4 a 8**: 1,041 → 6,246 → 12,394 imágenes en un solo grupo. A 8, el 42 % del dataset queda encadenado.
+
+Lo que muestran las hojas de contactos:
+
+- Los 10 grupos muestreados a distancia 0 que no son byte-idénticos son lesiones distintas (forma, color, vello y fondo diferentes) con la misma composición: mancha oscura centrada sobre fondo claro uniforme. pHash colapsa la miniatura de 32x32 a las mismas frecuencias bajas.
+- Los 10 grupos muestreados a distancia 2 (de 131 candidatos con menos de 10 imágenes) son también lesiones distintas; en ninguno aparece la misma lesión con encuadre desplazado, que es lo que la pasada 2 buscaba.
+
+**Recomendación: `data.phash.threshold = 0`**, ahora sostenida por el barrido: es el único umbral en el que el grupo mayor se mantiene por debajo de 10 imágenes, todos los pares oficiales ya están a esa distancia, y un solo paso más (2) produce encadenamiento sin recuperar ningún duplicado adicional verificable. Con umbral 0 pHash aporta 19 grupos más que SHA256; son falsos positivos visuales, pero fusionar a esos 23 pacientes en unidades de split no cuesta nada, así que se conservan como cruzados por prudencia. La consecuencia honesta es que, en ISIC 2020, la deduplicación efectiva la hace SHA256; pHash queda como verificación de que no hay casi-duplicados por recodificación (ninguno: todo par a distancia 0 con bytes distintos es una lesión distinta).
+
+## Los 433 grupos byte-idénticos frente a los 425 de la referencia
+
+- Tamaño de los grupos SHA256: 433 grupos de 2 → los 433 grupos son pares, es decir, 433 imágenes duplicadas y 866 implicadas.
+- Lista oficial `ISIC_2020_Training_Duplicates.csv`: 425 pares (850 imágenes); 3 pares incluyen un melanoma. Por eso la referencia habla de 32,542 benignas y 32,120 sin duplicados: 32,542 − 32,120 = 422 = 425 − 3.
+- Los 425 pares oficiales son todos byte-idénticos (pares oficiales no byte-idénticos: 0).
+- Pares byte-idénticos que la lista oficial NO incluye: **8**. Todos con el mismo `patient_id`, el mismo `lesion_id`, metadatos idénticos y `target = 0`: el mismo archivo registrado dos veces con dos `image_id`.
+
+| grupo                      | patient_id   | lesion_id   | mismo_lesion_id   | target   |
+|:---------------------------|:-------------|:------------|:------------------|:---------|
+| ISIC_2718135, ISIC_9409255 | IP_5889408   | IL_2414583  | True              | 0, 0     |
+| ISIC_2074396, ISIC_8689583 | IP_5889408   | IL_6648212  | True              | 0, 0     |
+| ISIC_6284722, ISIC_8262759 | IP_7651325   | IL_8087895  | True              | 0, 0     |
+| ISIC_6450285, ISIC_6548307 | IP_7121757   | IL_1243658  | True              | 0, 0     |
+| ISIC_7607101, ISIC_7675261 | IP_5889408   | IL_5109762  | True              | 0, 0     |
+| ISIC_5492174, ISIC_6705662 | IP_4130585   | IL_1240728  | True              | 0, 0     |
+| ISIC_6063252, ISIC_7195645 | IP_3564160   | IL_6590948  | True              | 0, 0     |
+| ISIC_1642492, ISIC_8776686 | IP_5295861   | IL_3459064  | True              | 0, 0     |
+
+- `lesion_id` repetidos en el manifiesto: 425. De los pares oficiales, 8 tienen `lesion_id` distinto pese a ser el mismo archivo (inconsistencia de metadatos de la fuente): [['ISIC_2754949', 'ISIC_5300278'], ['ISIC_9218360', 'ISIC_9913406'], ['ISIC_1979109', 'ISIC_9933282'], ['ISIC_1578998', 'ISIC_4139260'], ['ISIC_2138357', 'ISIC_5097912'], ['ISIC_1300006', 'ISIC_9126974'], ['ISIC_3218501', 'ISIC_7718526'], ['ISIC_6151153', 'ISIC_8329627']].
+
+Conclusión: la diferencia son 8 pares reales que la referencia no lista, no un artefacto de conteo. La deduplicación de este proyecto usa los 433.
 
 ## Punto de verificación
 

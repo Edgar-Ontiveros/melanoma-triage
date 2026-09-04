@@ -35,6 +35,7 @@ data/**/*.csv
 !data/splits/SHA256SUMS
 # Reportes: se versionan md y figuras; los intermedios pesados no
 reports/*.npy
+reports/*.npz
 # Kaggle: el dataset se arma en kaggle/dataset/ a partir de archivos ya versionados
 kaggle/dataset/
 *.ckpt

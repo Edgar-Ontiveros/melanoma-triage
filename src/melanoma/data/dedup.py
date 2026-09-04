@@ -185,3 +185,43 @@ def contact_sheet(
         draw.text((pad, y + thumb_px + 2), text, fill="black")
     Path(out_png).parent.mkdir(parents=True, exist_ok=True)
     sheet.save(out_png)  # el formato lo decide la extensión (PNG o JPEG)
+
+
+def group_contact_sheet(
+    groups: list[list[str]],
+    path_of: dict[str, Path],
+    patient_of: dict[str, str],
+    target_of: dict[str, int],
+    out_path: Path | str,
+    thumb_px: int,
+    max_per_row: int = 6,
+) -> None:
+    """Una fila por grupo con hasta ``max_per_row`` imágenes; el texto lista ids y pacientes."""
+    from PIL import ImageDraw
+
+    if not groups:
+        return
+    pad = 4
+    label_h = 18
+    cell = thumb_px + pad
+    width = max_per_row * cell + pad
+    sheet = Image.new("RGB", (width, len(groups) * (cell + label_h) + pad), "white")
+    draw = ImageDraw.Draw(sheet)
+    for r, group in enumerate(groups):
+        y = pad + r * (cell + label_h)
+        for c, image_id in enumerate(group[:max_per_row]):
+            with Image.open(path_of[image_id]) as img:
+                img.draft("RGB", (thumb_px * 2, thumb_px * 2))
+                img = img.convert("RGB")
+                img.thumbnail((thumb_px, thumb_px))
+                sheet.paste(img, (pad + c * cell, y))
+        patients = sorted({patient_of[i] for i in group})
+        text = (
+            f"[{len(group)} img, {len(patients)} pac, mel={sum(target_of[i] for i in group)}] "
+            + "  ".join(f"{i}({patient_of[i]})" for i in group[:max_per_row])
+        )
+        if len(group) > max_per_row:
+            text += f"  … +{len(group) - max_per_row}"
+        draw.text((pad, y + thumb_px + 2), text, fill="black")
+    Path(out_path).parent.mkdir(parents=True, exist_ok=True)
+    sheet.save(out_path)
