@@ -11,11 +11,13 @@ Referencia: un clasificador aleatorio tiene AUC-ROC 0.5 y AUPRC ≈ prevalencia 
 | modelo | corrida | AUC-ROC [IC 95 %] | AUPRC [IC 95 %] | sens@spec 0.90 | spec@sens 0.90 | mejor época / corridas | colapso |
 |:--|:--|:--|:--|--:|--:|:--|:--|
 | **B0** metadatos (regresión logística) | `b0` commit `c1600c0` | 0.620 [0.552, 0.691] | 0.044 [0.028, 0.079] | 0.284 | 0.139 | — | — |
-| **B1** ResNet50-224, pos_weight (3 semillas) | _pendiente: corrida de Kaggle no copiada a `reports/runs/`_ | | | | | | |
+| **B1** ResNet50-224, pos_weight, semilla 0 | `resnet50-224-s0-f431f11` | 0.778 [0.729, 0.822] | 0.077 [0.048, 0.130] | 0.386 | 0.418 | 5 / 11 | no |
 
 ## B1: media y rango sobre semillas
 
-_pendiente: corrida de Kaggle no copiada a `reports/runs/`_
+- AUC-ROC: 0.778 (una semilla)
+- AUPRC: 0.077 (una semilla)
+- Semillas: [0] — **faltan semillas para llegar a 3**
 
 ## pos_weight vs. muestreo ponderado (misma semilla)
 
@@ -23,6 +25,6 @@ _pendiente: corrida de Kaggle no copiada a `reports/runs/`_
 
 ## Lectura
 
-B0 es el piso: cualquier modelo de imágenes por debajo de estos números tiene un bug. La comparación con B1 se completa cuando lleguen las corridas de Kaggle.
+B1 supera a B0 en AUPRC (0.077 vs 0.044) — las imágenes aportan información que los metadatos no tienen.
 
 Detalle de B0 en `reports/b0_metadata.md`; de cada corrida en `reports/runs/<run_name>/summary.md`.

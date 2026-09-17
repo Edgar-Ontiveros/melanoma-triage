@@ -47,3 +47,5 @@ kaggle/dataset/
 .vscode/
 .idea/
 .DS_Store
+# Corridas offline de W&B bajadas de Kaggle: se sincronizan con `kaggle_run.py sync-wandb`, no se versionan
+reports/runs/**/wandb/

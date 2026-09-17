@@ -1,0 +1,8 @@
+[2026-09-17 21:53:31,718][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet50.a1_in1k)
+[2026-09-17 21:53:31,976][httpx][INFO] - HTTP Request: HEAD https://huggingface.co/timm/resnet50.a1_in1k/resolve/main/model.safetensors "HTTP/1.1 302 Found"
+[2026-09-17 21:53:31,977][huggingface_hub.utils._http][WARNING] - Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[2026-09-17 21:53:32,207][httpx][INFO] - HTTP Request: GET https://huggingface.co/api/models/timm/resnet50.a1_in1k/xet-read-token/767268603ca0cb0bfe326fa87277f19c419566ef "HTTP/1.1 200 OK"
+[2026-09-17 21:53:40,845][timm.models._hub][INFO] - [timm/resnet50.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
+[2026-09-17 21:53:40,899][melanoma.train.run][INFO] - data_config del backbone: {'input_size': (3, 224, 224), 'interpolation': 'bicubic', 'mean': (0.485, 0.456, 0.406), 'std': (0.229, 0.224, 0.225), 'crop_pct': 0.95, 'crop_mode': 'center'}
+[2026-09-17 21:53:41,241][melanoma.train.run][INFO] - corrida resnet50-224-s0-f431f11: train 22501 neg / 410 pos, pos_weight=54.88, sampler=none
+[2026-09-17 21:53:41,273][melanoma.train.run][WARNING] - WANDB_API_KEY no está definida; W&B corre en modo offline

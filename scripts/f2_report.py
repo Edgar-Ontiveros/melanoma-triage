@@ -38,7 +38,8 @@ def ci_str(ci: dict, key: str) -> str:
 
 def load_runs() -> dict[str, list[dict[str, Any]]]:
     groups: dict[str, list[dict[str, Any]]] = {}
-    for metrics_path in sorted(RUNS.glob("*/metrics.json")):
+    # kaggle_run.py output deja la salida del kernel anidada: reports/runs/<corrida>/runs/<run_name>/
+    for metrics_path in sorted(RUNS.rglob("metrics.json")):
         run = json.loads(metrics_path.read_text(encoding="utf-8"))
         cfg_path = metrics_path.with_name("config.yaml")
         cfg = OmegaConf.load(cfg_path) if cfg_path.exists() else OmegaConf.create({})
