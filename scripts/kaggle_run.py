@@ -8,6 +8,7 @@
     list                  corridas de configs/kaggle.yaml y su estado
     dataset-images        publica data/processed/isic2020_512 como un solo zip
     sync-wandb <corrida>  sube a W&B las corridas offline bajadas con `output`
+    batch <c1> <c2> ... --sha SHA   empuja varias corridas y las vigila en un solo bucle
 
 `kernel-metadata.json` se genera desde `configs/kaggle.yaml`; los parámetros de la primera celda
 del notebook (REPO_SHA, OVERRIDES, RUN_TAG, ...) se sustituyen con `melanoma.utils.notebook`.
@@ -330,6 +331,53 @@ def cmd_dataset_images(args: argparse.Namespace) -> None:
     )
 
 
+def cmd_batch(args: argparse.Namespace) -> None:
+    """Empuja todas las corridas (Kaggle ejecuta en paralelo las que su cuota permita y encola el
+    resto) y las sondea en un solo bucle: una llamada de estado por corrida y ciclo, con pausa
+    entre llamadas para no provocar 429. Al completar una baja su salida; si falla, guarda el
+    log."""
+    c = cfg()
+    pending: dict[str, str] = {}
+    for name in args.names:
+        folder = stage_kernel(name, c, args.sha, {})
+        out = kaggle_cli("kernels", "push", "-p", str(folder), quiet=True)
+        m = re.search(r"Kernel version (\d+) successfully pushed", out)
+        if not m:
+            raise SystemExit(f"push de {name} no confirmó la versión:\n{out}")
+        pending[name] = "pushed"
+        print(
+            f"[{datetime.now():%H:%M:%S}] {ref_of(name, c)}: versión {m.group(1)} empujada",
+            flush=True,
+        )
+        time.sleep(5)
+    results: dict[str, str] = {}
+    start = time.time()
+    while pending:
+        for name in list(pending):
+            status = status_of(name, c)
+            elapsed = (time.time() - start) / 60
+            print(f"[{datetime.now():%H:%M:%S}] {name}: {status}  ({elapsed:.0f} min)", flush=True)
+            if any(t in status.upper() for t in TERMINAL):
+                results[name] = status
+                del pending[name]
+                if "COMPLETE" in status.upper():
+                    save_log(name, c)
+                    try:
+                        download_output(name, c)
+                    except SystemExit as exc:
+                        print(f"  salida de {name} no bajada: {exc}")
+                else:
+                    save_log(name, c)
+            time.sleep(5)
+        if pending:
+            time.sleep(int(c.poll_seconds))
+    print("\n===== RESULTADO DEL LOTE =====")
+    for name, status in results.items():
+        print(f"  {name:16s} {status}")
+    if any("COMPLETE" not in s.upper() for s in results.values()):
+        raise SystemExit("alguna corrida del lote no completó")
+
+
 def offline_wandb_dirs(run_dir: Path) -> list[Path]:
     return sorted(p for p in run_dir.rglob("offline-run-*") if p.is_dir())
 
@@ -378,6 +426,10 @@ def main() -> None:
     q = sub.add_parser("sync-wandb")
     q.add_argument("name")
     q.set_defaults(fn=cmd_sync_wandb)
+    b = sub.add_parser("batch", help="empujar varias corridas y vigilarlas en un solo bucle")
+    b.add_argument("names", nargs="+")
+    b.add_argument("--sha", required=True)
+    b.set_defaults(fn=cmd_batch)
     args = ap.parse_args()
     args.fn(args)
 
