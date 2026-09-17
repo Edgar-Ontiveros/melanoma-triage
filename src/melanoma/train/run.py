@@ -165,7 +165,7 @@ def run_training(cfg: DictConfig, root: Path | str, run_dir: Path | str) -> dict
         logger=logger,
         callbacks=[checkpoint, early_stopping, lr_monitor],
         default_root_dir=str(run_dir),
-        enable_progress_bar=bool(cfg.train.get("progress_bar", True)),
+        enable_progress_bar=bool(cfg.train.progress_bar),
         log_every_n_steps=10,
     )
     trainer.fit(lit, datamodule=dm)

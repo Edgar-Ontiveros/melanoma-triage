@@ -20,6 +20,7 @@ monitor: val/auprc
 monitor_mode: max
 early_stopping_patience: 5
 checkpoint_dir: null     # null → directorio de la corrida de Hydra
+progress_bar: true       # false en notebooks y CI (menos ruido en el log)
 
 # --- Detector de colapso (F2.2): al final de cada validación se marca colapso si la desviación
 # estándar de las probabilidades predichas queda por debajo de `collapse_std_threshold` o si el

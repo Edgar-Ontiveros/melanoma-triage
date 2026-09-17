@@ -86,7 +86,11 @@ paciente, historial por época, colapsos, SHA del commit y de los splits), `curv
   (Kaggle Secrets). Nombre de corrida `{modelo}-{resolución}-s{semilla}-{sha}`.
 - **Kaggle**: `notebooks/kaggle_prepare_512.ipynb` (una vez: dataset `melanoma-isic2020-512` y
   verificación de `sha256_resized`) y `notebooks/kaggle_train.ipynb` (clona el repo en un SHA,
-  verifica `SHA256SUMS`, entrena con `configs/`).
+  verifica `SHA256SUMS`, entrena con `configs/`). Antes de mandarlos a Kaggle:
+  `make check-notebooks` los ejecuta de principio a fin en un sandbox local (venv limpio, clon
+  del árbol de trabajo, `/kaggle/input` sintético, intérprete ya corriendo). En CI,
+  `tests/test_notebooks.py` verifica sus imports de `melanoma.*` y que `src/` entre en
+  `sys.path` antes del primer import.
 
 ## Estructura del repositorio
 

@@ -71,3 +71,6 @@ baseline-b0:
 ## Reportes de F2 a partir de reports/metrics/b0_val.json y reports/runs/*/metrics.json.
 f2-report:
 	$(UV_RUN) python scripts/f2_report.py
+## Ejecuta los notebooks de Kaggle en un sandbox local (venv limpio + clon + /kaggle/input sintético).
+check-notebooks:
+	$(UV_RUN) python scripts/check_notebooks.py
