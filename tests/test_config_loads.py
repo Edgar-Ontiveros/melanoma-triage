@@ -26,6 +26,7 @@ REQUIRED = {
         "precision",
         "deterministic",
         "accelerator",
+        "devices",
         "pos_weight",
         "scheduler",
         "warmup_epochs",

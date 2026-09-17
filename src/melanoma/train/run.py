@@ -160,6 +160,7 @@ def run_training(cfg: DictConfig, root: Path | str, run_dir: Path | str) -> dict
     trainer = L.Trainer(
         max_epochs=cfg.train.max_epochs,
         accelerator=cfg.train.accelerator,
+        devices=cfg.train.devices,
         precision=cfg.train.precision,
         deterministic=cfg.train.deterministic,
         logger=logger,
@@ -168,6 +169,10 @@ def run_training(cfg: DictConfig, root: Path | str, run_dir: Path | str) -> dict
         enable_progress_bar=bool(cfg.train.progress_bar),
         log_every_n_steps=10,
     )
+    if trainer.world_size != 1:
+        raise RuntimeError(
+            f"la evaluación asume un solo proceso y hay {trainer.world_size}; fijar train.devices=1"
+        )
     trainer.fit(lit, datamodule=dm)
 
     # ---- evaluación sobre validación con el mejor checkpoint -----------------------------

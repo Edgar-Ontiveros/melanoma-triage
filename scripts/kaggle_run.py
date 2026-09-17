@@ -182,8 +182,9 @@ def wait_and_collect(name: str, c: DictConfig) -> None:
         except SystemExit as exc:
             print(f"salida no bajada: {exc}. El log quedó en reports/runs/{name}/kernel.log")
     else:
-        print("\n===== LOG DE LA EJECUCIÓN (falló) =====")
-        cmd_logs(argparse.Namespace(name=name))
+        path = save_log(name, c)
+        print("\n===== LOG DE LA EJECUCIÓN (falló), cola =====")
+        print(path.read_text(encoding="utf-8")[-6000:])
         raise SystemExit(f"{ref} terminó con estado {status}")
 
 

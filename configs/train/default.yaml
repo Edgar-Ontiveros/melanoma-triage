@@ -5,6 +5,10 @@ weight_decay: 1.0e-2
 precision: bf16-mixed
 deterministic: true
 accelerator: auto
+# Un solo dispositivo. Kaggle a veces asigna T4 x2 y Lightning entrenaría en DDP: el tamaño de
+# lote efectivo cambia y la predicción final devuelve a cada proceso la mitad de validación
+# (falló así el 2026-09-17). La evaluación de F2.3 asume un proceso.
+devices: 1
 
 # --- Pérdida (F2.2). BCEWithLogitsLoss con pos_weight: null → 1.0; "auto" → negativos/positivos
 # del split de entrenamiento (≈ 55 en ISIC 2020); o un número.
