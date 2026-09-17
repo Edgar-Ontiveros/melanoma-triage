@@ -3,8 +3,12 @@ CUDA ?= cu126
 TORCH_CUDA_INDEX = https://download.pytorch.org/whl/$(CUDA)
 UV_RUN = uv run --no-sync
 
+# Todos los objetivos son comandos, no archivos: sin .PHONY, un directorio con el mismo nombre
+# (p. ej. kaggle/) hace que make diga "is up to date" y no ejecute nada (pasó el 2026-09-17).
+# tests/test_makefile.py verifica que cada objetivo esté aquí.
 .PHONY: setup setup-gpu lint format test smoke ci docker-api docker-size clean \
-	data-verify data-manifest data-dedup data-splits data-resize data-eda data-all kaggle-dataset
+	data-verify data-manifest data-dedup data-splits data-resize data-eda data-all \
+	kaggle-dataset train baseline-b0 f2-report check-notebooks kaggle
 
 ## Entorno local (WSL/Ubuntu): core + train + dev con ruedas CPU del lockfile.
 setup:
