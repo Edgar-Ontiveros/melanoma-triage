@@ -1,0 +1,40 @@
+0.00s - Debugger warning: It seems that frozen modules are being used, which may
+0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+0.00s - to python to disable frozen modules.
+0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+0.00s - Debugger warning: It seems that frozen modules are being used, which may
+0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+0.00s - to python to disable frozen modules.
+0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+commit 249f256
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 168.8/168.8 kB 8.2 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 168.8/168.8 kB 8.2 MB/s eta 0:00:00
+Pillow 11.3.0 · long_side=512 · jpeg_quality=95
+33126 imágenes redimensionadas en 13.2 min
+{
+  "pillow_kaggle": "11.3.0",
+  "long_side": 512,
+  "jpeg_quality": 95,
+  "images": 33126,
+  "sha256_match": 33126,
+  "sha256_match_pct": 100.0,
+  "dims_match": 33126
+}
+
+33126 JPEG listos en /kaggle/working/isic2020_512 con dataset-metadata.json y resize_verification.json.
+
+PARA CREAR EL DATASET (sin transferir nada; los archivos ya están en Kaggle):
+  1. Save Version → Save & Run All (esperar a que termine).
+  2. Abrir la versión → pestaña Output → carpeta isic2020_512 → "New Dataset".
+  3. Título: melanoma-isic2020-512, visibilidad privada. Debe quedar como edgaronti26/melanoma-isic2020-512.
+  4. Copiar la salida de la celda de verificación a docs/DATA.md.
+Los notebooks de entrenamiento lo adjuntan en /kaggle/input/datasets/edgaronti26/melanoma-isic2020-512/.
+
+/usr/local/lib/python3.12/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\|'
+  cells[i][c] = re.sub('\\\\\|', '|', cell)
+/usr/local/lib/python3.12/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\_'
+  text = re.sub(r'_', '\_', text) # Escape underscores in display text
+[NbConvertApp] Converting notebook __notebook__.ipynb to notebook
+[NbConvertApp] Writing 15631 bytes to __notebook__.ipynb
+[NbConvertApp] Converting notebook __notebook__.ipynb to html
+[NbConvertApp] Writing 303274 bytes to __results__.html

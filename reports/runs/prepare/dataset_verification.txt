@@ -1,0 +1,4 @@
+Verificación por API del dataset edgaronti26/melanoma-isic2020-512 (versión vigente), 2026-09-17:
+archivos totales en el dataset: 33282; isic2020_512/*.jpg: 33126; locales: 33126; iguales: True
+solo en Kaggle: []  solo en local: []
+muestra de 20 descargadas por API: 20/20 huellas SHA256 coinciden con sha256_resized

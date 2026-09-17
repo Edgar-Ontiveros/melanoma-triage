@@ -101,6 +101,13 @@ aunque Kaggle usa Pillow 11.3.0. El dataset privado `edgaronti26/melanoma-isic20
 byte-idéntico a la copia local: todo entrenamiento en Kaggle ve exactamente las imágenes
 auditadas en la laptop.
 
+Repetido el mismo día por API (`scripts/kaggle_run.py push prepare --sha 249f256`, kernel
+`edgaronti26/melanoma-f2-prepare-512` v1): 33,126/33,126 huellas y dimensiones, 13.2 min
+(`reports/runs/prepare/resize_verification.json`, extraído del log del kernel). La versión vigente
+del dataset es la v1, creada desde la interfaz con la salida de la corrida manual; sus imágenes
+están bajo `isic2020_512/` y se verificaron por API: 33,126 JPEG contados y una muestra de 20
+descargada y cotejada contra `sha256_resized` (resultado en `docs/specs/F2.md`, desviación 13).
+
 ## Duplicados
 
 ISIC publica `ISIC_2020_Training_Duplicates.csv` con 425 pares de imágenes duplicadas

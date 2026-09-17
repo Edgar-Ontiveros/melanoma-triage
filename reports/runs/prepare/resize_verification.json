@@ -1,0 +1,13 @@
+{
+  "pillow_kaggle": "11.3.0",
+  "long_side": 512,
+  "jpeg_quality": 95,
+  "images": 33126,
+  "sha256_match": 33126,
+  "sha256_match_pct": 100.0,
+  "dims_match": 33126,
+  "kernel": "edgaronti26/melanoma-f2-prepare-512",
+  "version": 1,
+  "repo_sha": "249f256",
+  "source": "log del kernel (la API no lista salidas de 33 mil archivos)"
+}

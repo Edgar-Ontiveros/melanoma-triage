@@ -176,7 +176,11 @@ def wait_and_collect(name: str, c: DictConfig) -> None:
             break
         time.sleep(poll)
     if "COMPLETE" in status.upper():
-        download_output(name, c)
+        save_log(name, c)
+        try:
+            download_output(name, c)
+        except SystemExit as exc:
+            print(f"salida no bajada: {exc}. El log quedó en reports/runs/{name}/kernel.log")
     else:
         print("\n===== LOG DE LA EJECUCIÓN (falló) =====")
         cmd_logs(argparse.Namespace(name=name))
@@ -211,8 +215,15 @@ def download_output(name: str, c: DictConfig) -> Path:
                 )
                 break
             except Exception as exc:  # 429 u otro error transitorio
-                if "429" not in str(exc) or attempt == 5:
+                if "429" not in str(exc):
                     raise
+                if attempt == 5:
+                    raise SystemExit(
+                        "la API responde 429 al listar la salida del kernel. Verificado el "
+                        "2026-09-17: pasa cuando la salida tiene decenas de miles de archivos "
+                        "(no es límite de tasa). Dejar los archivos grandes fuera de "
+                        "/kaggle/working y usar `logs`."
+                    ) from exc
                 time.sleep(int(c.retry_seconds))
         total += len(files)
         for f in files:
@@ -227,8 +238,30 @@ def cmd_output(args: argparse.Namespace) -> None:
     download_output(args.name, cfg())
 
 
+def fetch_log(name: str, c: DictConfig) -> str:
+    """Texto plano (stdout+stderr) del log; el CLI devuelve una lista JSON de eventos."""
+    raw = kaggle_cli("kernels", "logs", ref_of(name, c), check=False, quiet=True)
+    start = raw.find("[")
+    try:
+        events = json.loads(raw[start:]) if start >= 0 else []
+    except json.JSONDecodeError:
+        return raw
+    return "".join(
+        e.get("data", "") for e in events if e.get("stream_name") in ("stdout", "stderr")
+    )
+
+
+def save_log(name: str, c: DictConfig) -> Path:
+    dest = ROOT / c.output_dir / name
+    dest.mkdir(parents=True, exist_ok=True)
+    path = dest / "kernel.log"
+    path.write_text(fetch_log(name, c), encoding="utf-8")
+    print(f"log en {path.relative_to(ROOT)}")
+    return path
+
+
 def cmd_logs(args: argparse.Namespace) -> None:
-    kaggle_cli("kernels", "logs", ref_of(args.name, cfg()), check=False)
+    print(fetch_log(args.name, cfg()))
 
 
 def cmd_list(args: argparse.Namespace) -> None:

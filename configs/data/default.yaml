@@ -17,8 +17,10 @@ paths:
     manifest_path: ${data.manifest_path}
     splits_dir: ${data.splits_dir}
   kaggle:
-    # Dataset privado con las imágenes redimensionadas (notebooks/kaggle_prepare_512.ipynb).
-    images_dir: /kaggle/input/datasets/edgaronti26/melanoma-isic2020-512
+    # Dataset privado con las imágenes redimensionadas, versión 1 (creada el 2026-09-17 desde la
+    # salida de kaggle_prepare_512.ipynb): las imágenes viven en la subcarpeta isic2020_512/.
+    # Verificado por API: 33,126 JPEG y una muestra de huellas contra sha256_resized.
+    images_dir: /kaggle/input/datasets/edgaronti26/melanoma-isic2020-512/isic2020_512
     manifest_path: /kaggle/input/datasets/edgaronti26/melanoma-isic2020-splits/isic2020.csv
     splits_dir: /kaggle/input/datasets/edgaronti26/melanoma-isic2020-splits
 
