@@ -1,0 +1,14 @@
+# @package _global_
+# F2.5 — Misma B1 pero con muestreo ponderado en lugar de pos_weight (comparación de
+# estrategias de desbalance, misma semilla que la corrida con pos_weight).
+# Uso: python scripts/train.py +experiment=b1_resnet50_224_sampler train.seed=0
+experiment: b1_sampler
+
+defaults:
+  - b1_resnet50_224
+
+data:
+  sampler: weighted
+
+train:
+  pos_weight: null

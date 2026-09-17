@@ -1,6 +1,46 @@
+# Claves comunes del grupo `data`. `isic2020.yaml` las hereda y agrega el pipeline de F1.
 root: data
 manifest_path: data/manifests/isic2020.csv
 splits_dir: data/splits
+# Lado de la imagen que entra al modelo. `null` → el `input_size` del data_config de timm.
 image_size: 384
 batch_size: 32
 num_workers: 4
+
+# --- Entorno de ejecución (F2.1). Las rutas de imágenes/manifiesto/splits dependen de dónde
+# corre el código; se eligen aquí, nunca editando src/. `auto` detecta Kaggle por la variable
+# de entorno KAGGLE_KERNEL_RUN_TYPE (o por la existencia de /kaggle/input).
+env: auto            # auto | local | kaggle
+paths:
+  local:
+    images_dir: ${data.root}/processed/isic2020_512
+    manifest_path: ${data.manifest_path}
+    splits_dir: ${data.splits_dir}
+  kaggle:
+    # Dataset privado con las imágenes redimensionadas (notebooks/kaggle_prepare_512.ipynb).
+    images_dir: /kaggle/input/datasets/edgaronti26/melanoma-isic2020-512
+    manifest_path: /kaggle/input/datasets/edgaronti26/melanoma-isic2020-splits/isic2020.csv
+    splits_dir: /kaggle/input/datasets/edgaronti26/melanoma-isic2020-splits
+
+# --- Aumentación (albumentations). SOLO sobre entrenamiento; validación nunca se aumenta.
+# Punto de partida razonable, no una decisión óptima (ablacionable en F3). Volteo vertical sí:
+# en dermatoscopia no hay orientación canónica.
+augment:
+  hflip_p: 0.5
+  vflip_p: 0.5
+  rotate_limit_deg: 20
+  rotate_p: 0.5
+  brightness_limit: 0.2
+  contrast_limit: 0.2
+  brightness_contrast_p: 0.5
+  crop_scale: [0.8, 1.0]
+
+# --- Desbalance de clases en el DataLoader de entrenamiento (F2.2).
+# none: barajado uniforme. weighted: WeightedRandomSampler con peso 1/frecuencia de clase,
+# tantas muestras por época como imágenes de entrenamiento. Validación nunca se rebalancea.
+sampler: none        # none | weighted
+
+# --- Experimento de preprocesamiento (F2.6). Multiplica el rango de píxel que asume la
+# normalización: none = correcto (data_config de timm); divide255 = la entrada llega 255× más
+# pequeña de lo que el modelo espera; multiply255 = 255× más grande. Solo para el experimento.
+preprocess_scale: none   # none | divide255 | multiply255

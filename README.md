@@ -50,26 +50,59 @@ uv run --no-sync python -c "import torch; print(torch.__version__, torch.cuda.is
 make smoke        # o: uv run python scripts/smoke_train.py
 ```
 
-Entrena `resnet18` sin pesos preentrenados sobre 50 imágenes de ruido generadas en memoria,
-2 épocas a 224 px, batch 8, en CPU. No descarga nada. Debe terminar en menos de 2 minutos.
-Lee `configs/smoke.yaml` con Hydra, exactamente como lo haría una corrida real, así que un
-error de configuración aparece aquí y no a los 40 minutos de una GPU rentada.
+Genera 50 JPEG sintéticos en `outputs/smoke/synthetic/` (manifiesto + `train.txt`/`val.txt`) y
+entrena `resnet18` sin pesos preentrenados con el **DataModule real** (albumentations, sampler,
+`pos_weight=auto`), 2 épocas a 224 px, batch 8, en CPU; después evalúa validación con bootstrap
+por paciente y escribe los mismos artefactos que una corrida real. No descarga nada. Debe
+terminar en menos de 2 minutos. Lee `configs/smoke.yaml` con Hydra, exactamente como lo haría
+una corrida real, así que un error de configuración aparece aquí y no a los 40 minutos de GPU.
+
+## Entrenamiento y evaluación (F2)
+
+```bash
+make baseline-b0                                              # B0: metadatos, sklearn, segundos
+make train ARGS="+experiment=b1_resnet50_224 train.seed=0"    # B1: ResNet50 a 224 px (GPU)
+make train ARGS="+experiment=b1_resnet50_224_sampler train.seed=0"   # B1 con muestreo ponderado
+make train ARGS="+experiment=prep_b_divide255"                # F2.6: condición B
+make f2-report                                                # reports/f2_baselines.md y preprocessing_experiment.md
+```
+
+Cada corrida deja en su directorio de Hydra `checkpoints/`, `metrics.json` (métricas, IC por
+paciente, historial por época, colapsos, SHA del commit y de los splits), `curves.json`,
+`val_predictions.csv`, `figures/` y `summary.md`. Las corridas de Kaggle se copian a
+`reports/runs/<run_name>/` y `make f2-report` las agrupa por la clave `experiment` de su config.
+
+- **DataModule** (`melanoma.data.datamodule`): normalización, interpolación y tamaño de entrada
+  desde el `data_config` de la fábrica; aumentación solo en entrenamiento; `test_dataloader()`
+  lanza `LockedTestSplitError`. Rutas por entorno en `data.paths.{local,kaggle}` (`data.env=auto`).
+- **Desbalance**: `train.pos_weight` (`auto` = negativos/positivos ≈ 55) o `data.sampler=weighted`.
+- **Detector de colapso**: al final de cada validación, si la desviación estándar de las
+  probabilidades cae por debajo de `train.collapse_std_threshold` o el AUROC queda en ~0.5, se
+  registra `COLAPSO DETECTADO` en el log y `val/collapsed=1`.
+- **Evaluación** (`melanoma.eval`): AUC-ROC, AUPRC (primaria), sensibilidad/especificidad a
+  nivel fijo, VPP/VPN, matriz de confusión, bootstrap de 2,000 remuestreos por paciente y curvas a
+  archivo. La exactitud no existe en el módulo.
+- **W&B**: `train.wandb.enabled=true`, proyecto `melanoma-triage`, llave en `WANDB_API_KEY`
+  (Kaggle Secrets). Nombre de corrida `{modelo}-{resolución}-s{semilla}-{sha}`.
+- **Kaggle**: `notebooks/kaggle_prepare_512.ipynb` (una vez: dataset `melanoma-isic2020-512` y
+  verificación de `sha256_resized`) y `notebooks/kaggle_train.ipynb` (clona el repo en un SHA,
+  verifica `SHA256SUMS`, entrena con `configs/`).
 
 ## Estructura del repositorio
 
 ```
 .github/workflows/   CI: ruff, pytest, humo, build de la API y límite de 400 MB
-configs/             Configuración Hydra: data/, model/, train/, composiciones raíz (config.yaml, prepare.yaml)
+configs/             Configuración Hydra: data/, model/, train/, experiment/ y composiciones raíz (config, prepare, smoke, baseline_b0)
 src/melanoma/        Paquete Python: data (manifiesto, dedup, splits, resize), models (fábrica timm), train, eval, explain, export, utils
 services/api/        API de inferencia FastAPI + onnxruntime (grupo `api`, sin torch ni core) y su Dockerfile
 apps/web/            Frontend (fase posterior)
 data/manifests/      isic2020.csv, una fila por imagen con SHA256 (versionado)
 data/splits/         train.txt, val.txt, test.txt y SHA256SUMS (versionados)
 data/raw/, data/processed/   Imágenes originales y redimensionadas (NO versionadas)
-reports/             dedup_report.md, eda.md, splits_report.md, manifest_report.md, resize_report.md y figuras
-notebooks/           kaggle_setup.ipynb: plantilla que verifica la procedencia en Kaggle
+reports/             Reportes de F1, b0_metadata.md, f2_baselines.md, preprocessing_experiment.md, metrics/, predictions/, runs/ y figuras
+notebooks/           kaggle_setup.ipynb (procedencia), kaggle_prepare_512.ipynb (F2.0), kaggle_train.ipynb (F2.8)
 kaggle/              Metadatos del dataset privado de Kaggle (manifiesto + splits)
-scripts/             Pipeline de datos, smoke_train.py y utilidades de CI
+scripts/             Pipeline de datos, train.py, baseline_metadata.py, f2_report.py, smoke_train.py y utilidades de CI
 tests/               Pruebas rápidas sin descargas (las que necesitan datos se saltan si faltan)
 docs/                DATA.md (licencia, procedencia), hardware.md, specs/ por fase
 logs/                test_set_access.log (versionado) y salidas de corridas (no versionadas)
@@ -145,7 +178,7 @@ El entrenamiento corre en Kaggle. Ahí se adjunta la distribución oficial de la
 |---|---|---|
 | F0 | Esqueleto, entorno, CI, prueba de humo | Cerrada (`docs/specs/F0.md`) |
 | F1 | Manifiesto, deduplicación, splits por paciente, bloqueo del test, Kaggle | Completa: 10/10 criterios en verde, cerrada el 2026-09-04 (`docs/specs/F1.md`) |
-| F2 | Entrenamiento y evaluación | Pendiente |
+| F2 | Líneas base B0/B1, DataModule, evaluación, experimento de preprocesamiento | En curso: maquinaria local y B0 listas; B1 y F2.6 pendientes de Kaggle (`docs/specs/F2.md`) |
 | F3 | GPU rentada, exportación ONNX, API | Pendiente |
 | F4 | Grad-CAM, evaluación externa (DDI) | Pendiente |
 

@@ -62,3 +62,12 @@ data-all: data-verify data-manifest data-dedup data-splits data-resize data-eda
 ## Dataset privado de Kaggle (solo manifiesto + splits). Requiere KAGGLE_USERNAME y ~/.kaggle/kaggle.json.
 kaggle-dataset:
 	scripts/kaggle_dataset.sh $(MODE)
+
+## ---- F2: entrenamiento y líneas base. `make train ARGS="+experiment=b1_resnet50_224 train.seed=0"`.
+train:
+	$(UV_RUN) python scripts/train.py $(ARGS)
+baseline-b0:
+	$(UV_RUN) python scripts/baseline_metadata.py
+## Reportes de F2 a partir de reports/metrics/b0_val.json y reports/runs/*/metrics.json.
+f2-report:
+	$(UV_RUN) python scripts/f2_report.py

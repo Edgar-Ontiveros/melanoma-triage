@@ -5,3 +5,41 @@ weight_decay: 1.0e-2
 precision: bf16-mixed
 deterministic: true
 accelerator: auto
+
+# --- Pérdida (F2.2). BCEWithLogitsLoss con pos_weight: null → 1.0; "auto" → negativos/positivos
+# del split de entrenamiento (≈ 55 en ISIC 2020); o un número.
+pos_weight: null
+
+# --- Scheduler: cosine annealing por paso con calentamiento lineal de `warmup_epochs` épocas.
+scheduler: cosine        # cosine | none
+warmup_epochs: 1
+
+# --- Selección de modelo. Checkpoint del mejor y early stopping por AUPRC de validación,
+# NO por pérdida.
+monitor: val/auprc
+monitor_mode: max
+early_stopping_patience: 5
+checkpoint_dir: null     # null → directorio de la corrida de Hydra
+
+# --- Detector de colapso (F2.2): al final de cada validación se marca colapso si la desviación
+# estándar de las probabilidades predichas queda por debajo de `collapse_std_threshold` o si el
+# AUROC dista menos de `collapse_auc_tolerance` de 0.5.
+collapse_std_threshold: 0.01
+collapse_auc_tolerance: 0.02
+
+# --- Evaluación al final del entrenamiento sobre validación (F2.3).
+eval:
+  bootstrap_resamples: 2000
+  bootstrap_seed: 20260904
+  fixed_levels: [0.90, 0.95]
+  # Umbral provisional para la matriz de confusión y VPP/VPN: el que alcanza esta
+  # sensibilidad en validación. La selección de umbral real es de F4.
+  threshold_sensitivity: 0.90
+  reliability_bins: 10
+
+# --- Weights & Biases (F2.7). La llave va en la variable WANDB_API_KEY (Kaggle Secrets).
+wandb:
+  enabled: false
+  project: melanoma-triage
+  entity: null
+  mode: online           # online | offline

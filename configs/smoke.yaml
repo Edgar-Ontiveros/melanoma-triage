@@ -1,5 +1,6 @@
 # Prueba de humo: misma composición que una corrida real, con overrides para que
-# termine en CPU en menos de 2 minutos. Datos sintéticos en memoria, sin descargas.
+# termine en CPU en menos de 2 minutos. Genera un dataset sintético de JPEG en disco
+# (manifiesto + train/val) y lo carga con el DataModule real. Sin descargas.
 defaults:
   - data: default
   - model: resnet18
@@ -11,11 +12,23 @@ data:
   batch_size: 8
   num_workers: 0
   synthetic_samples: 50
+  synthetic_positive_rate: 0.2
+  env: local
+  paths:
+    local:
+      images_dir: outputs/smoke/synthetic/images
+      manifest_path: outputs/smoke/synthetic/manifest.csv
+      splits_dir: outputs/smoke/synthetic/splits
 
 train:
   max_epochs: 2
   precision: 32
   accelerator: cpu
+  warmup_epochs: 1
+  pos_weight: auto
+  early_stopping_patience: 2
+  eval:
+    bootstrap_resamples: 50
 
 hydra:
   run:

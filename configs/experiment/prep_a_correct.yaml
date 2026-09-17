@@ -1,0 +1,16 @@
+# @package _global_
+# F2.6 — Condición A: preprocesamiento correcto (data_config de timm). Mismo backbone,
+# semilla y datos que B y C; 6 épocas bastan para ver el efecto.
+# Uso: python scripts/train.py +experiment=prep_a_correct
+experiment: prep_a
+
+defaults:
+  - b1_resnet50_224
+
+data:
+  preprocess_scale: none
+
+train:
+  seed: 0
+  max_epochs: 6
+  early_stopping_patience: 100   # sin early stopping: se quieren las 6 curvas completas

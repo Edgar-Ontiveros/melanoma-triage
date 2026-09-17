@@ -1,0 +1,109 @@
+{
+  "model": "B0 regresi\u00f3n log\u00edstica sobre metadatos",
+  "git_sha": "c1600c0",
+  "split_sha256": {
+    "train": "701333b2450c363b1ab1b5a9422d3d223d243e1b3af2d643b05f6b86f711968c",
+    "val": "b7f727d6cf70d7a12be136e3b7046b42c725eaf5541aadc0723fbac09941ffb1"
+  },
+  "config": {
+    "features": {
+      "numeric": [
+        "age_approx"
+      ],
+      "categorical": [
+        "sex",
+        "anatom_site"
+      ]
+    },
+    "impute_numeric": "median",
+    "missing_category": "missing",
+    "C": 1.0,
+    "class_weight": "balanced",
+    "max_iter": 1000,
+    "out_report": "reports/b0_metadata.md",
+    "out_metrics": "reports/metrics/b0_val.json",
+    "out_predictions": "reports/predictions/b0_val.csv",
+    "figures_dir": "reports/figures"
+  },
+  "metrics": {
+    "n_images": 4963,
+    "n_positives": 88,
+    "n_patients": 568,
+    "prevalence": 0.017731210961112232,
+    "auprc_random": 0.017731210961112232,
+    "auroc": 0.620067599067599,
+    "auprc": 0.04418150174642696,
+    "threshold_policy": "sensibilidad>=0.9",
+    "confusion": {
+      "threshold": 0.31359918500640305,
+      "tn": 676,
+      "fp": 4199,
+      "fn": 7,
+      "tp": 81,
+      "sensitivity": 0.9204545454545454,
+      "specificity": 0.13866666666666666,
+      "ppv": 0.018925233644859814,
+      "npv": 0.9897510980966325
+    },
+    "sens_at_spec090": 0.2840909090909091,
+    "spec_at_sens090": 0.13866666666666672,
+    "sens_at_spec095": 0.18181818181818182,
+    "spec_at_sens095": 0.06646153846153846
+  },
+  "ci": {
+    "auroc": {
+      "point": 0.620067599067599,
+      "lo": 0.5515127034656523,
+      "hi": 0.6907522133935167,
+      "n_resamples": 2000,
+      "n_skipped": 0,
+      "level": 0.95,
+      "unit": "patient"
+    },
+    "auprc": {
+      "point": 0.04418150174642696,
+      "lo": 0.027835566312386324,
+      "hi": 0.07857717184714101,
+      "n_resamples": 2000,
+      "n_skipped": 0,
+      "level": 0.95,
+      "unit": "patient"
+    },
+    "sens_at_spec090": {
+      "point": 0.2840909090909091,
+      "lo": 0.17240032327586208,
+      "hi": 0.38385780885780874,
+      "n_resamples": 2000,
+      "n_skipped": 0,
+      "level": 0.95,
+      "unit": "patient"
+    },
+    "spec_at_sens090": {
+      "point": 0.13866666666666672,
+      "lo": 0.07406796612785001,
+      "hi": 0.2250439163020394,
+      "n_resamples": 2000,
+      "n_skipped": 0,
+      "level": 0.95,
+      "unit": "patient"
+    },
+    "sens_at_spec095": {
+      "point": 0.18181818181818182,
+      "lo": 0.09411764705882353,
+      "hi": 0.2619047619047619,
+      "n_resamples": 2000,
+      "n_skipped": 0,
+      "level": 0.95,
+      "unit": "patient"
+    },
+    "spec_at_sens095": {
+      "point": 0.06646153846153846,
+      "lo": 0.033536881301236394,
+      "hi": 0.1694030045089955,
+      "n_resamples": 2000,
+      "n_skipped": 0,
+      "level": 0.95,
+      "unit": "patient"
+    }
+  }
+}

@@ -1,8 +1,9 @@
 """Prueba de humo de entrenamiento.
 
-Recorre el camino completo config → semilla → fábrica → LightningModule → Trainer
-con datos sintéticos en memoria. No descarga pesos ni datasets. Es el gate que se
-corre antes de encender cualquier instancia de GPU pagada.
+Recorre el camino completo config → semilla → fábrica → DataModule real (JPEG sintéticos en
+disco, albumentations, sampler) → LightningModule → Trainer → evaluación con bootstrap por
+paciente → artefactos. No descarga pesos ni datasets. Es el gate que se corre antes de
+encender cualquier GPU.
 
 Uso: ``python scripts/smoke_train.py`` (configuración en ``configs/smoke.yaml``).
 """
@@ -10,62 +11,42 @@ Uso: ``python scripts/smoke_train.py`` (configuración en ``configs/smoke.yaml``
 from __future__ import annotations
 
 import time
+from pathlib import Path
 
 import hydra
-import lightning as L
-import torch
+from hydra.core.hydra_config import HydraConfig
 from omegaconf import DictConfig, OmegaConf
-from torch.utils.data import DataLoader, TensorDataset
 
-from melanoma.models import build_model
-from melanoma.train import LitBinaryClassifier
-from melanoma.utils import seed_everything
+from melanoma.data.synthetic import write_synthetic_dataset
+from melanoma.eval import assert_no_accuracy
+from melanoma.train.run import run_training
 
-
-def make_synthetic_loader(cfg: DictConfig, data_config: dict) -> DataLoader:
-    """Ruido gaussiano con la forma que espera el backbone y etiquetas binarias aleatorias."""
-    n = cfg.data.synthetic_samples
-    channels = data_config["input_size"][0]
-    size = cfg.data.image_size
-    x = torch.randn(n, channels, size, size)
-    y = torch.randint(0, cfg.model.num_classes + 1, (n,))
-    return DataLoader(
-        TensorDataset(x, y),
-        batch_size=cfg.data.batch_size,
-        shuffle=True,
-        num_workers=cfg.data.num_workers,
-    )
+ROOT = Path(__file__).resolve().parents[1]
 
 
 @hydra.main(config_path="../configs", config_name="smoke", version_base="1.3")
 def main(cfg: DictConfig) -> None:
     start = time.perf_counter()
     print(OmegaConf.to_yaml(cfg))
-    seed_everything(cfg.train.seed, deterministic=cfg.train.deterministic)
-
-    model, data_config = build_model(
-        backbone=cfg.model.backbone,
-        pretrained=cfg.model.pretrained,
-        num_classes=cfg.model.num_classes,
-        dropout=cfg.model.dropout,
+    synthetic_root = (ROOT / cfg.data.paths.local.manifest_path).parent
+    write_synthetic_dataset(
+        synthetic_root,
+        n_images=cfg.data.synthetic_samples,
+        positive_rate=cfg.data.synthetic_positive_rate,
+        seed=cfg.train.seed,
     )
-    print(f"data_config del backbone: {data_config}")
-
-    loader = make_synthetic_loader(cfg, data_config)
-    lit = LitBinaryClassifier(model, lr=cfg.train.lr, weight_decay=cfg.train.weight_decay)
-    trainer = L.Trainer(
-        max_epochs=cfg.train.max_epochs,
-        accelerator=cfg.train.accelerator,
-        precision=cfg.train.precision,
-        deterministic=cfg.train.deterministic,
-        logger=False,
-        enable_checkpointing=False,
-        enable_progress_bar=False,
-    )
-    trainer.fit(lit, train_dataloaders=loader)
-
+    run_dir = Path(HydraConfig.get().runtime.output_dir)
+    result = run_training(cfg, root=ROOT, run_dir=run_dir)
+    assert_no_accuracy(result["metrics"])
+    for name in ("metrics.json", "val_predictions.csv", "summary.md"):
+        assert (run_dir / name).exists(), f"falta {name}"
+    for path in result["figures"].values():
+        assert Path(path).exists(), f"falta la figura {path}"
     elapsed = time.perf_counter() - start
-    print(f"SMOKE OK: {cfg.train.max_epochs} épocas, {elapsed:.1f} s")
+    print(
+        f"SMOKE OK: {cfg.train.max_epochs} épocas, AUROC {result['metrics']['auroc']:.3f}, "
+        f"colapsos {result['collapse_epochs']}, {elapsed:.1f} s"
+    )
 
 
 if __name__ == "__main__":

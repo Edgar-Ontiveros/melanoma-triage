@@ -1,0 +1,10 @@
+# @package _global_
+# F2.6 — Condición C: la entrada llega multiplicada por 255 de más. Resultado esperado:
+# colapso o divergencia.
+experiment: prep_c
+
+defaults:
+  - prep_a_correct
+
+data:
+  preprocess_scale: multiply255

@@ -1,0 +1,30 @@
+# F2.4 — Línea base B0: regresión logística sobre metadatos (edad, sexo, sitio anatómico),
+# sin imágenes. Compone el grupo `data` (rutas, splits) y `train` (bloque `eval`).
+# Uso: uv run python scripts/baseline_metadata.py
+defaults:
+  - data: isic2020
+  - train: default
+  - _self_
+
+b0:
+  features:
+    numeric: [age_approx]
+    categorical: [sex, anatom_site]
+  # Faltantes (F1 los cuantificó: sex 65, age_approx 68, anatom_site 527 en todo el dataset):
+  # numéricos → mediana del split de entrenamiento + indicador de faltante;
+  # categóricos → categoría explícita "missing" antes del one-hot.
+  impute_numeric: median
+  missing_category: missing
+  C: 1.0
+  class_weight: balanced   # balanced | null
+  max_iter: 1000
+  out_report: reports/b0_metadata.md
+  out_metrics: reports/metrics/b0_val.json
+  out_predictions: reports/predictions/b0_val.csv
+  figures_dir: reports/figures
+
+hydra:
+  run:
+    dir: outputs/b0/${now:%Y-%m-%d}/${now:%H-%M-%S}
+  job:
+    chdir: false

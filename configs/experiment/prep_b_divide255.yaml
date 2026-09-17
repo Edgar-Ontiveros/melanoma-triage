@@ -1,0 +1,10 @@
+# @package _global_
+# F2.6 — Condición B: la entrada llega dividida por 255 de más (255× más pequeña de lo que
+# el modelo espera). Resultado esperado: colapso a AUC ≈ 0.5.
+experiment: prep_b
+
+defaults:
+  - prep_a_correct
+
+data:
+  preprocess_scale: divide255
