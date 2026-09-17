@@ -11,6 +11,7 @@ datasets:
   splits: edgaronti26/melanoma-isic2020-splits
   images512: edgaronti26/melanoma-isic2020-512
 output_dir: reports/runs
+max_gpu_sessions: 2     # Kaggle: "Maximum batch GPU session count of 2 reached" (2026-09-17)
 poll_seconds: 90          # la API devuelve 429 si se consulta con más frecuencia
 retry_seconds: 60
 # Verificado el 2026-09-17 con el CLI 2.2.4: NvidiaTeslaP100 está retirado; T4 y L4 son las

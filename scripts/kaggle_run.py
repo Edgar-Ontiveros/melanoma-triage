@@ -331,45 +331,56 @@ def cmd_dataset_images(args: argparse.Namespace) -> None:
     )
 
 
-def cmd_batch(args: argparse.Namespace) -> None:
-    """Empuja todas las corridas (Kaggle ejecuta en paralelo las que su cuota permita y encola el
-    resto) y las sondea en un solo bucle: una llamada de estado por corrida y ciclo, con pausa
-    entre llamadas para no provocar 429. Al completar una baja su salida; si falla, guarda el
-    log."""
-    c = cfg()
-    pending: dict[str, str] = {}
-    for name in args.names:
-        folder = stage_kernel(name, c, args.sha, {})
-        out = kaggle_cli("kernels", "push", "-p", str(folder), quiet=True)
-        m = re.search(r"Kernel version (\d+) successfully pushed", out)
-        if not m:
-            raise SystemExit(f"push de {name} no confirmó la versión:\n{out}")
-        pending[name] = "pushed"
+def _push(name: str, c: DictConfig, sha: str) -> bool:
+    """Empuja una corrida. ``False`` si Kaggle rechaza por el límite de sesiones GPU."""
+    folder = stage_kernel(name, c, sha, {})
+    out = kaggle_cli("kernels", "push", "-p", str(folder), quiet=True, check=False)
+    m = re.search(r"Kernel version (\d+) successfully pushed", out)
+    if m:
         print(
             f"[{datetime.now():%H:%M:%S}] {ref_of(name, c)}: versión {m.group(1)} empujada",
             flush=True,
         )
-        time.sleep(5)
+        return True
+    if "Maximum batch GPU session count" in out:
+        return False
+    raise SystemExit(f"push de {name} no confirmó la versión:\n{out}")
+
+
+def cmd_batch(args: argparse.Namespace) -> None:
+    """Empuja las corridas respetando el límite de sesiones GPU simultáneas de Kaggle
+    (``max_gpu_sessions``, 2 el 2026-09-17: "Maximum batch GPU session count of 2 reached") y
+    las sondea en un solo bucle. Al completar una baja su salida y empuja la siguiente; si
+    falla, guarda el log. ``--adopt`` vigila corridas ya empujadas sin volver a empujarlas."""
+    c = cfg()
+    limit = int(c.get("max_gpu_sessions", 2))
+    queue = list(args.names)
+    active: list[str] = list(args.adopt or [])
     results: dict[str, str] = {}
     start = time.time()
-    while pending:
-        for name in list(pending):
+    while queue or active:
+        while queue and len(active) < limit:
+            if _push(queue[0], c, args.sha):
+                active.append(queue.pop(0))
+                time.sleep(5)
+            else:
+                print(f"[{datetime.now():%H:%M:%S}] límite de sesiones GPU; {queue[0]} espera")
+                break
+        for name in list(active):
             status = status_of(name, c)
             elapsed = (time.time() - start) / 60
             print(f"[{datetime.now():%H:%M:%S}] {name}: {status}  ({elapsed:.0f} min)", flush=True)
             if any(t in status.upper() for t in TERMINAL):
                 results[name] = status
-                del pending[name]
+                active.remove(name)
+                save_log(name, c)
                 if "COMPLETE" in status.upper():
-                    save_log(name, c)
                     try:
                         download_output(name, c)
                     except SystemExit as exc:
                         print(f"  salida de {name} no bajada: {exc}")
-                else:
-                    save_log(name, c)
             time.sleep(5)
-        if pending:
+        if queue or active:
             time.sleep(int(c.poll_seconds))
     print("\n===== RESULTADO DEL LOTE =====")
     for name, status in results.items():
@@ -427,8 +438,9 @@ def main() -> None:
     q.add_argument("name")
     q.set_defaults(fn=cmd_sync_wandb)
     b = sub.add_parser("batch", help="empujar varias corridas y vigilarlas en un solo bucle")
-    b.add_argument("names", nargs="+")
+    b.add_argument("names", nargs="*")
     b.add_argument("--sha", required=True)
+    b.add_argument("--adopt", nargs="*", help="corridas ya empujadas que solo se vigilan")
     b.set_defaults(fn=cmd_batch)
     args = ap.parse_args()
     args.fn(args)
