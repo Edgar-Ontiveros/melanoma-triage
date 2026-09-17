@@ -1,0 +1,71 @@
+# Corridas en Kaggle por API (scripts/kaggle_run.py). De aquí se genera kernel-metadata.json:
+# nada se escribe a mano. Uso:
+#   uv run python scripts/kaggle_run.py push prepare --sha <SHA> --wait
+#   uv run python scripts/kaggle_run.py push b1-s0 --sha <SHA> --wait
+#   uv run python scripts/kaggle_run.py status b1-s0 | wait b1-s0 | output b1-s0 | logs b1-s0
+#   uv run python scripts/kaggle_run.py dataset-images   # publica data/processed/isic2020_512
+username: edgaronti26
+repo_url: https://github.com/Edgar-Ontiveros/melanoma-triage.git
+competition: siim-isic-melanoma-classification
+datasets:
+  splits: edgaronti26/melanoma-isic2020-splits
+  images512: edgaronti26/melanoma-isic2020-512
+output_dir: reports/runs
+poll_seconds: 90          # la API devuelve 429 si se consulta con más frecuencia
+retry_seconds: 60
+# Verificado el 2026-09-17 con el CLI 2.2.4: NvidiaTeslaP100 está retirado; T4 y L4 son las
+# opciones documentadas. Se confirma en el primer push con GPU.
+gpu_machine_shape: NvidiaTeslaT4
+
+kernels:
+  prepare:
+    notebook: notebooks/kaggle_prepare_512.ipynb
+    slug: melanoma-f2-prepare-512
+    gpu: false
+    competition: true
+    datasets: [splits]
+    # No bajar los 33 mil JPEG: solo la verificación y los metadatos.
+    output_pattern: '.*\.json$'
+  train:
+    notebook: notebooks/kaggle_train.ipynb
+    slug_prefix: melanoma-f2-train
+    gpu: true
+    competition: false
+    datasets: [splits, images512]
+    # Todo lo de runs/ salvo checkpoints (no se versionan y pesan ~100 MB).
+    output_pattern: '^runs/(?!.*\.ckpt$).*'
+
+# Las siete corridas de F2 (F2.5 y F2.6). RUN_TAG y OVERRIDES sustituyen los parámetros de la
+# primera celda del notebook.
+runs:
+  b1-s0:
+    kernel: train
+    params: {RUN_TAG: b1-s0, OVERRIDES: ["+experiment=b1_resnet50_224", "train.seed=0"]}
+  b1-s1:
+    kernel: train
+    params: {RUN_TAG: b1-s1, OVERRIDES: ["+experiment=b1_resnet50_224", "train.seed=1"]}
+  b1-s2:
+    kernel: train
+    params: {RUN_TAG: b1-s2, OVERRIDES: ["+experiment=b1_resnet50_224", "train.seed=2"]}
+  b1-sampler-s0:
+    kernel: train
+    params: {RUN_TAG: b1-sampler-s0, OVERRIDES: ["+experiment=b1_resnet50_224_sampler", "train.seed=0"]}
+  prep-a:
+    kernel: train
+    params: {RUN_TAG: prep-a, OVERRIDES: ["+experiment=prep_a_correct"]}
+  prep-b:
+    kernel: train
+    params: {RUN_TAG: prep-b, OVERRIDES: ["+experiment=prep_b_divide255"]}
+  prep-c:
+    kernel: train
+    params: {RUN_TAG: prep-c, OVERRIDES: ["+experiment=prep_c_multiply255"]}
+
+# Dataset de imágenes redimensionadas, publicado desde la laptop como UN solo zip (Kaggle lo
+# extrae en el servidor; verificado el 2026-09-17). Subida medida: ~10 MB/s → ~3 min.
+images_dataset:
+  source_dir: data/processed/isic2020_512
+  title: melanoma-isic2020-512
+  license: CC-BY-NC-SA-4.0
+  subtitle: ISIC 2020 redimensionado a 512 px (JPEG q95) para el proyecto melanoma
+  verification_json: reports/runs/prepare/resize_verification.json
+  staging_dir: outputs/kaggle/melanoma-isic2020-512

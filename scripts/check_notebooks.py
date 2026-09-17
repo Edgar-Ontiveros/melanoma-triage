@@ -29,18 +29,18 @@ sys.path.insert(0, str(ROOT / "src"))
 
 from melanoma.data.resize import resize_many  # noqa: E402
 from melanoma.data.synthetic import write_synthetic_dataset  # noqa: E402
+from melanoma.utils.notebook import (  # noqa: E402
+    load_notebook,
+    save_notebook,
+    substitute_parameters,
+)
 
 TORCH_CPU_INDEX = "https://download.pytorch.org/whl/cpu"
 
 RUNNER = r"""
-import json, re, sys, traceback
-nb_path, overrides = sys.argv[1], json.loads(sys.argv[2])
+import json, sys, traceback
+nb_path = sys.argv[1]  # notebook ya con los parámetros sustituidos (melanoma.utils.notebook)
 cells = [c for c in json.load(open(nb_path))["cells"] if c["cell_type"] == "code"]
-first = "".join(cells[0]["source"])
-for name, value in overrides.items():
-    first, n = re.subn(rf"^{name} = .*$", f"{name} = {value!r}", first, flags=re.M)
-    assert n == 1, f"parámetro {name} no encontrado en la primera celda de {nb_path}"
-cells[0]["source"] = first
 ns = {"__name__": "__main__"}
 for i, cell in enumerate(cells):
     src = "".join(cell["source"])
@@ -157,7 +157,9 @@ def run_notebook(py: Path, sandbox: Path, notebook: Path, overrides: dict) -> No
         "WANDB_MODE": "offline",
     }
     env.pop("VIRTUAL_ENV", None)
-    sh(str(py), str(runner), str(notebook), json.dumps(overrides), cwd=working, env=env)
+    staged = sandbox / notebook.name
+    save_notebook(substitute_parameters(load_notebook(notebook), overrides), staged)
+    sh(str(py), str(runner), str(staged), cwd=working, env=env)
 
 
 def main() -> None:

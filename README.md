@@ -91,6 +91,11 @@ paciente, historial por época, colapsos, SHA del commit y de los splits), `curv
   del árbol de trabajo, `/kaggle/input` sintético, intérprete ya corriendo). En CI,
   `tests/test_notebooks.py` verifica sus imports de `melanoma.*` y que `src/` entre en
   `sys.path` antes del primer import.
+- **Kaggle por API, sin navegador**: `make kaggle ARGS="push b1-s0 --sha <SHA> --wait"` empuja
+  el notebook como kernel (metadata generado desde `configs/kaggle.yaml`), espera, baja la
+  salida a `reports/runs/b1-s0/` y muestra el log si falló. También `status`, `wait`, `output`,
+  `logs`, `list`, `dataset-images` (publica las imágenes de 512 px como un solo zip) y
+  `sync-wandb` (sube las corridas offline de W&B). Las siete corridas de F2 están en `runs:`.
 
 ## Estructura del repositorio
 

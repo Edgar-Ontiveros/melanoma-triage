@@ -74,3 +74,6 @@ f2-report:
 ## Ejecuta los notebooks de Kaggle en un sandbox local (venv limpio + clon + /kaggle/input sintético).
 check-notebooks:
 	$(UV_RUN) python scripts/check_notebooks.py
+## Corridas en Kaggle por API (configs/kaggle.yaml). Ej.: make kaggle ARGS="push b1-s0 --sha <SHA> --wait"
+kaggle:
+	$(UV_RUN) python scripts/kaggle_run.py $(ARGS)
