@@ -15,6 +15,7 @@ REQUIRED = {
         "augment",
         "sampler",
         "preprocess_scale",
+        "val_resize",
     },
     "model": {"backbone", "pretrained", "dropout", "num_classes"},
     "train": {

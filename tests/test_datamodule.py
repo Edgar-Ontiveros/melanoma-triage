@@ -128,6 +128,40 @@ def test_preprocess_scale_bug_conditions(data_config, smoke_cfg_module) -> None:
         build_transforms(data_config, size, None, False, "otra")
 
 
+def _circle_image(width: int = 600, height: int = 400, radius: int = 120) -> np.ndarray:
+    """Imagen 3:2 negra con un círculo blanco centrado."""
+    yy, xx = np.mgrid[:height, :width]
+    mask = (xx - width / 2) ** 2 + (yy - height / 2) ** 2 <= radius**2
+    img = np.zeros((height, width, 3), dtype=np.uint8)
+    img[mask] = 255
+    return img
+
+
+def _blob_aspect(out: torch.Tensor) -> float:
+    """Ancho/alto de la caja del blob más brillante en el canal 0 (tras normalizar)."""
+    ch = out[0].numpy()
+    mask = ch > (ch.min() + ch.max()) / 2
+    ys, xs = np.nonzero(mask)
+    return (xs.max() - xs.min() + 1) / (ys.max() - ys.min() + 1)
+
+
+def test_val_center_crop_preserves_aspect_ratio(data_config, smoke_cfg_module) -> None:
+    """Un círculo en una imagen 3:2 sigue siendo circular tras la transformación de validación."""
+    size = smoke_cfg_module.data.image_size
+    img = _circle_image()
+    kept = build_transforms(data_config, size, None, train=False, val_resize="center_crop")
+    squashed = build_transforms(data_config, size, None, train=False, val_resize="squash")
+    out = kept(image=img)["image"]
+    assert out.shape[1:] == (size, size)
+    assert _blob_aspect(out) == pytest.approx(1.0, abs=0.05)
+    # Control: el aplastado comprime el ancho 1.5x más que el alto → el círculo sale con
+    # proporción 2/3 (un óvalo vertical).
+    assert _blob_aspect(squashed(image=img)["image"]) == pytest.approx(2 / 3, abs=0.05)
+    assert smoke_cfg_module.data.val_resize == "center_crop"
+    with pytest.raises(ValueError):
+        build_transforms(data_config, size, None, train=False, val_resize="otra")
+
+
 def test_weighted_sampler_raises_positive_rate(synthetic, data_config, smoke_cfg_module) -> None:
     torch.manual_seed(0)
     plain = _dm(synthetic, data_config, smoke_cfg_module, sampler="none")

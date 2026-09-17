@@ -35,6 +35,12 @@ augment:
   brightness_contrast_p: 0.5
   crop_scale: [0.8, 1.0]
 
+# --- Geometría de validación (sin aumentación). center_crop: redimensiona el lado corto a
+# image_size y recorta el centro a image_size × image_size, preservando la relación de aspecto
+# (las imágenes de 512 px son 3:2; aplastarlas distorsiona asimetría y borde, que son criterios
+# diagnósticos). squash: Resize directo a cuadrado (solo para comparar; no se usa).
+val_resize: center_crop   # center_crop | squash
+
 # --- Desbalance de clases en el DataLoader de entrenamiento (F2.2).
 # none: barajado uniforme. weighted: WeightedRandomSampler con peso 1/frecuencia de clase,
 # tantas muestras por época como imágenes de entrenamiento. Validación nunca se rebalancea.

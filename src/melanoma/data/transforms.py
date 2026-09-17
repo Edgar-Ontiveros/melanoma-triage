@@ -31,6 +31,7 @@ _INTERPOLATION = {
 # antes de restar la media. Los factores de F2.6 lo multiplican para inyectar el error.
 PIXEL_MAX_8BIT = 255.0
 PREPROCESS_SCALE_FACTORS = {"none": 1.0, "divide255": 255.0, "multiply255": 1.0 / 255.0}
+VAL_RESIZE_MODES = ("center_crop", "squash")
 
 
 def resolve_image_size(image_size: int | None, data_config: Mapping[str, Any]) -> int:
@@ -66,12 +67,30 @@ def normalization(data_config: Mapping[str, Any], preprocess_scale: str = "none"
     )
 
 
+def eval_geometry(size: int, interp: int, val_resize: str) -> list[A.BasicTransform]:
+    """Geometría de validación/inferencia, sin aumentación.
+
+    ``center_crop``: lado corto a ``size`` y recorte central ``size × size``; conserva la
+    relación de aspecto (una imagen 3:2 pierde los bordes laterales, no su forma).
+    ``squash``: ``Resize`` directo a cuadrado; deforma un 3:2 en ~33 %. Solo para comparar.
+    """
+    if val_resize == "center_crop":
+        return [
+            A.SmallestMaxSize(max_size=size, interpolation=interp),
+            A.CenterCrop(height=size, width=size),
+        ]
+    if val_resize == "squash":
+        return [A.Resize(height=size, width=size, interpolation=interp)]
+    raise ValueError(f"val_resize desconocido: {val_resize!r}; opciones: {VAL_RESIZE_MODES}")
+
+
 def build_transforms(
     data_config: Mapping[str, Any],
     image_size: int | None,
     augment: Mapping[str, Any] | None,
     train: bool,
     preprocess_scale: str = "none",
+    val_resize: str = "center_crop",
 ) -> A.Compose:
     """Pipeline de albumentations para un split.
 
@@ -81,6 +100,7 @@ def build_transforms(
         augment: bloque ``data.augment`` de la config. Obligatorio si ``train=True``.
         train: ``True`` aplica aumentación; ``False`` solo redimensiona y normaliza.
         preprocess_scale: ``none`` salvo en el experimento F2.6.
+        val_resize: geometría de validación (``data.val_resize``): ``center_crop`` o ``squash``.
     """
     size = resolve_image_size(image_size, data_config)
     interp = interpolation_flag(data_config)
@@ -106,6 +126,6 @@ def build_transforms(
             ),
         ]
     else:
-        ops.append(A.Resize(height=size, width=size, interpolation=interp))
+        ops += eval_geometry(size, interp, val_resize)
     ops += [normalization(data_config, preprocess_scale), ToTensorV2()]
     return A.Compose(ops)

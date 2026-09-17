@@ -83,6 +83,7 @@ class ISICDataModule(L.LightningDataModule):
         augment: Mapping[str, Any] | None = None,
         sampler: str = "none",
         preprocess_scale: str = "none",
+        val_resize: str = "center_crop",
     ) -> None:
         super().__init__()
         if sampler not in SAMPLERS:
@@ -97,6 +98,7 @@ class ISICDataModule(L.LightningDataModule):
         self.augment = dict(augment) if augment is not None else None
         self.sampler = sampler
         self.preprocess_scale = preprocess_scale
+        self.val_resize = val_resize
         self.train_ds: ImageDataset | None = None
         self.val_ds: ImageDataset | None = None
 
@@ -134,6 +136,7 @@ class ISICDataModule(L.LightningDataModule):
             None,
             train=False,
             preprocess_scale=self.preprocess_scale,
+            val_resize=self.val_resize,
         )
         self.train_ds = ImageDataset(
             self._records(manifest, TRAIN_SPLIT), self.images_dir, train_tf
@@ -225,4 +228,5 @@ def datamodule_from_config(
         augment=data_cfg["augment"],
         sampler=str(data_cfg.get("sampler", "none")),
         preprocess_scale=str(data_cfg.get("preprocess_scale", "none")),
+        val_resize=str(data_cfg.get("val_resize", "center_crop")),
     )
