@@ -1,0 +1,65 @@
+0.00s - Debugger warning: It seems that frozen modules are being used, which may
+0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+0.00s - to python to disable frozen modules.
+0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+0.00s - Debugger warning: It seems that frozen modules are being used, which may
+0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+0.00s - to python to disable frozen modules.
+0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+commit bcdbbf9
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 45.0/45.0 kB 2.3 MB/s eta 0:00:00
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 45.0/45.0 kB 2.3 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 168.8/168.8 kB 8.4 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 849.3/849.3 kB 34.7 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 168.8/168.8 kB 8.4 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 849.3/849.3 kB 34.7 MB/s eta 0:00:00
+imágenes: /kaggle/input/datasets/edgaronti26/melanoma-isic2020-512/isic2020_512
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+  File "/usr/local/lib/python3.12/dist-packages/papermill/execute.py", line 131, in execute_notebook
+    raise_for_execution_errors(nb, output_path)
+  File "/usr/local/lib/python3.12/dist-packages/papermill/execute.py", line 251, in raise_for_execution_errors
+    raise error
+papermill.exceptions.PapermillExecutionError: 
+---------------------------------------------------------------------------
+Exception encountered at "In [3]":
+---------------------------------------------------------------------------
+FileNotFoundError                         Traceback (most recent call last)
+/tmp/ipykernel_23/4185005010.py in <cell line: 0>()
+      9     IMAGES_DIR = str(OmegaConf.load("configs/data/default.yaml").paths.kaggle.images_dir)
+     10 print("imágenes:", IMAGES_DIR)
+---> 11 hashes = verify_split_hashes(SPLITS_DIR)
+     12 print("splits íntegros:", hashes)
+     13 assert Path(IMAGES_DIR).exists(), f"no está adjunto el dataset de imágenes: {IMAGES_DIR}"
+
+/kaggle/working/repo/src/melanoma/data/datamodule.py in verify_split_hashes(splits_dir, names)
+     55     splits_dir = Path(splits_dir)
+     56     listed: dict[str, str] = {}
+---> 57     for line in (splits_dir / "SHA256SUMS").read_text(encoding="utf-8").splitlines():
+     58         parts = line.split()
+     59         if len(parts) == 2:
+
+/usr/lib/python3.12/pathlib.py in read_text(self, encoding, errors)
+   1025         """
+   1026         encoding = io.text_encoding(encoding)
+-> 1027         with self.open(mode='r', encoding=encoding, errors=errors) as f:
+   1028             return f.read()
+   1029 
+
+/usr/lib/python3.12/pathlib.py in open(self, mode, buffering, encoding, errors, newline)
+   1011         if "b" not in mode:
+   1012             encoding = io.text_encoding(encoding)
+-> 1013         return io.open(self, mode, buffering, encoding, errors, newline)
+   1014 
+   1015     def read_bytes(self):
+
+FileNotFoundError: [Errno 2] No such file or directory: '/kaggle/input/datasets/edgaronti26/melanoma-isic2020-splits/SHA256SUMS'
+
+/usr/local/lib/python3.12/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\|'
+  cells[i][c] = re.sub('\\\\\|', '|', cell)
+/usr/local/lib/python3.12/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\_'
+  text = re.sub(r'_', '\_', text) # Escape underscores in display text
+[NbConvertApp] Converting notebook __notebook__.ipynb to notebook
+[NbConvertApp] Writing 18397 bytes to __notebook__.ipynb
+[NbConvertApp] Converting notebook __notebook__.ipynb to html
+[NbConvertApp] Writing 302984 bytes to __results__.html
