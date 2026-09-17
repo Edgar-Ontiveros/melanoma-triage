@@ -204,6 +204,19 @@ def test_resolve_paths_by_env(root_dir: Path, cfg: DictConfig) -> None:
         resolve_paths(OmegaConf.merge(cfg.data, {"env": "nube"}), root=root_dir)
 
 
+def test_kaggle_layout_candidates() -> None:
+    from melanoma.data.paths import first_existing, kaggle_layout_candidates
+
+    new = "/kaggle/input/datasets/edgaronti26/melanoma-isic2020-512/isic2020_512"
+    assert [str(c) for c in kaggle_layout_candidates(new)] == [
+        new,
+        "/kaggle/input/melanoma-isic2020-512/isic2020_512",
+    ]
+    assert kaggle_layout_candidates("/otra/ruta") == [Path("/otra/ruta")]
+    # Ninguna existe en la laptop: se conserva la configurada.
+    assert str(first_existing(new)) == new
+
+
 def test_datamodule_from_config(synthetic, data_config, smoke_cfg_module) -> None:
     data_cfg = OmegaConf.merge(
         smoke_cfg_module.data,

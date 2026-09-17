@@ -10,6 +10,7 @@ para cambiar de entorno.
 from __future__ import annotations
 
 import os
+import re
 from collections.abc import Mapping
 from dataclasses import dataclass
 from pathlib import Path
@@ -33,6 +34,33 @@ def detect_env(environ: Mapping[str, str] | None = None, kaggle_root: str = "/ka
     return "local"
 
 
+_KAGGLE_DATASETS = re.compile(r"^/kaggle/input/datasets/[^/]+/([^/]+)(/.*)?$")
+
+
+def kaggle_layout_candidates(path: Path | str) -> list[Path]:
+    """Las dos estructuras con las que Kaggle monta un dataset, en orden de preferencia.
+
+    Desde 2026-09 Kaggle usa ``/kaggle/input/datasets/<usuario>/<slug>/…``, pero algunas
+    máquinas siguen montando la forma plana ``/kaggle/input/<slug>/…`` (el 2026-09-17, dos de
+    seis kernels del mismo lote). Se aceptan ambas.
+    """
+    path = Path(path)
+    m = _KAGGLE_DATASETS.match(path.as_posix())
+    if not m:
+        return [path]
+    slug, rest = m.group(1), m.group(2) or ""
+    return [path, Path(f"/kaggle/input/{slug}{rest}")]
+
+
+def first_existing(path: Path | str) -> Path:
+    """La primera variante de ``kaggle_layout_candidates`` que existe; si ninguna, la original."""
+    candidates = kaggle_layout_candidates(path)
+    for c in candidates:
+        if c.exists():
+            return c
+    return candidates[0]
+
+
 def resolve_paths(data_cfg: Mapping, root: Path | str | None = None) -> DataPaths:
     """Elige el bloque de rutas de ``data_cfg.paths`` según ``data_cfg.env``.
 
@@ -52,7 +80,8 @@ def resolve_paths(data_cfg: Mapping, root: Path | str | None = None) -> DataPath
 
     def _abs(p: str) -> Path:
         path = Path(str(p))
-        return path if path.is_absolute() else base / path
+        path = path if path.is_absolute() else base / path
+        return first_existing(path) if env == "kaggle" else path
 
     return DataPaths(
         env=env,

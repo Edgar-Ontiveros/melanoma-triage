@@ -6,13 +6,13 @@
 0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
 0.00s - to python to disable frozen modules.
 0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
-commit 90ac33b
+commit bcdbbf9
      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 45.0/45.0 kB 2.1 MB/s eta 0:00:00
      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 45.0/45.0 kB 2.1 MB/s eta 0:00:00
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 168.8/168.8 kB 7.8 MB/s eta 0:00:00
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 849.3/849.3 kB 27.3 MB/s eta 0:00:00
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 168.8/168.8 kB 7.8 MB/s eta 0:00:00
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 849.3/849.3 kB 27.3 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 168.8/168.8 kB 8.3 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 849.3/849.3 kB 28.9 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 168.8/168.8 kB 8.3 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 849.3/849.3 kB 28.9 MB/s eta 0:00:00
 imágenes: /kaggle/input/datasets/edgaronti26/melanoma-isic2020-512/isic2020_512
 esperando el montaje de /kaggle/input …
 esperando el montaje de /kaggle/input …
@@ -44,7 +44,7 @@ papermill.exceptions.PapermillExecutionError:
 Exception encountered at "In [3]":
 ---------------------------------------------------------------------------
 FileNotFoundError                         Traceback (most recent call last)
-/tmp/ipykernel_23/2478829560.py in <cell line: 0>()
+/tmp/ipykernel_24/2478829560.py in <cell line: 0>()
      19 else:
      20     print("contenido de /kaggle/input:", sorted(str(q) for q in Path("/kaggle/input").glob("*/*")))
 ---> 21 hashes = verify_split_hashes(SPLITS_DIR)
@@ -79,6 +79,6 @@ FileNotFoundError: [Errno 2] No such file or directory: '/kaggle/input/datasets/
 /usr/local/lib/python3.12/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\_'
   text = re.sub(r'_', '\_', text) # Escape underscores in display text
 [NbConvertApp] Converting notebook __notebook__.ipynb to notebook
-[NbConvertApp] Writing 20429 bytes to __notebook__.ipynb
+[NbConvertApp] Writing 20403 bytes to __notebook__.ipynb
 [NbConvertApp] Converting notebook __notebook__.ipynb to html
-[NbConvertApp] Writing 306539 bytes to __results__.html
+[NbConvertApp] Writing 306456 bytes to __results__.html
