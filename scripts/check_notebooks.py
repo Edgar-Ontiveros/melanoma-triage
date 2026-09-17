@@ -187,11 +187,14 @@ def main() -> None:
                 "SPLITS_DIR": str(inp["splits"]),
                 "OUT_DIR": f"{work}/isic2020_512",
                 "WORKERS": 2,
-                "PUBLISH": False,
             },
         )
-        report = json.loads((sandbox / "working/resize_verification.json").read_text())
+        out = sandbox / "working/isic2020_512"
+        report = json.loads((out / "resize_verification.json").read_text())
         assert report["sha256_match"] == report["images"], report
+        meta = json.loads((out / "dataset-metadata.json").read_text())
+        assert meta["id"].endswith("/melanoma-isic2020-512"), meta
+        assert len(list(out.glob("*.jpg"))) == report["images"]
         print(
             f"prepare: {report['sha256_match']}/{report['images']} huellas coinciden en el sandbox"
         )
@@ -218,6 +221,7 @@ def main() -> None:
                 "SPLITS_DIR": str(inp["splits"]),
                 "IMAGES_DIR": str(inp["resized"]),
                 "NUM_WORKERS": 0,
+                "COPY_IMAGES_LOCAL": True,
             },
         )
         runs = list((sandbox / "working/runs").glob("*/metrics.json"))

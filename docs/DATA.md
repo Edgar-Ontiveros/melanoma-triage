@@ -84,6 +84,23 @@ OK: 200/200 imágenes de Kaggle coinciden byte a byte con el manifiesto
 Conclusión: la copia de Kaggle y la descarga oficial de ISIC son byte-idénticas en la muestra;
 la cadena de procedencia laptop → Kaggle queda verificada.
 
+**Verificación de F2.0 (redimensionado en Kaggle, 33,126 imágenes):** corrida el **2026-09-17**
+con `notebooks/kaggle_prepare_512.ipynb` (commit `d48958f`), leyendo `resize.long_side` y
+`resize.jpeg_quality` de `configs/data/isic2020.yaml` y redimensionando con
+`melanoma.data.resize.resize_many`, el mismo código de F1. Salida:
+
+```
+33126 imágenes redimensionadas en 14.0 min
+pillow_kaggle: 11.3.0, long_side: 512, jpeg_quality: 95
+images: 33126, sha256_match: 33126, sha256_match_pct: 100.0, dims_match: 33126
+```
+
+Conclusión: las 33,126 huellas SHA256 de los redimensionados en Kaggle coinciden con
+`sha256_resized` del manifiesto local (`data/processed/isic2020_512`, generado con Pillow 12.3.0),
+aunque Kaggle usa Pillow 11.3.0. El dataset privado `edgaronti26/melanoma-isic2020-512` es
+byte-idéntico a la copia local: todo entrenamiento en Kaggle ve exactamente las imágenes
+auditadas en la laptop.
+
 ## Duplicados
 
 ISIC publica `ISIC_2020_Training_Duplicates.csv` con 425 pares de imágenes duplicadas
