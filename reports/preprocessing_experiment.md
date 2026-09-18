@@ -73,10 +73,12 @@ Curvas por época (pérdida de entrenamiento, AUC-ROC y AUPRC de validación) de
 
 | condición | AUC-ROC final [IC] | AUPRC final [IC] | colapso (épocas) | std de prob. última época |
 |:--|:--|:--|:--|--:|
-| A — correcto, congelado | _pendiente: corrida de Kaggle no copiada a `reports/runs/`_ | | | |
-| B — ÷255, congelado | _pendiente: corrida de Kaggle no copiada a `reports/runs/`_ | | | |
-| C — ×255, congelado | _pendiente: corrida de Kaggle no copiada a `reports/runs/`_ | | | |
+| A — correcto, congelado | 0.683 [0.622, 0.734] | 0.043 [0.029, 0.074] | no | 0.1856 |
+| B — ÷255, congelado | 0.719 [0.672, 0.766] | 0.032 [0.024, 0.044] | [0, 1, 2, 3, 4, 5] | 0.0019 |
+| C — ×255, congelado | divergió (probabilidades NaN) | — | [0, 1, 2, 3, 4, 5] | NaN |
+
+![curvas por época, backbone congelado](figures/preprocessing_curves_frozen.png)
 
 ## Párrafo para la tesis (corrige la afirmación de la v1)
 
-_Se redacta cuando estén las seis condiciones (fine-tuning completo y backbone congelado). Con fine-tuning completo el desajuste NO produjo desempeño de azar, así que el párrafo no puede afirmar que el mecanismo «basta» sin el resultado congelado._
+> En la versión anterior de este trabajo, EfficientNetB3 con el backbone congelado obtuvo una exactitud del 50.75 %, y se atribuyó el resultado a que «las capas congeladas impidieron un aprendizaje adecuado». Esa explicación no se sostiene por sí sola: congelar un backbone preentrenado es una práctica estándar que produce resultados muy por encima del azar. La explicación más probable es un desajuste de preprocesamiento: las implementaciones de EfficientNet en Keras incluyen el reescalado dentro del modelo y esperan píxeles en [0, 255], de modo que entregarles imágenes ya normalizadas a [0, 1] reduce 255 veces la señal de entrada. Para comprobarlo se entrenó un ResNet50 preentrenado con la misma semilla y los mismos datos bajo tres condiciones de preprocesamiento. Con el backbone congelado, como en la versión anterior: correcto (AUC-ROC 0.683), entrada dividida por 255 de más (AUC-ROC 0.719, con probabilidades casi constantes, desviación estándar 0.0019: cualquier umbral asigna una sola clase y la exactitud se reduce a la proporción de la clase mayoritaria, que en un conjunto balanceado como el de la versión anterior es ≈ 50 %) y multiplicada por 255 de más (el entrenamiento divergió: probabilidades NaN). Con fine-tuning completo el efecto se atenúa (0.785, 0.713 y 0.775), porque las capas de normalización se reajustan a la escala de entrada. No es posible afirmar que ese fue exactamente el error de la versión anterior sin reejecutar aquel código; sí es posible afirmar que es consistente con el resultado observado y que la conclusión original era incorrecta.

@@ -1,0 +1,241 @@
+{
+  "run_name": "resnet50-224-s0-0d3272a",
+  "best_checkpoint": "/kaggle/working/runs/prep-c-frozen-0d3272a/checkpoints/resnet50-224-s0-0d3272a-00-0.0000.ckpt",
+  "best_epoch": 0,
+  "epochs_run": 6,
+  "elapsed_s": 356.7,
+  "collapse_epochs": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "diverged": true,
+  "collapse_history": [
+    {
+      "collapsed": true,
+      "reason": "probabilidades NaN/inf: el entrenamiento divergi\u00f3; AUROC 0.4844 \u2248 0.5 (tolerancia 0.02)",
+      "prob_std": NaN,
+      "prob_mean": NaN,
+      "auroc": 0.4844265580177307
+    },
+    {
+      "collapsed": true,
+      "reason": "probabilidades NaN/inf: el entrenamiento divergi\u00f3; AUROC 0.4844 \u2248 0.5 (tolerancia 0.02)",
+      "prob_std": NaN,
+      "prob_mean": NaN,
+      "auroc": 0.4844265580177307
+    },
+    {
+      "collapsed": true,
+      "reason": "probabilidades NaN/inf: el entrenamiento divergi\u00f3; AUROC 0.4844 \u2248 0.5 (tolerancia 0.02)",
+      "prob_std": NaN,
+      "prob_mean": NaN,
+      "auroc": 0.4844265580177307
+    },
+    {
+      "collapsed": true,
+      "reason": "probabilidades NaN/inf: el entrenamiento divergi\u00f3; AUROC 0.4844 \u2248 0.5 (tolerancia 0.02)",
+      "prob_std": NaN,
+      "prob_mean": NaN,
+      "auroc": 0.4844265580177307
+    },
+    {
+      "collapsed": true,
+      "reason": "probabilidades NaN/inf: el entrenamiento divergi\u00f3; AUROC 0.4844 \u2248 0.5 (tolerancia 0.02)",
+      "prob_std": NaN,
+      "prob_mean": NaN,
+      "auroc": 0.4844265580177307
+    },
+    {
+      "collapsed": true,
+      "reason": "probabilidades NaN/inf: el entrenamiento divergi\u00f3; AUROC 0.4844 \u2248 0.5 (tolerancia 0.02)",
+      "prob_std": NaN,
+      "prob_mean": NaN,
+      "auroc": 0.4844265580177307
+    }
+  ],
+  "epochs": [
+    {
+      "epoch": 0,
+      "val/loss": NaN,
+      "val/auroc": 0.4844265580177307,
+      "val/auprc": 0.016737215220928192,
+      "val/prob_std": NaN,
+      "val/prob_mean": NaN,
+      "collapsed": true,
+      "train/loss": NaN
+    },
+    {
+      "epoch": 1,
+      "val/loss": NaN,
+      "val/auroc": 0.4844265580177307,
+      "val/auprc": 0.016737215220928192,
+      "val/prob_std": NaN,
+      "val/prob_mean": NaN,
+      "collapsed": true,
+      "train/loss": NaN
+    },
+    {
+      "epoch": 2,
+      "val/loss": NaN,
+      "val/auroc": 0.4844265580177307,
+      "val/auprc": 0.016737215220928192,
+      "val/prob_std": NaN,
+      "val/prob_mean": NaN,
+      "collapsed": true,
+      "train/loss": NaN
+    },
+    {
+      "epoch": 3,
+      "val/loss": NaN,
+      "val/auroc": 0.4844265580177307,
+      "val/auprc": 0.016737215220928192,
+      "val/prob_std": NaN,
+      "val/prob_mean": NaN,
+      "collapsed": true,
+      "train/loss": NaN
+    },
+    {
+      "epoch": 4,
+      "val/loss": NaN,
+      "val/auroc": 0.4844265580177307,
+      "val/auprc": 0.016737215220928192,
+      "val/prob_std": NaN,
+      "val/prob_mean": NaN,
+      "collapsed": true,
+      "train/loss": NaN
+    },
+    {
+      "epoch": 5,
+      "val/loss": NaN,
+      "val/auroc": 0.4844265580177307,
+      "val/auprc": 0.016737215220928192,
+      "val/prob_std": NaN,
+      "val/prob_mean": NaN,
+      "collapsed": true,
+      "train/loss": NaN
+    }
+  ],
+  "provenance": {
+    "git_sha": "0d3272a",
+    "git_sha_full": "0d3272a723212fba4942a1fb0e0ab4a1d4449af8",
+    "split_sha256": {
+      "train": "701333b2450c363b1ab1b5a9422d3d223d243e1b3af2d643b05f6b86f711968c",
+      "val": "b7f727d6cf70d7a12be136e3b7046b42c725eaf5541aadc0723fbac09941ffb1"
+    },
+    "data_env": "/tmp/images_512",
+    "data_config": {
+      "input_size": [
+        3,
+        224,
+        224
+      ],
+      "interpolation": "bicubic",
+      "mean": [
+        0.485,
+        0.456,
+        0.406
+      ],
+      "std": [
+        0.229,
+        0.224,
+        0.225
+      ],
+      "crop_pct": 0.95,
+      "crop_mode": "center"
+    },
+    "pos_weight_used": 54.88048780487805,
+    "train_counts": {
+      "negatives": 22501,
+      "positives": 410
+    },
+    "val_counts": {
+      "negatives": 4875,
+      "positives": 88
+    }
+  },
+  "metrics": {
+    "n_images": 4963,
+    "n_positives": 88,
+    "n_patients": 568,
+    "prevalence": NaN,
+    "auprc_random": NaN,
+    "auroc": NaN,
+    "auprc": NaN,
+    "threshold_policy": "sensibilidad>=0.9",
+    "confusion": {
+      "threshold": 0.5,
+      "tn": 0,
+      "fp": 4875,
+      "fn": 0,
+      "tp": 88,
+      "sensitivity": 1.0,
+      "specificity": 0.0,
+      "ppv": 0.017731210961112232,
+      "npv": NaN
+    },
+    "sens_at_spec090": NaN,
+    "spec_at_sens090": NaN,
+    "sens_at_spec095": NaN,
+    "spec_at_sens095": NaN
+  },
+  "ci": {
+    "auroc": {
+      "point": NaN,
+      "lo": NaN,
+      "hi": NaN,
+      "n_resamples": 2000,
+      "n_skipped": 0,
+      "level": 0.95,
+      "unit": "patient"
+    },
+    "auprc": {
+      "point": NaN,
+      "lo": NaN,
+      "hi": NaN,
+      "n_resamples": 2000,
+      "n_skipped": 0,
+      "level": 0.95,
+      "unit": "patient"
+    },
+    "sens_at_spec090": {
+      "point": NaN,
+      "lo": NaN,
+      "hi": NaN,
+      "n_resamples": 2000,
+      "n_skipped": 0,
+      "level": 0.95,
+      "unit": "patient"
+    },
+    "spec_at_sens090": {
+      "point": NaN,
+      "lo": NaN,
+      "hi": NaN,
+      "n_resamples": 2000,
+      "n_skipped": 0,
+      "level": 0.95,
+      "unit": "patient"
+    },
+    "sens_at_spec095": {
+      "point": NaN,
+      "lo": NaN,
+      "hi": NaN,
+      "n_resamples": 2000,
+      "n_skipped": 0,
+      "level": 0.95,
+      "unit": "patient"
+    },
+    "spec_at_sens095": {
+      "point": NaN,
+      "lo": NaN,
+      "hi": NaN,
+      "n_resamples": 2000,
+      "n_skipped": 0,
+      "level": 0.95,
+      "unit": "patient"
+    }
+  }
+}
