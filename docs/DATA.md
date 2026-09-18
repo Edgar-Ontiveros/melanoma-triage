@@ -156,7 +156,8 @@ evaluación externa en F4**: nunca se entrena con él.
 | archivo | contenido | SHA256 |
 |:--|:--|:--|
 | `DDI - Diverse Dermatology Images_files.zip` | 656 PNG (238,670,195 bytes) + copia de la tabla de metadatos, extraído en `images/` | `57f7b1126b43101f8563aa87b15cfb027e512df75a789cba77924b487f473e96` |
-| `ddi_metadata.csv` | tabla de metadatos, 656 filas (idéntica a la copia dentro del zip) | `47884b2b1b65a685b2d6321e122333b4ecb750fc5885ad022f46a80439e1a074` |
+| `ddi_metadata.csv` | tabla de metadatos exportada por Redivis, 656 filas | `47884b2b1b65a685b2d6321e122333b4ecb750fc5885ad022f46a80439e1a074` |
+| `images/ddi_metadata.csv` (dentro del zip) | la misma tabla en su formato original: mismo contenido en las cinco columnas reales (`DDI_ID`, `DDI_file`, `skin_tone`, `malignant`, `disease`, verificado fila a fila); difiere solo en formato (columna índice sin nombre, `True/False` con mayúscula, orden por `DDI_ID`) | `534bdb3d95943eefb9bb5691d5fc00e5c0f132326bea24b28f750e9f6087a838` |
 | `Redivis-files-2026-09-18.csv` | índice de archivos de Redivis (nombre, carpeta, tamaño) | — |
 | `ddi_diverse_dermatology_images.apa` | cita bibliográfica | — |
 
