@@ -1,12 +1,13 @@
 # @package _global_
-# F2.5 — Línea base B1: ResNet50 preentrenado en ImageNet, 224 px, fine-tuning completo,
-# AdamW 1e-4 con cosine annealing, 15 épocas con early stopping por AUPRC. Desbalance con
-# pos_weight = negativos/positivos del split de entrenamiento.
+# F2.5 — Línea base B1: ResNet50 preentrenado en ImageNet, 224 px, fine-tuning completo.
+# Los hiperparámetros de entrenamiento vienen del grupo train/matrix (compartidos con la matriz
+# de F3); aquí solo el backbone, la resolución y el lote físico (× acumulación = 128).
 # Uso: python scripts/train.py +experiment=b1_resnet50_224 train.seed=0
 experiment: b1_pos_weight
 
 defaults:
   - override /model: resnet50_224
+  - override /train: matrix
 
 data:
   image_size: 224
@@ -14,11 +15,4 @@ data:
   sampler: none
 
 train:
-  lr: 1.0e-4
-  max_epochs: 15
-  warmup_epochs: 1
-  early_stopping_patience: 5
-  pos_weight: auto
-  precision: 16-mixed   # T4/P100 de Kaggle no tienen bf16 nativo
-  wandb:
-    enabled: true
+  accumulate_grad_batches: 1

@@ -9,6 +9,12 @@ accelerator: auto
 # lote efectivo cambia y la predicción final devuelve a cada proceso la mitad de validación
 # (falló así el 2026-09-17). La evaluación de F2.3 asume un proceso.
 devices: 1
+# Acumulación de gradiente (F3.1): cada paso del optimizador ve batch_size × accumulate_grad_batches
+# imágenes. La matriz de F3 fija el producto en 128 para todas las configuraciones.
+accumulate_grad_batches: 1
+# Paso de calentamiento en GPU (F3.3): un forward+backward con un lote físico completo al tamaño
+# de imagen configurado antes de entrenar. Un OOM aparece en minutos, no a la mitad de una época.
+memory_warmup: true
 
 # --- Pérdida (F2.2). BCEWithLogitsLoss con pos_weight: null → 1.0; "auto" → negativos/positivos
 # del split de entrenamiento (≈ 55 en ISIC 2020); o un número.

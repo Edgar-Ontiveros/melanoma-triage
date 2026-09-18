@@ -9,6 +9,7 @@
     dataset-images        publica data/processed/isic2020_512 como un solo zip
     sync-wandb <corrida>  sube a W&B las corridas offline bajadas con `output`
     batch <c1> <c2> ... --sha SHA   empuja varias corridas y las vigila en un solo bucle
+    checkpoint <corrida> [--publish]  baja el .ckpt de la corrida (SHA256) y lo publica como dataset
 
 `kernel-metadata.json` se genera desde `configs/kaggle.yaml`; los parámetros de la primera celda
 del notebook (REPO_SHA, OVERRIDES, RUN_TAG, ...) se sustituyen con `melanoma.utils.notebook`.
@@ -389,6 +390,81 @@ def cmd_batch(args: argparse.Namespace) -> None:
         raise SystemExit("alguna corrida del lote no completó")
 
 
+def cmd_checkpoint(args: argparse.Namespace) -> None:
+    """Baja el mejor checkpoint de una corrida (excluido de `output` por tamaño), registra su
+    SHA256 y, con ``--publish``, lo sube como dataset privado (F3.7: `melanoma-f3-final`)."""
+    import hashlib
+
+    from kaggle.api.kaggle_api_extended import KaggleApi
+
+    c = cfg()
+    dest = ROOT / c.output_dir / args.name / "checkpoint"
+    dest.mkdir(parents=True, exist_ok=True)
+    api = KaggleApi()
+    api.authenticate()
+    files, _ = api.kernels_output(
+        ref_of(args.name, c),
+        str(dest),
+        file_pattern=r".*\.ckpt$",
+        force=True,
+        quiet=False,
+        page_size=50,
+    )
+    ckpts = sorted(dest.rglob("*.ckpt"))
+    if not ckpts:
+        raise SystemExit(f"la corrida {args.name} no tiene .ckpt en su salida ({files})")
+    ckpt = ckpts[-1]
+    sha = hashlib.sha256(ckpt.read_bytes()).hexdigest()
+    info = {
+        "run": args.name,
+        "file": ckpt.name,
+        "bytes": ckpt.stat().st_size,
+        "sha256": sha,
+        "date": f"{datetime.now():%F}",
+    }
+    print(json.dumps(info, indent=2))
+    if args.publish:
+        d = c.final_model_dataset
+        staging = ROOT / d.staging_dir
+        if staging.exists():
+            shutil.rmtree(staging)
+        staging.mkdir(parents=True)
+        shutil.copy2(ckpt, staging / ckpt.name)
+        dataset_id = f"{c.username}/{d.title}"
+        meta = {
+            "title": str(d.title),
+            "id": dataset_id,
+            "licenses": [{"name": str(d.license)}],
+            "subtitle": str(d.subtitle),
+            "description": (
+                f"Checkpoint final de F3 ({args.name}, {ckpt.name}, SHA256 {sha}) del proyecto "
+                f"{c.repo_url}. Entrenado sobre ISIC 2020 (CC-BY-NC 4.0); uso no comercial."
+            ),
+            "keywords": ["medicine", "image"],
+        }
+        (staging / "dataset-metadata.json").write_text(json.dumps(meta, indent=2), encoding="utf-8")
+        (staging / "checkpoint.json").write_text(json.dumps(info, indent=2), encoding="utf-8")
+        exists = "ready" in kaggle_cli("datasets", "status", dataset_id, check=False, quiet=True)
+        if exists:
+            kaggle_cli(
+                "datasets",
+                "version",
+                "-p",
+                str(staging),
+                "-m",
+                f"{args.name} {sha[:12]}",
+                "--dir-mode",
+                "skip",
+            )
+        else:
+            kaggle_cli("datasets", "create", "-p", str(staging), "--dir-mode", "skip")
+        info["dataset"] = dataset_id
+        (ROOT / "reports" / "f3_final_model.json").write_text(
+            json.dumps(info, indent=2), encoding="utf-8"
+        )
+        print(f"https://www.kaggle.com/datasets/{dataset_id}")
+
+
 def offline_wandb_dirs(run_dir: Path) -> list[Path]:
     return sorted(p for p in run_dir.rglob("offline-run-*") if p.is_dir())
 
@@ -437,6 +513,12 @@ def main() -> None:
     q = sub.add_parser("sync-wandb")
     q.add_argument("name")
     q.set_defaults(fn=cmd_sync_wandb)
+    ck = sub.add_parser(
+        "checkpoint", help="bajar el .ckpt de una corrida y publicarlo como dataset"
+    )
+    ck.add_argument("name")
+    ck.add_argument("--publish", action="store_true")
+    ck.set_defaults(fn=cmd_checkpoint)
     b = sub.add_parser("batch", help="empujar varias corridas y vigilarlas en un solo bucle")
     b.add_argument("names", nargs="*")
     b.add_argument("--sha", required=True)

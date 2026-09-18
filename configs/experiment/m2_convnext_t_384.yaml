@@ -1,0 +1,17 @@
+# @package _global_
+# F3.2 — M2, otra familia: ConvNeXt-Tiny (in22k→in1k, nativo a 384) a 384 px.
+# Todo lo demás es idéntico a B1 (grupo train/matrix); lote efectivo 32 × 4 = 128.
+# Uso: python scripts/train.py +experiment=m2_convnext_t_384 train.seed=0
+experiment: m2
+
+defaults:
+  - override /model: convnext_t_384
+  - override /train: matrix
+
+data:
+  image_size: 384
+  batch_size: 32
+  sampler: none
+
+train:
+  accumulate_grad_batches: 4

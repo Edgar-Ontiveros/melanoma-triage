@@ -8,7 +8,7 @@ UV_RUN = uv run --no-sync
 # tests/test_makefile.py verifica que cada objetivo esté aquí.
 .PHONY: setup setup-gpu lint format test smoke ci docker-api docker-size clean \
 	data-verify data-manifest data-dedup data-splits data-resize data-eda data-all \
-	kaggle-dataset train baseline-b0 f2-report check-notebooks kaggle
+	kaggle-dataset train baseline-b0 f2-report f3-report check-notebooks kaggle
 
 ## Entorno local (WSL/Ubuntu): core + train + dev con ruedas CPU del lockfile.
 setup:
@@ -75,6 +75,8 @@ baseline-b0:
 ## Reportes de F2 a partir de reports/metrics/b0_val.json y reports/runs/*/metrics.json.
 f2-report:
 	$(UV_RUN) python scripts/f2_report.py
+f3-report:
+	$(UV_RUN) python scripts/f3_report.py
 ## Ejecuta los notebooks de Kaggle en un sandbox local (venv limpio + clon + /kaggle/input sintético).
 check-notebooks:
 	$(UV_RUN) python scripts/check_notebooks.py

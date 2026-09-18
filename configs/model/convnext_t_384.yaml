@@ -1,0 +1,5 @@
+backbone: convnext_tiny.fb_in22k_ft_in1k_384
+pretrained: true
+dropout: 0.2
+num_classes: 1
+freeze_backbone: false

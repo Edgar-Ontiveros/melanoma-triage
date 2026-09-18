@@ -1,0 +1,15 @@
+# Hiperparámetros FIJOS de la comparación controlada (B1 en F2 y la matriz de F3). Cualquier
+# experimento que se compare con B1 debe usar este grupo sin tocarlo; lo vigila
+# tests/test_f3_matrix.py::test_matrix_configs_share_fixed_params.
+defaults:
+  - default
+  - _self_
+
+lr: 1.0e-4
+max_epochs: 15
+warmup_epochs: 1
+early_stopping_patience: 5
+pos_weight: auto
+precision: 16-mixed   # T4/P100 de Kaggle no tienen bf16 nativo
+wandb:
+  enabled: true

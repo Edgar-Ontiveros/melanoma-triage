@@ -69,6 +69,34 @@ runs:
   prep-c-frozen:
     kernel: train
     params: {RUN_TAG: prep-c-frozen, OVERRIDES: ["+experiment=prep_c_frozen"]}
+  # F3.2 — matriz de modelos: {m1,m2,a1} × semillas {0,1,2}
+  m1-s0:
+    kernel: train
+    params: {RUN_TAG: m1-s0, OVERRIDES: ["+experiment=m1_effnetv2s_384", "train.seed=0"]}
+  m1-s1:
+    kernel: train
+    params: {RUN_TAG: m1-s1, OVERRIDES: ["+experiment=m1_effnetv2s_384", "train.seed=1"]}
+  m1-s2:
+    kernel: train
+    params: {RUN_TAG: m1-s2, OVERRIDES: ["+experiment=m1_effnetv2s_384", "train.seed=2"]}
+  m2-s0:
+    kernel: train
+    params: {RUN_TAG: m2-s0, OVERRIDES: ["+experiment=m2_convnext_t_384", "train.seed=0"]}
+  m2-s1:
+    kernel: train
+    params: {RUN_TAG: m2-s1, OVERRIDES: ["+experiment=m2_convnext_t_384", "train.seed=1"]}
+  m2-s2:
+    kernel: train
+    params: {RUN_TAG: m2-s2, OVERRIDES: ["+experiment=m2_convnext_t_384", "train.seed=2"]}
+  a1-s0:
+    kernel: train
+    params: {RUN_TAG: a1-s0, OVERRIDES: ["+experiment=a1_effnetv2s_224", "train.seed=0"]}
+  a1-s1:
+    kernel: train
+    params: {RUN_TAG: a1-s1, OVERRIDES: ["+experiment=a1_effnetv2s_224", "train.seed=1"]}
+  a1-s2:
+    kernel: train
+    params: {RUN_TAG: a1-s2, OVERRIDES: ["+experiment=a1_effnetv2s_224", "train.seed=2"]}
 
 # Dataset de imágenes redimensionadas, publicado desde la laptop como UN solo zip (Kaggle extrae
 # zips en el servidor; probado con un dataset pequeño). Subida real hacia Kaggle: ~1.3 MB/s (20 min
@@ -82,3 +110,10 @@ images_dataset:
   subtitle: ISIC 2020 redimensionado a 512 px (JPEG q95) para el proyecto melanoma
   verification_json: reports/runs/prepare/resize_verification.json
   staging_dir: outputs/kaggle/melanoma-isic2020-512
+
+# Checkpoint final de F3 (F3.7): semilla 0 de la configuración ganadora, publicado como dataset.
+final_model_dataset:
+  title: melanoma-f3-final
+  license: CC-BY-NC-SA-4.0
+  subtitle: Checkpoint final de F3 (semilla 0) del proyecto melanoma, ISIC 2020
+  staging_dir: outputs/kaggle/melanoma-f3-final

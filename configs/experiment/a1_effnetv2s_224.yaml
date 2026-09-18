@@ -1,0 +1,17 @@
+# @package _global_
+# F3.2 — A1, ablación de resolución: EfficientNetV2-S a 224 px.
+# Todo lo demás es idéntico a B1 (grupo train/matrix); lote efectivo 128 × 1 = 128.
+# Uso: python scripts/train.py +experiment=a1_effnetv2s_224 train.seed=0
+experiment: a1
+
+defaults:
+  - override /model: effnetv2s_384
+  - override /train: matrix
+
+data:
+  image_size: 224
+  batch_size: 128
+  sampler: none
+
+train:
+  accumulate_grad_batches: 1

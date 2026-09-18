@@ -32,7 +32,7 @@ from melanoma.eval import (
     plot_all,
 )
 from melanoma.models import build_model
-from melanoma.train.callbacks import build_callbacks
+from melanoma.train.callbacks import ThroughputMonitor, build_callbacks
 from melanoma.train.module import LitBinaryClassifier
 from melanoma.utils import seed_everything
 
@@ -51,6 +51,50 @@ def freeze_backbone(model: torch.nn.Module) -> int:
         frozen += p.numel()
     log.info("backbone congelado: %d parámetros sin gradiente", frozen)
     return frozen
+
+
+def memory_warmup(
+    lit: LitBinaryClassifier, batch_size: int, input_size, image_size: int, precision
+) -> None:
+    """Un forward+backward con un lote físico completo en la GPU antes de entrenar (F3.3).
+
+    Si no cabe, termina con un mensaje claro en vez de fallar a la mitad de la primera época.
+    No hace nada sin CUDA.
+    """
+    if not torch.cuda.is_available():
+        log.info("calentamiento de memoria omitido: sin CUDA")
+        return
+    device = torch.device("cuda")
+    channels = int(input_size[0])
+    use_half = "16" in str(precision)
+    lit.to(device)
+    lit.train()
+    x = torch.randn(batch_size, channels, image_size, image_size, device=device)
+    y = torch.randint(0, 2, (batch_size,), device=device).float()
+    try:
+        with torch.autocast("cuda", dtype=torch.float16, enabled=use_half):
+            loss = lit.criterion.to(device)(lit(x).squeeze(1), y)
+        loss.backward()
+        torch.cuda.synchronize()
+        peak = torch.cuda.max_memory_allocated(device) / 2**30
+        total = torch.cuda.get_device_properties(device).total_memory / 2**30
+        msg = (
+            f"calentamiento OK: lote {batch_size} × {image_size} px, pico {peak:.2f} GB de "
+            f"{total:.2f} GB ({torch.cuda.get_device_name(device)})"
+        )
+        log.info(msg)
+        print(f"[GPU] {msg}", flush=True)
+    except torch.cuda.OutOfMemoryError as exc:
+        raise SystemExit(
+            f"OOM en el calentamiento: lote físico {batch_size} × {image_size} px no cabe en "
+            f"{torch.cuda.get_device_name(device)}. Bajar data.batch_size y subir "
+            "train.accumulate_grad_batches manteniendo el producto (p. ej. 16 × 8)."
+        ) from exc
+    finally:
+        lit.zero_grad(set_to_none=True)
+        del x, y
+        torch.cuda.empty_cache()
+        torch.cuda.reset_peak_memory_stats(device)
 
 
 def git_sha(root: Path | str, short: bool = True) -> str:
@@ -133,6 +177,7 @@ def run_training(cfg: DictConfig, root: Path | str, run_dir: Path | str) -> dict
     split_hashes = dm.split_hashes()
     provenance = {
         "git_sha": sha,
+        "effective_batch": dm.batch_size * int(cfg.train.get("accumulate_grad_batches", 1)),
         "git_sha_full": git_sha(root, short=False),
         "split_sha256": split_hashes,
         "data_env": dm.images_dir.as_posix(),
@@ -162,6 +207,14 @@ def run_training(cfg: DictConfig, root: Path | str, run_dir: Path | str) -> dict
         collapse_std_threshold=cfg.train.collapse_std_threshold,
         collapse_auc_tolerance=cfg.train.collapse_auc_tolerance,
     )
+    if bool(cfg.train.get("memory_warmup", True)) and str(cfg.train.accelerator) in (
+        "auto",
+        "gpu",
+        "cuda",
+    ):
+        memory_warmup(
+            lit, dm.batch_size, data_config["input_size"], int(image_size), cfg.train.precision
+        )
     ckpt_dir = (
         Path(cfg.train.checkpoint_dir) if cfg.train.checkpoint_dir else run_dir / "checkpoints"
     )
@@ -173,6 +226,7 @@ def run_training(cfg: DictConfig, root: Path | str, run_dir: Path | str) -> dict
         run_name=name,
     )
     logger = build_logger(cfg, run_dir, name, provenance)
+    throughput = ThroughputMonitor()
     trainer = L.Trainer(
         max_epochs=cfg.train.max_epochs,
         accelerator=cfg.train.accelerator,
@@ -180,7 +234,8 @@ def run_training(cfg: DictConfig, root: Path | str, run_dir: Path | str) -> dict
         precision=cfg.train.precision,
         deterministic=cfg.train.deterministic,
         logger=logger,
-        callbacks=[checkpoint, early_stopping, lr_monitor],
+        callbacks=[checkpoint, early_stopping, lr_monitor, throughput],
+        accumulate_grad_batches=int(cfg.train.get("accumulate_grad_batches", 1)),
         default_root_dir=str(run_dir),
         enable_progress_bar=bool(cfg.train.progress_bar),
         log_every_n_steps=10,
@@ -193,6 +248,8 @@ def run_training(cfg: DictConfig, root: Path | str, run_dir: Path | str) -> dict
 
     # ---- evaluación sobre validación con el mejor checkpoint -----------------------------
     best = checkpoint.best_model_path or None
+    for row in lit.epoch_history:  # E/S y GPU por época (F3.4)
+        row.update(throughput.history.get(int(row["epoch"]), {}))
     history, collapse_history = lit.epoch_history, lit.collapse_history
     if best:
         lit = LitBinaryClassifier.load_from_checkpoint(best, model=model)

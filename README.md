@@ -188,7 +188,12 @@ El entrenamiento corre en Kaggle. Ahí se adjunta la distribución oficial de la
 | F0 | Esqueleto, entorno, CI, prueba de humo | Cerrada (`docs/specs/F0.md`) |
 | F1 | Manifiesto, deduplicación, splits por paciente, bloqueo del test, Kaggle | Completa: 10/10 criterios en verde, cerrada el 2026-09-04 (`docs/specs/F1.md`) |
 | F2 | Líneas base B0/B1, DataModule, evaluación, experimento de preprocesamiento, Kaggle por API | Cerrada el 2026-09-17: 12/12 criterios en verde (`docs/specs/F2.md`) |
-| F3 | GPU rentada, exportación ONNX, API | Pendiente |
-| F4 | Grad-CAM, evaluación externa (DDI) | Pendiente |
+| F3 | Matriz de modelos, ablación de resolución, anclaje en literatura | En curso (`docs/specs/F3.md`) |
+| F4 | Evaluación clínica: test bloqueado, calibración, umbral, subgrupos, DDI | Pendiente |
+| F5 | Explicabilidad: Grad-CAM y métrica de solapamiento | Pendiente |
+| F6 | Exportación ONNX y API | Pendiente |
+| F7 | Interfaz | Pendiente |
+| F8 | Despliegue | Pendiente |
+| F9 | Documento y defensa | Pendiente |
 
 Diagnóstico del hardware de desarrollo: `docs/hardware.md`.

@@ -4,7 +4,7 @@ F0 dejó `LitBinaryClassifier` mínimo; F2.2 lo extiende con `pos_weight`, métr
 validación (AUROC, AUPRC), cosine annealing con calentamiento y detección de colapso.
 """
 
-from melanoma.train.callbacks import build_callbacks
+from melanoma.train.callbacks import ThroughputMonitor, build_callbacks
 from melanoma.train.collapse import CollapseReport, detect_collapse
 from melanoma.train.module import LitBinaryClassifier
 from melanoma.train.schedulers import cosine_with_warmup, cosine_with_warmup_factor
@@ -12,6 +12,7 @@ from melanoma.train.schedulers import cosine_with_warmup, cosine_with_warmup_fac
 __all__ = [
     "CollapseReport",
     "LitBinaryClassifier",
+    "ThroughputMonitor",
     "build_callbacks",
     "cosine_with_warmup",
     "cosine_with_warmup_factor",
