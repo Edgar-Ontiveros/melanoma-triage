@@ -202,8 +202,19 @@ def run_training(cfg: DictConfig, root: Path | str, run_dir: Path | str) -> dict
     frame = dm.val_frame()
     frame["prob"] = probs
     ev = cfg.train.eval
+    diverged = not bool(np.all(np.isfinite(probs)))
+    if diverged:
+        log.error(
+            "DIVERGENCIA: %d de %d probabilidades no son finitas; se registra la corrida sin "
+            "métricas (curvas por época en metrics.json)",
+            int((~np.isfinite(probs)).sum()),
+            probs.size,
+        )
+        probs_eval = np.full_like(probs, 0.5)  # solo para que compute_metrics no falle
+    else:
+        probs_eval = probs
     metrics = compute_metrics(
-        probs,
+        probs_eval,
         frame["target"].to_numpy(),
         frame["patient_id"].to_numpy(),
         fixed_levels=list(ev.fixed_levels),
@@ -211,12 +222,18 @@ def run_training(cfg: DictConfig, root: Path | str, run_dir: Path | str) -> dict
         n_reliability_bins=ev.reliability_bins,
     )
     ci = bootstrap_patient(
-        probs,
+        probs_eval,
         frame["target"].to_numpy(),
         frame["patient_id"].to_numpy(),
         n_resamples=ev.bootstrap_resamples,
         seed=ev.bootstrap_seed,
     )
+    if diverged:
+        for k, v in list(metrics.items()):
+            if isinstance(v, int | float) and k not in ("n_images", "n_positives", "n_patients"):
+                metrics[k] = float("nan")
+        for v in ci.values():
+            v.update({"point": float("nan"), "lo": float("nan"), "hi": float("nan")})
     assert_no_accuracy(metrics)
     figures = plot_all(metrics, run_dir / "figures", name)
     collapse_epochs = [i for i, r in enumerate(lit.collapse_history) if r.collapsed]
@@ -229,6 +246,7 @@ def run_training(cfg: DictConfig, root: Path | str, run_dir: Path | str) -> dict
         "epochs_run": trainer.current_epoch,
         "elapsed_s": round(time.perf_counter() - start, 1),
         "collapse_epochs": collapse_epochs,
+        "diverged": diverged,
         "collapse_history": [r.as_dict() for r in lit.collapse_history],
         "epochs": lit.epoch_history,
         "provenance": provenance,

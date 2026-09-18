@@ -1,0 +1,6 @@
+- +experiment=prep_b_frozen
+- data.env=kaggle
+- data.paths.kaggle.images_dir=/tmp/images_512
+- data.paths.kaggle.splits_dir=/kaggle/input/datasets/edgaronti26/melanoma-isic2020-splits
+- data.paths.kaggle.manifest_path=/kaggle/input/datasets/edgaronti26/melanoma-isic2020-splits/isic2020.csv
+- data.num_workers=4

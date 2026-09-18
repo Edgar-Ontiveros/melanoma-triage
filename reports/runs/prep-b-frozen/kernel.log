@@ -1,0 +1,552 @@
+0.00s - Debugger warning: It seems that frozen modules are being used, which may
+0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+0.00s - to python to disable frozen modules.
+0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+0.00s - Debugger warning: It seems that frozen modules are being used, which may
+0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+0.00s - to python to disable frozen modules.
+0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+commit 8da1f44
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 45.0/45.0 kB 3.1 MB/s eta 0:00:00
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 45.0/45.0 kB 3.1 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 168.8/168.8 kB 9.4 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 849.3/849.3 kB 38.3 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 168.8/168.8 kB 9.4 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 849.3/849.3 kB 38.3 MB/s eta 0:00:00
+splits: /kaggle/input/datasets/edgaronti26/melanoma-isic2020-splits
+splits íntegros: {'train': '701333b2450c363b1ab1b5a9422d3d223d243e1b3af2d643b05f6b86f711968c', 'val': 'b7f727d6cf70d7a12be136e3b7046b42c725eaf5541aadc0723fbac09941ffb1'}
+imágenes copiadas al disco local en 2.8 min
+33126 imágenes en /tmp/images_512
+W&B sin llave (modo offline): Connection error trying to communicate with service.
+/usr/bin/python3 scripts/train.py +experiment=prep_b_frozen data.env=kaggle data.paths.kaggle.images_dir=/tmp/images_512 data.paths.kaggle.splits_dir=/kaggle/input/datasets/edgaronti26/melanoma-isic2020-splits data.paths.kaggle.manifest_path=/kaggle/input/datasets/edgaronti26/melanoma-isic2020-splits/isic2020.csv data.num_workers=4 hydra.run.dir=/kaggle/working/runs/prep-b-frozen-8da1f44
+data:
+  root: data
+  manifest_path: ${data.root}/manifests/isic2020.csv
+  splits_dir: ${data.root}/splits
+  image_size: 224
+  batch_size: 128
+  num_workers: 4
+  env: kaggle
+  paths:
+    local:
+      images_dir: ${data.root}/processed/isic2020_512
+      manifest_path: ${data.manifest_path}
+      splits_dir: ${data.splits_dir}
+    kaggle:
+      images_dir: /tmp/images_512
+      manifest_path: /kaggle/input/datasets/edgaronti26/melanoma-isic2020-splits/isic2020.csv
+      splits_dir: /kaggle/input/datasets/edgaronti26/melanoma-isic2020-splits
+  augment:
+    hflip_p: 0.5
+    vflip_p: 0.5
+    rotate_limit_deg: 20
+    rotate_p: 0.5
+    brightness_limit: 0.2
+    contrast_limit: 0.2
+    brightness_contrast_p: 0.5
+    crop_scale:
+    - 0.8
+    - 1.0
+  val_resize: center_crop
+  sampler: none
+  preprocess_scale: divide255
+  name: isic2020
+  raw_dir: ${data.root}/raw/isic2020
+  images_zip: ${data.raw_dir}/ISIC_2020_Training_JPEG.zip
+  images_dir: ${data.raw_dir}/train
+  ground_truth_csv: ${data.raw_dir}/ISIC_2020_Training_GroundTruth_v2.csv
+  official_duplicates_csv: ${data.raw_dir}/ISIC_2020_Training_Duplicates.csv
+  reports_dir: reports
+  figures_dir: ${data.reports_dir}/figures
+  test_access_log: logs/test_set_access.log
+  source:
+    base_url: https://isic-challenge-data.s3.amazonaws.com/2020
+    zip_bytes: 24707698022
+    zip_etag: 013145107654177e7dd94091fdf27e9c-2946
+  expected:
+    images: 33126
+    positives: 584
+    patients: 2056
+    prevalence_pct: 1.76
+  hashing:
+    workers: 12
+  phash:
+    hash_size: 8
+    threshold: 0
+    report_max_distance: 16
+    decode_size: 256
+    contact_sheet_pairs: 20
+    thumb_px: 224
+    cache: true
+    sweep_thresholds:
+    - 0
+    - 2
+    - 4
+    - 6
+    - 8
+    sweep_max_group: 10
+    sweep_sample_groups: 10
+    sweep_seed: 20260904
+  split:
+    fractions:
+      train: 0.7
+      val: 0.15
+      test: 0.15
+    seed: 20260904
+    min_test_positives: 80
+    names:
+    - train
+    - val
+    - test
+  resize:
+    long_side: 512
+    jpeg_quality: 95
+    out_dir: ${data.root}/processed/isic2020_512
+    workers: 12
+  verify:
+    sample_size: 200
+    seed: 20260904
+    kaggle_competition_dir: /kaggle/input/competitions/siim-isic-melanoma-classification/jpeg/train
+    kaggle_splits_dir: /kaggle/input/datasets/edgaronti26/melanoma-isic2020-splits
+model:
+  backbone: resnet50.a1_in1k
+  pretrained: true
+  dropout: 0.2
+  num_classes: 1
+  freeze_backbone: true
+train:
+  seed: 0
+  max_epochs: 6
+  lr: 0.001
+  weight_decay: 0.01
+  precision: 16-mixed
+  deterministic: true
+  accelerator: auto
+  devices: 1
+  pos_weight: auto
+  scheduler: cosine
+  warmup_epochs: 1
+  monitor: val/auprc
+  monitor_mode: max
+  early_stopping_patience: 100
+  checkpoint_dir: null
+  progress_bar: true
+  collapse_std_threshold: 0.01
+  collapse_auc_tolerance: 0.02
+  eval:
+    bootstrap_resamples: 2000
+    bootstrap_seed: 20260904
+    fixed_levels:
+    - 0.9
+    - 0.95
+    threshold_sensitivity: 0.9
+    reliability_bins: 10
+  wandb:
+    enabled: true
+    project: melanoma-triage
+    entity: null
+    mode: online
+experiment: prep_b_frozen
+
+[2026-09-18 01:39:49,147][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet50.a1_in1k)
+[2026-09-18 01:39:49,223][httpx][INFO] - HTTP Request: HEAD https://huggingface.co/timm/resnet50.a1_in1k/resolve/main/model.safetensors "HTTP/1.1 302 Found"
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[2026-09-18 01:39:49,224][huggingface_hub.utils._http][WARNING] - Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[2026-09-18 01:39:49,277][httpx][INFO] - HTTP Request: GET https://huggingface.co/api/models/timm/resnet50.a1_in1k/xet-read-token/767268603ca0cb0bfe326fa87277f19c419566ef "HTTP/1.1 200 OK"
+data:
+  root: data
+  manifest_path: ${data.root}/manifests/isic2020.csv
+  splits_dir: ${data.root}/splits
+  image_size: 224
+  batch_size: 128
+  num_workers: 4
+  env: kaggle
+  paths:
+    local:
+      images_dir: ${data.root}/processed/isic2020_512
+      manifest_path: ${data.manifest_path}
+      splits_dir: ${data.splits_dir}
+    kaggle:
+      images_dir: /tmp/images_512
+      manifest_path: /kaggle/input/datasets/edgaronti26/melanoma-isic2020-splits/isic2020.csv
+      splits_dir: /kaggle/input/datasets/edgaronti26/melanoma-isic2020-splits
+  augment:
+    hflip_p: 0.5
+    vflip_p: 0.5
+    rotate_limit_deg: 20
+    rotate_p: 0.5
+    brightness_limit: 0.2
+    contrast_limit: 0.2
+    brightness_contrast_p: 0.5
+    crop_scale:
+    - 0.8
+    - 1.0
+  val_resize: center_crop
+  sampler: none
+  preprocess_scale: divide255
+  name: isic2020
+  raw_dir: ${data.root}/raw/isic2020
+  images_zip: ${data.raw_dir}/ISIC_2020_Training_JPEG.zip
+  images_dir: ${data.raw_dir}/train
+  ground_truth_csv: ${data.raw_dir}/ISIC_2020_Training_GroundTruth_v2.csv
+  official_duplicates_csv: ${data.raw_dir}/ISIC_2020_Training_Duplicates.csv
+  reports_dir: reports
+  figures_dir: ${data.reports_dir}/figures
+  test_access_log: logs/test_set_access.log
+  source:
+    base_url: https://isic-challenge-data.s3.amazonaws.com/2020
+    zip_bytes: 24707698022
+    zip_etag: 013145107654177e7dd94091fdf27e9c-2946
+  expected:
+    images: 33126
+    positives: 584
+    patients: 2056
+    prevalence_pct: 1.76
+  hashing:
+    workers: 12
+  phash:
+    hash_size: 8
+    threshold: 0
+    report_max_distance: 16
+    decode_size: 256
+    contact_sheet_pairs: 20
+    thumb_px: 224
+    cache: true
+    sweep_thresholds:
+    - 0
+    - 2
+    - 4
+    - 6
+    - 8
+    sweep_max_group: 10
+    sweep_sample_groups: 10
+    sweep_seed: 20260904
+  split:
+    fractions:
+      train: 0.7
+      val: 0.15
+      test: 0.15
+    seed: 20260904
+    min_test_positives: 80
+    names:
+    - train
+    - val
+    - test
+  resize:
+    long_side: 512
+    jpeg_quality: 95
+    out_dir: ${data.root}/processed/isic2020_512
+    workers: 12
+  verify:
+    sample_size: 200
+    seed: 20260904
+    kaggle_competition_dir: /kaggle/input/competitions/siim-isic-melanoma-classification/jpeg/train
+    kaggle_splits_dir: /kaggle/input/datasets/edgaronti26/melanoma-isic2020-splits
+model:
+  backbone: resnet50.a1_in1k
+  pretrained: true
+  dropout: 0.2
+  num_classes: 1
+  freeze_backbone: true
+train:
+  seed: 0
+  max_epochs: 6
+  lr: 0.001
+  weight_decay: 0.01
+  precision: 16-mixed
+  deterministic: true
+  accelerator: auto
+  devices: 1
+  pos_weight: auto
+  scheduler: cosine
+  warmup_epochs: 1
+  monitor: val/auprc
+  monitor_mode: max
+  early_stopping_patience: 100
+  checkpoint_dir: null
+  progress_bar: true
+  collapse_std_threshold: 0.01
+  collapse_auc_tolerance: 0.02
+  eval:
+    bootstrap_resamples: 2000
+    bootstrap_seed: 20260904
+    fixed_levels:
+    - 0.9
+    - 0.95
+    threshold_sensitivity: 0.9
+    reliability_bins: 10
+  wandb:
+    enabled: true
+    project: melanoma-triage
+    entity: null
+    mode: online
+experiment: prep_b_frozen
+
+[2026-09-18 01:39:49,147][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet50.a1_in1k)
+[2026-09-18 01:39:49,223][httpx][INFO] - HTTP Request: HEAD https://huggingface.co/timm/resnet50.a1_in1k/resolve/main/model.safetensors "HTTP/1.1 302 Found"
+[2026-09-18 01:39:49,224][huggingface_hub.utils._http][WARNING] - Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[2026-09-18 01:39:49,277][httpx][INFO] - HTTP Request: GET https://huggingface.co/api/models/timm/resnet50.a1_in1k/xet-read-token/767268603ca0cb0bfe326fa87277f19c419566ef "HTTP/1.1 200 OK"
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[2026-09-18 01:39:52,717][timm.models._hub][INFO] - [timm/resnet50.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
+[2026-09-18 01:39:52,761][melanoma.train.run][INFO] - data_config del backbone: {'input_size': (3, 224, 224), 'interpolation': 'bicubic', 'mean': (0.485, 0.456, 0.406), 'std': (0.229, 0.224, 0.225), 'crop_pct': 0.95, 'crop_mode': 'center'}
+[2026-09-18 01:39:52,762][melanoma.train.run][INFO] - backbone congelado: 23508032 parámetros sin gradiente
+[2026-09-18 01:39:52,717][timm.models._hub][INFO] - [timm/resnet50.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
+[2026-09-18 01:39:52,761][melanoma.train.run][INFO] - data_config del backbone: {'input_size': (3, 224, 224), 'interpolation': 'bicubic', 'mean': (0.485, 0.456, 0.406), 'std': (0.229, 0.224, 0.225), 'crop_pct': 0.95, 'crop_mode': 'center'}
+[2026-09-18 01:39:52,762][melanoma.train.run][INFO] - backbone congelado: 23508032 parámetros sin gradiente
+[2026-09-18 01:39:53,098][melanoma.train.run][INFO] - corrida resnet50-224-s0-8da1f44: train 22501 neg / 410 pos, pos_weight=54.88, sampler=none
+[2026-09-18 01:39:53,127][melanoma.train.run][WARNING] - WANDB_API_KEY no está definida; W&B corre en modo offline
+Using 16bit Automatic Mixed Precision (AMP)
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+💡 Tip: For seamless cloud logging and experiment tracking, try installing [litlogger](https://pypi.org/project/litlogger/) to enable LitLogger, which logs metrics and artifacts automatically to the Lightning Experiments platform.
+[2026-09-18 01:39:53,098][melanoma.train.run][INFO] - corrida resnet50-224-s0-8da1f44: train 22501 neg / 410 pos, pos_weight=54.88, sampler=none
+[2026-09-18 01:39:53,127][melanoma.train.run][WARNING] - WANDB_API_KEY no está definida; W&B corre en modo offline
+Using 16bit Automatic Mixed Precision (AMP)
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+💡 Tip: For seamless cloud logging and experiment tracking, try installing [litlogger](https://pypi.org/project/litlogger/) to enable LitLogger, which logs metrics and artifacts automatically to the Lightning Experiments platform.
+
+Using 16bit Automatic Mixed Precision (AMP)
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+💡 Tip: For seamless cloud logging and experiment tracking, try installing [litlogger](https://pypi.org/project/litlogger/) to enable LitLogger, which logs metrics and artifacts automatically to the Lightning Experiments platform.
+wandb: WARNING The anonymous setting has no effect and will be removed in a future version.
+wandb: WARNING The anonymous setting has no effect and will be removed in a future version.
+
+wandb: WARNING The anonymous setting has no effect and will be removed in a future version.
+wandb: WARNING `resume` will be ignored since W&B syncing is set to `offline`. Starting a new run with run id ida0ooqo.
+wandb: Tracking run with wandb version 0.26.1
+wandb: W&B syncing is set to `offline` in this directory. Run `wandb online` or set WANDB_MODE=online to enable cloud syncing.
+wandb: Run data is saved locally in /kaggle/working/runs/prep-b-frozen-8da1f44/wandb/offline-run-20260918_013953-ida0ooqo
+wandb: WARNING `resume` will be ignored since W&B syncing is set to `offline`. Starting a new run with run id ida0ooqo.
+wandb: Tracking run with wandb version 0.26.1
+wandb: W&B syncing is set to `offline` in this directory. Run `wandb online` or set WANDB_MODE=online to enable cloud syncing.
+wandb: Run data is saved locally in /kaggle/working/runs/prep-b-frozen-8da1f44/wandb/offline-run-20260918_013953-ida0ooqo
+
+wandb: WARNING `resume` will be ignored since W&B syncing is set to `offline`. Starting a new run with run id ida0ooqo.
+wandb: Tracking run with wandb version 0.26.1
+wandb: W&B syncing is set to `offline` in this directory. Run `wandb online` or set WANDB_MODE=online to enable cloud syncing.
+wandb: Run data is saved locally in /kaggle/working/runs/prep-b-frozen-8da1f44/wandb/offline-run-20260918_013953-ida0ooqo
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0,1]
+Loading `train_dataloader` to estimate number of stepping batches.
+/usr/local/lib/python3.12/dist-packages/lightning/pytorch/utilities/_pytree.py:21: `isinstance(treespec, LeafSpec)` is deprecated, use `isinstance(treespec, TreeSpec) and treespec.is_leaf()` instead.
+/usr/local/lib/python3.12/dist-packages/lightning/pytorch/utilities/model_summary/model_summary.py:242: Precision 16-mixed is not supported by the model summary.  Estimated model size in MB will not be accurate. Using 32 bits instead.
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0,1]
+Loading `train_dataloader` to estimate number of stepping batches.
+/usr/local/lib/python3.12/dist-packages/lightning/pytorch/utilities/_pytree.py:21: `isinstance(treespec, LeafSpec)` is deprecated, use `isinstance(treespec, TreeSpec) and treespec.is_leaf()` instead.
+/usr/local/lib/python3.12/dist-packages/lightning/pytorch/utilities/model_summary/model_summary.py:242: Precision 16-mixed is not supported by the model summary.  Estimated model size in MB will not be accurate. Using 32 bits instead.
+
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0,1]
+Loading `train_dataloader` to estimate number of stepping batches.
+/usr/local/lib/python3.12/dist-packages/lightning/pytorch/utilities/_pytree.py:21: `isinstance(treespec, LeafSpec)` is deprecated, use `isinstance(treespec, TreeSpec) and treespec.is_leaf()` instead.
+/usr/local/lib/python3.12/dist-packages/lightning/pytorch/utilities/model_summary/model_summary.py:242: Precision 16-mixed is not supported by the model summary.  Estimated model size in MB will not be accurate. Using 32 bits instead.
+┏━━━┳━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━┳━━━━━━━┓
+┃   ┃ Name      ┃ Type                   ┃ Params ┃ Mode  ┃ FLOPs ┃
+┡━━━╇━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━╇━━━━━━━┩
+│ 0 │ model     │ BackboneClassifier     │ 23.5 M │ train │     0 │
+│ 1 │ criterion │ BCEWithLogitsLoss      │      0 │ train │     0 │
+│ 2 │ val_auroc │ BinaryAUROC            │      0 │ train │     0 │
+│ 3 │ val_auprc │ BinaryAveragePrecision │      0 │ train │     0 │
+└───┴───────────┴────────────────────────┴────────┴───────┴───────┘
+Trainable params: 2.0 K                                                         
+Non-trainable params: 23.5 M                                                    
+Total params: 23.5 M                                                            
+Total estimated model params size (MB): 94.040                                  
+Modules in train mode: 224                                                      
+Modules in eval mode: 0                                                         
+Total FLOPs: 0                                                                  
+┏━━━┳━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━┳━━━━━━━┓
+┃   ┃ Name      ┃ Type                   ┃ Params ┃ Mode  ┃ FLOPs ┃
+┡━━━╇━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━╇━━━━━━━┩
+│ 0 │ model     │ BackboneClassifier     │ 23.5 M │ train │     0 │
+│ 1 │ criterion │ BCEWithLogitsLoss      │      0 │ train │     0 │
+│ 2 │ val_auroc │ BinaryAUROC            │      0 │ train │     0 │
+│ 3 │ val_auprc │ BinaryAveragePrecision │      0 │ train │     0 │
+└───┴───────────┴────────────────────────┴────────┴───────┴───────┘
+Trainable params: 2.0 K                                                         
+Non-trainable params: 23.5 M                                                    
+Total params: 23.5 M                                                            
+Total estimated model params size (MB): 94.040                                  
+Modules in train mode: 224                                                      
+Modules in eval mode: 0                                                         
+Total FLOPs: 0                                                                  
+[2026-09-18 01:40:54,459][melanoma.train.module][WARNING] - COLAPSO DETECTADO en la época 0: std de probabilidades 0.00032 < 0.01 (media de probabilidades 0.4877). El modelo predice una sola clase; revisar preprocesamiento, pos_weight/sampler y tasa de aprendizaje.
+
+*** COLAPSO DETECTADO en la época 0: std de probabilidades 0.00032 < 0.01 (media de probabilidades 0.4877). El modelo predice una sola clase; revisar preprocesamiento, pos_weight/sampler y tasa de aprendizaje.
+
+Metric val/auprc improved. New best score: 0.026
+[2026-09-18 01:40:54,459][melanoma.train.module][WARNING] - COLAPSO DETECTADO en la época 0: std de probabilidades 0.00032 < 0.01 (media de probabilidades 0.4877). El modelo predice una sola clase; revisar preprocesamiento, pos_weight/sampler y tasa de aprendizaje.
+
+*** COLAPSO DETECTADO en la época 0: std de probabilidades 0.00032 < 0.01 (media de probabilidades 0.4877). El modelo predice una sola clase; revisar preprocesamiento, pos_weight/sampler y tasa de aprendizaje.
+
+Metric val/auprc improved. New best score: 0.026
+
+Metric val/auprc improved. New best score: 0.026
+[2026-09-18 01:41:48,971][melanoma.train.module][WARNING] - COLAPSO DETECTADO en la época 1: std de probabilidades 0.00087 < 0.01 (media de probabilidades 0.4948). El modelo predice una sola clase; revisar preprocesamiento, pos_weight/sampler y tasa de aprendizaje.
+
+*** COLAPSO DETECTADO en la época 1: std de probabilidades 0.00087 < 0.01 (media de probabilidades 0.4948). El modelo predice una sola clase; revisar preprocesamiento, pos_weight/sampler y tasa de aprendizaje.
+
+Metric val/auprc improved by 0.005 >= min_delta = 0.0. New best score: 0.031
+[2026-09-18 01:41:48,971][melanoma.train.module][WARNING] - COLAPSO DETECTADO en la época 1: std de probabilidades 0.00087 < 0.01 (media de probabilidades 0.4948). El modelo predice una sola clase; revisar preprocesamiento, pos_weight/sampler y tasa de aprendizaje.
+
+*** COLAPSO DETECTADO en la época 1: std de probabilidades 0.00087 < 0.01 (media de probabilidades 0.4948). El modelo predice una sola clase; revisar preprocesamiento, pos_weight/sampler y tasa de aprendizaje.
+
+Metric val/auprc improved by 0.005 >= min_delta = 0.0. New best score: 0.031
+
+Metric val/auprc improved by 0.005 >= min_delta = 0.0. New best score: 0.031
+[2026-09-18 01:42:42,717][melanoma.train.module][WARNING] - COLAPSO DETECTADO en la época 2: std de probabilidades 0.00146 < 0.01 (media de probabilidades 0.5181). El modelo predice una sola clase; revisar preprocesamiento, pos_weight/sampler y tasa de aprendizaje.
+
+*** COLAPSO DETECTADO en la época 2: std de probabilidades 0.00146 < 0.01 (media de probabilidades 0.5181). El modelo predice una sola clase; revisar preprocesamiento, pos_weight/sampler y tasa de aprendizaje.
+
+Metric val/auprc improved by 0.001 >= min_delta = 0.0. New best score: 0.032
+[2026-09-18 01:42:42,717][melanoma.train.module][WARNING] - COLAPSO DETECTADO en la época 2: std de probabilidades 0.00146 < 0.01 (media de probabilidades 0.5181). El modelo predice una sola clase; revisar preprocesamiento, pos_weight/sampler y tasa de aprendizaje.
+
+*** COLAPSO DETECTADO en la época 2: std de probabilidades 0.00146 < 0.01 (media de probabilidades 0.5181). El modelo predice una sola clase; revisar preprocesamiento, pos_weight/sampler y tasa de aprendizaje.
+
+Metric val/auprc improved by 0.001 >= min_delta = 0.0. New best score: 0.032
+
+Metric val/auprc improved by 0.001 >= min_delta = 0.0. New best score: 0.032
+[2026-09-18 01:43:35,695][melanoma.train.module][WARNING] - COLAPSO DETECTADO en la época 3: std de probabilidades 0.00178 < 0.01 (media de probabilidades 0.5075). El modelo predice una sola clase; revisar preprocesamiento, pos_weight/sampler y tasa de aprendizaje.
+
+*** COLAPSO DETECTADO en la época 3: std de probabilidades 0.00178 < 0.01 (media de probabilidades 0.5075). El modelo predice una sola clase; revisar preprocesamiento, pos_weight/sampler y tasa de aprendizaje.
+
+Metric val/auprc improved by 0.000 >= min_delta = 0.0. New best score: 0.032
+[2026-09-18 01:43:35,695][melanoma.train.module][WARNING] - COLAPSO DETECTADO en la época 3: std de probabilidades 0.00178 < 0.01 (media de probabilidades 0.5075). El modelo predice una sola clase; revisar preprocesamiento, pos_weight/sampler y tasa de aprendizaje.
+
+*** COLAPSO DETECTADO en la época 3: std de probabilidades 0.00178 < 0.01 (media de probabilidades 0.5075). El modelo predice una sola clase; revisar preprocesamiento, pos_weight/sampler y tasa de aprendizaje.
+
+Metric val/auprc improved by 0.000 >= min_delta = 0.0. New best score: 0.032
+
+Metric val/auprc improved by 0.000 >= min_delta = 0.0. New best score: 0.032
+[2026-09-18 01:44:28,766][melanoma.train.module][WARNING] - COLAPSO DETECTADO en la época 4: std de probabilidades 0.00187 < 0.01 (media de probabilidades 0.4983). El modelo predice una sola clase; revisar preprocesamiento, pos_weight/sampler y tasa de aprendizaje.
+
+*** COLAPSO DETECTADO en la época 4: std de probabilidades 0.00187 < 0.01 (media de probabilidades 0.4983). El modelo predice una sola clase; revisar preprocesamiento, pos_weight/sampler y tasa de aprendizaje.
+
+[2026-09-18 01:44:28,766][melanoma.train.module][WARNING] - COLAPSO DETECTADO en la época 4: std de probabilidades 0.00187 < 0.01 (media de probabilidades 0.4983). El modelo predice una sola clase; revisar preprocesamiento, pos_weight/sampler y tasa de aprendizaje.
+
+*** COLAPSO DETECTADO en la época 4: std de probabilidades 0.00187 < 0.01 (media de probabilidades 0.4983). El modelo predice una sola clase; revisar preprocesamiento, pos_weight/sampler y tasa de aprendizaje.
+
+[2026-09-18 01:45:21,732][melanoma.train.module][WARNING] - COLAPSO DETECTADO en la época 5: std de probabilidades 0.00188 < 0.01 (media de probabilidades 0.4979). El modelo predice una sola clase; revisar preprocesamiento, pos_weight/sampler y tasa de aprendizaje.
+
+*** COLAPSO DETECTADO en la época 5: std de probabilidades 0.00188 < 0.01 (media de probabilidades 0.4979). El modelo predice una sola clase; revisar preprocesamiento, pos_weight/sampler y tasa de aprendizaje.
+
+`Trainer.fit` stopped: `max_epochs=6` reached.
+Epoch 5/5  ━━━━━━━━━━━━━━━━ 179/179 0:00:44 • 0:00:00 4.09it/s v_num: ooqo      
+                                                               train/loss_step: 
+                                                               1.580 val/auroc: 
+                                                               0.719 val/auprc: 
+                                                               0.032            
+                                                               train/loss_epoch:
+                                                               1.359            
+[2026-09-18 01:45:21,732][melanoma.train.module][WARNING] - COLAPSO DETECTADO en la época 5: std de probabilidades 0.00188 < 0.01 (media de probabilidades 0.4979). El modelo predice una sola clase; revisar preprocesamiento, pos_weight/sampler y tasa de aprendizaje.
+
+*** COLAPSO DETECTADO en la época 5: std de probabilidades 0.00188 < 0.01 (media de probabilidades 0.4979). El modelo predice una sola clase; revisar preprocesamiento, pos_weight/sampler y tasa de aprendizaje.
+
+Epoch 5/5  ━━━━━━━━━━━━━━━━ 179/179 0:00:44 • 0:00:00 4.09it/s v_num: ooqo      
+                                                               train/loss_step: 
+                                                               1.580 val/auroc: 
+                                                               0.719 val/auprc: 
+                                                               0.032            
+                                                               train/loss_epoch:
+                                                               1.359            
+`Trainer.fit` stopped: `max_epochs=6` reached.
+
+`Trainer.fit` stopped: `max_epochs=6` reached.
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0,1]
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0,1]
+
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0,1]
+Predicting ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 39/39 0:00:06 • 0:00:00 5.55it/s 
+Predicting ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 39/39 0:00:06 • 0:00:00 5.55it/s 
+
+resnet50-224-s0-8da1f44: AUROC 0.7193  AUPRC 0.0319  (prevalencia 0.0177)  épocas 6  colapsos [0, 1, 2, 3, 4, 5]
+→ /kaggle/working/runs/prep-b-frozen-8da1f44
+[1;34mwandb[0m: 
+[1;34mwandb[0m: You can sync this run to the cloud by running:
+[1;34mwandb[0m: [1mwandb sync /kaggle/working/runs/prep-b-frozen-8da1f44/wandb/offline-run-20260918_013953-ida0ooqo[0m
+[1;34mwandb[0m: Find logs at: [1;35m../runs/prep-b-frozen-8da1f44/wandb/offline-run-20260918_013953-ida0ooqo/logs[0m
+
+resnet50-224-s0-8da1f44: AUROC 0.7193  AUPRC 0.0319  (prevalencia 0.0177)  épocas 6  colapsos [0, 1, 2, 3, 4, 5]
+→ /kaggle/working/runs/prep-b-frozen-8da1f44
+[1;34mwandb[0m: 
+[1;34mwandb[0m: You can sync this run to the cloud by running:
+[1;34mwandb[0m: [1mwandb sync /kaggle/working/runs/prep-b-frozen-8da1f44/wandb/offline-run-20260918_013953-ida0ooqo[0m
+[1;34mwandb[0m: Find logs at: [1;35m../runs/prep-b-frozen-8da1f44/wandb/offline-run-20260918_013953-ida0ooqo/logs[0m
+{
+  "run_name": "resnet50-224-s0-8da1f44",
+  "best_checkpoint": "/kaggle/working/runs/prep-b-frozen-8da1f44/checkpoints/resnet50-224-s0-8da1f44-03-0.0000.ckpt",
+  "epochs_run": 6,
+  "collapse_epochs": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ]
+}
+{
+  "n_images": 4963,
+  "n_positives": 88,
+  "n_patients": 568,
+  "prevalence": 0.017731210961112232,
+  "auprc_random": 0.017731210961112232,
+  "auroc": 0.7192948717948718,
+  "auprc": 0.03186409732850194,
+  "threshold_policy": "sensibilidad>=0.9",
+  "confusion": {
+    "threshold": 0.5068889260292053,
+    "tn": 2124,
+    "fp": 2751,
+    "fn": 8,
+    "tp": 80,
+    "sensitivity": 0.9090909090909091,
+    "specificity": 0.4356923076923077,
+    "ppv": 0.0282585658777817,
+    "npv": 0.9962476547842402
+  },
+  "sens_at_spec090": 0.19318181818181818,
+  "spec_at_sens090": 0.4356923076923077,
+  "sens_at_spec095": 0.022727272727272728,
+  "spec_at_sens095": 0.3261538461538461
+}
+# resnet50-224-s0-8da1f44
+
+commit `8da1f44` · splits {'train': '701333b2450c363b1ab1b5a9422d3d223d243e1b3af2d643b05f6b86f711968c', 'val': 'b7f727d6cf70d7a12be136e3b7046b42c725eaf5541aadc0723fbac09941ffb1'}
+
+| métrica | valor | IC 95 % (bootstrap por paciente) |
+|:--|--:|:--|
+| AUC-ROC | 0.719 | [0.672, 0.766] |
+| AUPRC (primaria) | 0.032 | [0.024, 0.044] |
+| Sensibilidad a especificidad 0.90 | 0.193 | [0.101, 0.288] |
+| Sensibilidad a especificidad 0.95 | 0.023 | [0.000, 0.087] |
+| Especificidad a sensibilidad 0.90 | 0.436 | [0.321, 0.568] |
+| Especificidad a sensibilidad 0.95 | 0.326 | [0.140, 0.498] |
+| Prevalencia (AUPRC de un clasificador aleatorio) | 0.0177 | |
+
+Umbral: 0.5069 (política: sensibilidad>=0.9; la selección definitiva de umbral es de F4).
+
+| | pred. benigno | pred. melanoma |
+|:--|--:|--:|
+| real benigno | 2124 | 2751 |
+| real melanoma | 8 | 80 |
+
+| métrica en el umbral | valor |
+|:--|--:|
+| Sensibilidad | 0.909 |
+| Especificidad | 0.436 |
+| VPP a la prevalencia observada (0.0177) | 0.028 |
+| VPN a la prevalencia observada | 0.996 |
+
+**COLAPSO** en épocas [0, 1, 2, 3, 4, 5]
+
+/usr/local/lib/python3.12/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\|'
+  cells[i][c] = re.sub('\\\\\|', '|', cell)
+/usr/local/lib/python3.12/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\_'
+  text = re.sub(r'_', '\_', text) # Escape underscores in display text
+[NbConvertApp] Converting notebook __notebook__.ipynb to notebook
+[NbConvertApp] Writing 33100 bytes to __notebook__.ipynb
+[NbConvertApp] Converting notebook __notebook__.ipynb to html
+[NbConvertApp] Writing 317431 bytes to __results__.html

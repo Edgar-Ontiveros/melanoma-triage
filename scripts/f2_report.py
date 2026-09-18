@@ -337,7 +337,11 @@ def preprocessing_report(groups: dict[str, list[dict]]) -> str:
         "|:--|:--|:--|:--|--:|",
     ]
     for label, run in frozen.items():
-        if run:
+        if run and run.get("diverged"):
+            lines.append(
+                f"| {label} | divergió (probabilidades NaN) | — | {run['collapse_epochs'] or 'no'} | NaN |"
+            )
+        elif run:
             last = run["epochs"][-1] if run["epochs"] else {}
             lines.append(
                 f"| {label} | {fmt(run['metrics']['auroc'])} {ci_str(run['ci'], 'auroc')} | "
@@ -364,8 +368,16 @@ def preprocessing_report(groups: dict[str, list[dict]]) -> str:
             "normalizadas a [0, 1] reduce 255 veces la señal de entrada. Para comprobarlo se entrenó un ResNet50 "
             "preentrenado con la misma semilla y los mismos datos bajo tres condiciones de preprocesamiento. Con "
             f"el backbone congelado, como en la versión anterior: correcto (AUC-ROC {fa['metrics']['auroc']:.3f}), "
-            f"entrada dividida por 255 de más (AUC-ROC {fb['metrics']['auroc']:.3f}) y multiplicada por 255 de más "
-            f"(AUC-ROC {fc['metrics']['auroc']:.3f}). Con fine-tuning completo el efecto se atenúa "
+            f"entrada dividida por 255 de más (AUC-ROC {fb['metrics']['auroc']:.3f}, con probabilidades casi "
+            f"constantes, desviación estándar {fb['epochs'][-1]['val/prob_std']:.4f}: cualquier umbral asigna una sola "
+            "clase y la exactitud se reduce a la proporción de la clase mayoritaria, que en un conjunto balanceado "
+            "como el de la versión anterior es ≈ 50 %) y multiplicada por 255 de más ("
+            + (
+                "el entrenamiento divergió: probabilidades NaN"
+                if fc.get("diverged")
+                else f"AUC-ROC {fc['metrics']['auroc']:.3f}"
+            )
+            + "). Con fine-tuning completo el efecto se atenúa "
             f"({a['metrics']['auroc']:.3f}, {b['metrics']['auroc']:.3f} y {c['metrics']['auroc']:.3f}), porque las "
             "capas de normalización se reajustan a la escala de entrada. No es posible afirmar que ese fue "
             "exactamente el error de la versión anterior sin reejecutar aquel código; sí es posible afirmar que es "

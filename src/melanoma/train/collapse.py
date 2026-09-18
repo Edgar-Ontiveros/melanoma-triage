@@ -37,6 +37,8 @@ def detect_collapse(
     mean = float(p.mean()) if p.size else float("nan")
     auc = float("nan") if auroc is None else float(auroc)
     reasons = []
+    if p.size and not np.all(np.isfinite(p)):
+        reasons.append("probabilidades NaN/inf: el entrenamiento divergió")
     if std < std_threshold:
         reasons.append(f"std de probabilidades {std:.5f} < {std_threshold}")
     if math.isnan(auc) or abs(auc - 0.5) < auc_tolerance:

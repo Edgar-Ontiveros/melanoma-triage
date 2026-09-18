@@ -1,0 +1,15 @@
+[2026-09-18 01:39:49,147][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet50.a1_in1k)
+[2026-09-18 01:39:49,223][httpx][INFO] - HTTP Request: HEAD https://huggingface.co/timm/resnet50.a1_in1k/resolve/main/model.safetensors "HTTP/1.1 302 Found"
+[2026-09-18 01:39:49,224][huggingface_hub.utils._http][WARNING] - Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[2026-09-18 01:39:49,277][httpx][INFO] - HTTP Request: GET https://huggingface.co/api/models/timm/resnet50.a1_in1k/xet-read-token/767268603ca0cb0bfe326fa87277f19c419566ef "HTTP/1.1 200 OK"
+[2026-09-18 01:39:52,717][timm.models._hub][INFO] - [timm/resnet50.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
+[2026-09-18 01:39:52,761][melanoma.train.run][INFO] - data_config del backbone: {'input_size': (3, 224, 224), 'interpolation': 'bicubic', 'mean': (0.485, 0.456, 0.406), 'std': (0.229, 0.224, 0.225), 'crop_pct': 0.95, 'crop_mode': 'center'}
+[2026-09-18 01:39:52,762][melanoma.train.run][INFO] - backbone congelado: 23508032 parámetros sin gradiente
+[2026-09-18 01:39:53,098][melanoma.train.run][INFO] - corrida resnet50-224-s0-8da1f44: train 22501 neg / 410 pos, pos_weight=54.88, sampler=none
+[2026-09-18 01:39:53,127][melanoma.train.run][WARNING] - WANDB_API_KEY no está definida; W&B corre en modo offline
+[2026-09-18 01:40:54,459][melanoma.train.module][WARNING] - COLAPSO DETECTADO en la época 0: std de probabilidades 0.00032 < 0.01 (media de probabilidades 0.4877). El modelo predice una sola clase; revisar preprocesamiento, pos_weight/sampler y tasa de aprendizaje.
+[2026-09-18 01:41:48,971][melanoma.train.module][WARNING] - COLAPSO DETECTADO en la época 1: std de probabilidades 0.00087 < 0.01 (media de probabilidades 0.4948). El modelo predice una sola clase; revisar preprocesamiento, pos_weight/sampler y tasa de aprendizaje.
+[2026-09-18 01:42:42,717][melanoma.train.module][WARNING] - COLAPSO DETECTADO en la época 2: std de probabilidades 0.00146 < 0.01 (media de probabilidades 0.5181). El modelo predice una sola clase; revisar preprocesamiento, pos_weight/sampler y tasa de aprendizaje.
+[2026-09-18 01:43:35,695][melanoma.train.module][WARNING] - COLAPSO DETECTADO en la época 3: std de probabilidades 0.00178 < 0.01 (media de probabilidades 0.5075). El modelo predice una sola clase; revisar preprocesamiento, pos_weight/sampler y tasa de aprendizaje.
+[2026-09-18 01:44:28,766][melanoma.train.module][WARNING] - COLAPSO DETECTADO en la época 4: std de probabilidades 0.00187 < 0.01 (media de probabilidades 0.4983). El modelo predice una sola clase; revisar preprocesamiento, pos_weight/sampler y tasa de aprendizaje.
+[2026-09-18 01:45:21,732][melanoma.train.module][WARNING] - COLAPSO DETECTADO en la época 5: std de probabilidades 0.00188 < 0.01 (media de probabilidades 0.4979). El modelo predice una sola clase; revisar preprocesamiento, pos_weight/sampler y tasa de aprendizaje.

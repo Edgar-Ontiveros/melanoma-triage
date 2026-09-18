@@ -129,3 +129,10 @@ def test_freeze_backbone_trains_only_the_head(smoke_cfg: DictConfig) -> None:
     opt = lit.configure_optimizers()
     n_opt = sum(p.numel() for g in opt.param_groups for p in g["params"])
     assert n_opt == sum(p.numel() for p in model.head.parameters())
+
+
+def test_collapse_reports_nan_as_divergence(smoke_cfg: DictConfig) -> None:
+    thr, tol = smoke_cfg.train.collapse_std_threshold, smoke_cfg.train.collapse_auc_tolerance
+    probs = np.array([0.1, np.nan, 0.3, np.nan])
+    report = detect_collapse(probs, auroc=float("nan"), std_threshold=thr, auc_tolerance=tol)
+    assert report.collapsed and "divergió" in report.reason
