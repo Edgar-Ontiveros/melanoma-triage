@@ -89,3 +89,12 @@ def test_offline_wandb_dirs_found(tmp_path: Path) -> None:
     (tmp_path / "runs/x/wandb/run-20260917_2-def").mkdir(parents=True)
     found = kr.offline_wandb_dirs(tmp_path)
     assert [p.name for p in found] == ["offline-run-20260917_1-abc"]
+
+
+def test_network_errors_are_not_terminal() -> None:
+    kr = _load_script()
+    assert kr.is_terminal("COMPLETE")
+    assert kr.is_terminal("ERROR (Failure message)")
+    assert kr.is_terminal("CANCELACKNOWLEDGED")
+    assert not kr.is_terminal("RUNNING")
+    assert not kr.is_terminal("desconocido: HTTPSConnectionPool ... NameResolutionError(...)")

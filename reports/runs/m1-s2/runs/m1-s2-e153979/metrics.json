@@ -1,0 +1,353 @@
+{
+  "run_name": "tf_efficientnetv2_s-384-s2-e153979",
+  "best_checkpoint": "/kaggle/working/runs/m1-s2-e153979/checkpoints/tf_efficientnetv2_s-384-s2-e153979-05-0.0000.ckpt",
+  "best_epoch": 5,
+  "epochs_run": 11,
+  "elapsed_s": 4392.8,
+  "collapse_epochs": [],
+  "diverged": false,
+  "collapse_history": [
+    {
+      "collapsed": false,
+      "reason": "",
+      "prob_std": 0.24518077551933046,
+      "prob_mean": 0.39126998920022915,
+      "auroc": 0.7939906716346741
+    },
+    {
+      "collapsed": false,
+      "reason": "",
+      "prob_std": 0.2994038321039554,
+      "prob_mean": 0.3636339239789458,
+      "auroc": 0.8046246767044067
+    },
+    {
+      "collapsed": false,
+      "reason": "",
+      "prob_std": 0.2824641010182367,
+      "prob_mean": 0.23219029703230112,
+      "auroc": 0.8374930024147034
+    },
+    {
+      "collapsed": false,
+      "reason": "",
+      "prob_std": 0.3140203624274616,
+      "prob_mean": 0.27303571939470284,
+      "auroc": 0.8454417586326599
+    },
+    {
+      "collapsed": false,
+      "reason": "",
+      "prob_std": 0.33786464598824256,
+      "prob_mean": 0.28181777640803934,
+      "auroc": 0.8435932397842407
+    },
+    {
+      "collapsed": false,
+      "reason": "",
+      "prob_std": 0.28490745564127395,
+      "prob_mean": 0.19582663410785012,
+      "auroc": 0.8405967950820923
+    },
+    {
+      "collapsed": false,
+      "reason": "",
+      "prob_std": 0.29209841317592505,
+      "prob_mean": 0.15581121970851758,
+      "auroc": 0.8279696702957153
+    },
+    {
+      "collapsed": false,
+      "reason": "",
+      "prob_std": 0.29403696317988737,
+      "prob_mean": 0.15953522449125515,
+      "auroc": 0.8380396366119385
+    },
+    {
+      "collapsed": false,
+      "reason": "",
+      "prob_std": 0.25741716226936584,
+      "prob_mean": 0.12426739757121752,
+      "auroc": 0.8480908870697021
+    },
+    {
+      "collapsed": false,
+      "reason": "",
+      "prob_std": 0.22739185790725192,
+      "prob_mean": 0.09738836574250738,
+      "auroc": 0.8366491794586182
+    },
+    {
+      "collapsed": false,
+      "reason": "",
+      "prob_std": 0.22489741156766915,
+      "prob_mean": 0.09858495894357627,
+      "auroc": 0.841017484664917
+    }
+  ],
+  "epochs": [
+    {
+      "epoch": 0,
+      "val/loss": 1.0718225240707397,
+      "val/auroc": 0.7939906716346741,
+      "val/auprc": 0.06869620084762573,
+      "val/prob_std": 0.24518077551933046,
+      "val/prob_mean": 0.39126998920022915,
+      "collapsed": false,
+      "train/loss": 1.0371627807617188,
+      "train/data_wait_frac": 0.2882399347699807,
+      "train/gpu_util": 98.36111111111111,
+      "train/epoch_min": 6.5583274777666665
+    },
+    {
+      "epoch": 1,
+      "val/loss": 1.0811337232589722,
+      "val/auroc": 0.8046246767044067,
+      "val/auprc": 0.06369888782501221,
+      "val/prob_std": 0.2994038321039554,
+      "val/prob_mean": 0.3636339239789458,
+      "collapsed": false,
+      "train/loss": 0.7190626263618469,
+      "train/data_wait_frac": 0.2962249931980507,
+      "train/gpu_util": 99.26388888888889,
+      "train/epoch_min": 6.558072253233331
+    },
+    {
+      "epoch": 2,
+      "val/loss": 1.120619773864746,
+      "val/auroc": 0.8374930024147034,
+      "val/auprc": 0.1018243283033371,
+      "val/prob_std": 0.2824641010182367,
+      "val/prob_mean": 0.23219029703230112,
+      "collapsed": false,
+      "train/loss": 0.5905340313911438,
+      "train/data_wait_frac": 0.29541129291099383,
+      "train/gpu_util": 98.76388888888889,
+      "train/epoch_min": 6.562129647233333
+    },
+    {
+      "epoch": 3,
+      "val/loss": 1.0251415967941284,
+      "val/auroc": 0.8454417586326599,
+      "val/auprc": 0.10011650621891022,
+      "val/prob_std": 0.3140203624274616,
+      "val/prob_mean": 0.27303571939470284,
+      "collapsed": false,
+      "train/loss": 0.4886617064476013,
+      "train/data_wait_frac": 0.29585489795628434,
+      "train/gpu_util": 98.625,
+      "train/epoch_min": 6.549625613483332
+    },
+    {
+      "epoch": 4,
+      "val/loss": 1.1410490274429321,
+      "val/auroc": 0.8435932397842407,
+      "val/auprc": 0.10091134160757065,
+      "val/prob_std": 0.33786464598824256,
+      "val/prob_mean": 0.28181777640803934,
+      "collapsed": false,
+      "train/loss": 0.41443929076194763,
+      "train/data_wait_frac": 0.29558788578800355,
+      "train/gpu_util": 99.20833333333333,
+      "train/epoch_min": 6.523979861266669
+    },
+    {
+      "epoch": 5,
+      "val/loss": 1.2264347076416016,
+      "val/auroc": 0.8405967950820923,
+      "val/auprc": 0.12791627645492554,
+      "val/prob_std": 0.28490745564127395,
+      "val/prob_mean": 0.19582663410785012,
+      "collapsed": false,
+      "train/loss": 0.38220688700675964,
+      "train/data_wait_frac": 0.29543708584521844,
+      "train/gpu_util": 99.51388888888889,
+      "train/epoch_min": 6.5349591802499996
+    },
+    {
+      "epoch": 6,
+      "val/loss": 1.6233177185058594,
+      "val/auroc": 0.8279696702957153,
+      "val/auprc": 0.0902586504817009,
+      "val/prob_std": 0.29209841317592505,
+      "val/prob_mean": 0.15581121970851758,
+      "collapsed": false,
+      "train/loss": 0.30167871713638306,
+      "train/data_wait_frac": 0.2954893348045999,
+      "train/gpu_util": 99.375,
+      "train/epoch_min": 6.531094179400005
+    },
+    {
+      "epoch": 7,
+      "val/loss": 1.5744825601577759,
+      "val/auroc": 0.8380396366119385,
+      "val/auprc": 0.09859602153301239,
+      "val/prob_std": 0.29403696317988737,
+      "val/prob_mean": 0.15953522449125515,
+      "collapsed": false,
+      "train/loss": 0.23954233527183533,
+      "train/data_wait_frac": 0.2948591570193357,
+      "train/gpu_util": 98.97222222222223,
+      "train/epoch_min": 6.5208553223
+    },
+    {
+      "epoch": 8,
+      "val/loss": 1.5710877180099487,
+      "val/auroc": 0.8480908870697021,
+      "val/auprc": 0.10611597448587418,
+      "val/prob_std": 0.25741716226936584,
+      "val/prob_mean": 0.12426739757121752,
+      "collapsed": false,
+      "train/loss": 0.23569515347480774,
+      "train/data_wait_frac": 0.295079963634574,
+      "train/gpu_util": 99.22222222222223,
+      "train/epoch_min": 6.531236404483343
+    },
+    {
+      "epoch": 9,
+      "val/loss": 1.8343017101287842,
+      "val/auroc": 0.8366491794586182,
+      "val/auprc": 0.1123787984251976,
+      "val/prob_std": 0.22739185790725192,
+      "val/prob_mean": 0.09738836574250738,
+      "collapsed": false,
+      "train/loss": 0.18819351494312286,
+      "train/data_wait_frac": 0.2947471683573099,
+      "train/gpu_util": 98.63888888888889,
+      "train/epoch_min": 6.5368292111666655
+    },
+    {
+      "epoch": 10,
+      "val/loss": 1.791487693786621,
+      "val/auroc": 0.841017484664917,
+      "val/auprc": 0.11981488764286041,
+      "val/prob_std": 0.22489741156766915,
+      "val/prob_mean": 0.09858495894357627,
+      "collapsed": false,
+      "train/loss": 0.1767606884241104,
+      "train/data_wait_frac": 0.29538946714851066,
+      "train/gpu_util": 99.04166666666667,
+      "train/epoch_min": 6.547690576949996
+    }
+  ],
+  "provenance": {
+    "git_sha": "e153979",
+    "effective_batch": 128,
+    "git_sha_full": "e1539793c83ca5275acf131c53600c9429daa70e",
+    "split_sha256": {
+      "train": "701333b2450c363b1ab1b5a9422d3d223d243e1b3af2d643b05f6b86f711968c",
+      "val": "b7f727d6cf70d7a12be136e3b7046b42c725eaf5541aadc0723fbac09941ffb1"
+    },
+    "data_env": "/tmp/images_512",
+    "data_config": {
+      "input_size": [
+        3,
+        300,
+        300
+      ],
+      "interpolation": "bicubic",
+      "mean": [
+        0.5,
+        0.5,
+        0.5
+      ],
+      "std": [
+        0.5,
+        0.5,
+        0.5
+      ],
+      "crop_pct": 1.0,
+      "crop_mode": "center"
+    },
+    "pos_weight_used": 54.88048780487805,
+    "train_counts": {
+      "negatives": 22501,
+      "positives": 410
+    },
+    "val_counts": {
+      "negatives": 4875,
+      "positives": 88
+    }
+  },
+  "metrics": {
+    "n_images": 4963,
+    "n_positives": 88,
+    "n_patients": 568,
+    "prevalence": 0.017731210961112232,
+    "auprc_random": 0.017731210961112232,
+    "auroc": 0.8405967365967366,
+    "auprc": 0.12791627399595115,
+    "threshold_policy": "sensibilidad>=0.9",
+    "confusion": {
+      "threshold": 0.057705316692590714,
+      "tn": 2732,
+      "fp": 2143,
+      "fn": 8,
+      "tp": 80,
+      "sensitivity": 0.9090909090909091,
+      "specificity": 0.5604102564102564,
+      "ppv": 0.03598740440845704,
+      "npv": 0.997080291970803
+    },
+    "sens_at_spec090": 0.5454545454545454,
+    "spec_at_sens090": 0.5604102564102564,
+    "sens_at_spec095": 0.42045454545454547,
+    "spec_at_sens095": 0.4
+  },
+  "ci": {
+    "auroc": {
+      "point": 0.8405967365967366,
+      "lo": 0.7980732895129695,
+      "hi": 0.8792249887994916,
+      "n_resamples": 2000,
+      "n_skipped": 0,
+      "level": 0.95,
+      "unit": "patient"
+    },
+    "auprc": {
+      "point": 0.12791627399595115,
+      "lo": 0.08432526182243967,
+      "hi": 0.20269007688477822,
+      "n_resamples": 2000,
+      "n_skipped": 0,
+      "level": 0.95,
+      "unit": "patient"
+    },
+    "sens_at_spec090": {
+      "point": 0.5454545454545454,
+      "lo": 0.4301048387096774,
+      "hi": 0.6521960958296361,
+      "n_resamples": 2000,
+      "n_skipped": 0,
+      "level": 0.95,
+      "unit": "patient"
+    },
+    "spec_at_sens090": {
+      "point": 0.5604102564102564,
+      "lo": 0.394321817214077,
+      "hi": 0.6607990441918536,
+      "n_resamples": 2000,
+      "n_skipped": 0,
+      "level": 0.95,
+      "unit": "patient"
+    },
+    "sens_at_spec095": {
+      "point": 0.42045454545454547,
+      "lo": 0.3150231061231226,
+      "hi": 0.5360862094725832,
+      "n_resamples": 2000,
+      "n_skipped": 0,
+      "level": 0.95,
+      "unit": "patient"
+    },
+    "spec_at_sens095": {
+      "point": 0.4,
+      "lo": 0.20771681205726739,
+      "hi": 0.5789007807851261,
+      "n_resamples": 2000,
+      "n_skipped": 0,
+      "level": 0.95,
+      "unit": "patient"
+    }
+  }
+}

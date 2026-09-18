@@ -46,6 +46,14 @@ KAGGLE = Path(sys.executable).parent / "kaggle"
 TERMINAL = ("COMPLETE", "ERROR", "CANCEL")
 
 
+def is_terminal(status: str) -> bool:
+    """Solo un estado real de Kaggle es terminal. Un fallo de red devuelve "desconocido: …" y
+    contenía "Error", lo que el 2026-09-18 hizo que el vigilante soltara dos corridas vivas."""
+    if status.startswith("desconocido"):
+        return False
+    return status.split()[0].upper().startswith(TERMINAL)
+
+
 def cfg() -> DictConfig:
     return OmegaConf.load(ROOT / "configs/kaggle.yaml")
 
@@ -174,7 +182,7 @@ def wait_and_collect(name: str, c: DictConfig) -> None:
         status = status_of(name, c)
         elapsed = (time.time() - start) / 60
         print(f"[{datetime.now():%H:%M:%S}] {ref}: {status}  ({elapsed:.0f} min)", flush=True)
-        if any(t in status.upper() for t in TERMINAL):
+        if is_terminal(status):
             break
         time.sleep(poll)
     if "COMPLETE" in status.upper():
@@ -371,7 +379,7 @@ def cmd_batch(args: argparse.Namespace) -> None:
             status = status_of(name, c)
             elapsed = (time.time() - start) / 60
             print(f"[{datetime.now():%H:%M:%S}] {name}: {status}  ({elapsed:.0f} min)", flush=True)
-            if any(t in status.upper() for t in TERMINAL):
+            if is_terminal(status):
                 results[name] = status
                 active.remove(name)
                 save_log(name, c)

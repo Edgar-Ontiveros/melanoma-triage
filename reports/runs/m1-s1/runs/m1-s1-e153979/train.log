@@ -1,0 +1,23 @@
+[2026-09-18 14:34:49,839][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/tf_efficientnetv2_s.in21k_ft_in1k)
+[2026-09-18 14:34:49,995][httpx][INFO] - HTTP Request: HEAD https://huggingface.co/timm/tf_efficientnetv2_s.in21k_ft_in1k/resolve/main/model.safetensors "HTTP/1.1 302 Found"
+[2026-09-18 14:34:50,098][httpx][INFO] - HTTP Request: GET https://huggingface.co/api/models/timm/tf_efficientnetv2_s.in21k_ft_in1k/xet-read-token/ea9abc143ea2b9d8e1ec1de277bce02149b9cf0e "HTTP/1.1 200 OK"
+[2026-09-18 14:34:52,342][timm.models._hub][INFO] - [timm/tf_efficientnetv2_s.in21k_ft_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
+[2026-09-18 14:34:52,409][melanoma.train.run][INFO] - data_config del backbone: {'input_size': (3, 300, 300), 'interpolation': 'bicubic', 'mean': (0.5, 0.5, 0.5), 'std': (0.5, 0.5, 0.5), 'crop_pct': 1.0, 'crop_mode': 'center'}
+[2026-09-18 14:34:52,868][melanoma.train.run][INFO] - corrida tf_efficientnetv2_s-384-s1-e153979: train 22501 neg / 410 pos, pos_weight=54.88, sampler=none
+[2026-09-18 14:35:02,462][melanoma.train.run][INFO] - calentamiento OK: lote 32 × 384 px, pico 7.03 GB de 14.56 GB (Tesla T4)
+[2026-09-18 14:35:02,730][melanoma.train.run][WARNING] - WANDB_API_KEY no está definida; W&B corre en modo offline
+[2026-09-18 14:41:44,975][melanoma.train.callbacks][INFO] - época 0: 6.6 min, espera de datos 29 %, GPU 99 %
+[2026-09-18 14:48:26,879][melanoma.train.callbacks][INFO] - época 1: 6.7 min, espera de datos 30 %, GPU 99 %
+[2026-09-18 14:55:07,337][melanoma.train.callbacks][INFO] - época 2: 6.7 min, espera de datos 30 %, GPU 99 %
+[2026-09-18 15:01:48,210][melanoma.train.callbacks][INFO] - época 3: 6.7 min, espera de datos 30 %, GPU 99 %
+[2026-09-18 15:08:25,249][melanoma.train.callbacks][INFO] - época 4: 6.6 min, espera de datos 29 %, GPU 99 %
+[2026-09-18 15:15:06,185][melanoma.train.callbacks][INFO] - época 5: 6.7 min, espera de datos 30 %, GPU 99 %
+[2026-09-18 15:21:45,211][melanoma.train.callbacks][INFO] - época 6: 6.7 min, espera de datos 30 %, GPU 99 %
+[2026-09-18 15:28:23,761][melanoma.train.callbacks][INFO] - época 7: 6.6 min, espera de datos 30 %, GPU 99 %
+[2026-09-18 15:35:00,365][melanoma.train.callbacks][INFO] - época 8: 6.6 min, espera de datos 30 %, GPU 99 %
+[2026-09-18 15:41:38,785][melanoma.train.callbacks][INFO] - época 9: 6.6 min, espera de datos 30 %, GPU 99 %
+[2026-09-18 15:48:16,329][melanoma.train.callbacks][INFO] - época 10: 6.6 min, espera de datos 29 %, GPU 99 %
+[2026-09-18 15:54:55,149][melanoma.train.callbacks][INFO] - época 11: 6.6 min, espera de datos 30 %, GPU 99 %
+[2026-09-18 16:01:35,413][melanoma.train.callbacks][INFO] - época 12: 6.7 min, espera de datos 30 %, GPU 99 %
+[2026-09-18 16:08:13,139][melanoma.train.callbacks][INFO] - época 13: 6.6 min, espera de datos 30 %, GPU 99 %
+[2026-09-18 16:14:51,456][melanoma.train.callbacks][INFO] - época 14: 6.6 min, espera de datos 29 %, GPU 99 %
