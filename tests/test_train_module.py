@@ -110,3 +110,22 @@ def test_cosine_with_warmup_shape() -> None:
         opt.step()
         sched.step()
     assert opt.param_groups[0]["lr"] == pytest.approx(1.0)
+
+
+def test_freeze_backbone_trains_only_the_head(smoke_cfg: DictConfig) -> None:
+    from melanoma.train.run import freeze_backbone
+
+    model, _ = build_model(
+        backbone=smoke_cfg.model.backbone,
+        pretrained=False,
+        num_classes=smoke_cfg.model.num_classes,
+        dropout=0.0,
+    )
+    n_frozen = freeze_backbone(model)
+    assert n_frozen > 0
+    assert not any(p.requires_grad for p in model.backbone.parameters())
+    assert all(p.requires_grad for p in model.head.parameters())
+    lit = LitBinaryClassifier(model, lr=1e-3, weight_decay=0.0)
+    opt = lit.configure_optimizers()
+    n_opt = sum(p.numel() for g in opt.param_groups for p in g["params"])
+    assert n_opt == sum(p.numel() for p in model.head.parameters())

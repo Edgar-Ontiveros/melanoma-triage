@@ -184,7 +184,9 @@ def baselines_report(b0: dict | None, groups: dict[str, list[dict]]) -> str:
     return "\n".join(lines)
 
 
-def curves_figure(conds: dict[str, dict | None]) -> Path | None:
+def curves_figure(
+    conds: dict[str, dict | None], filename: str = "preprocessing_curves.png"
+) -> Path | None:
     if not any(conds.values()):
         return None
     fig, axes = plt.subplots(1, 3, figsize=(13, 4))
@@ -206,7 +208,7 @@ def curves_figure(conds: dict[str, dict | None]) -> Path | None:
         ax.legend(fontsize=8)
     fig.tight_layout()
     FIGURES.mkdir(parents=True, exist_ok=True)
-    path = FIGURES / "preprocessing_curves.png"
+    path = FIGURES / filename
     fig.savefig(path, dpi=120)
     plt.close(fig)
     return path
@@ -300,32 +302,80 @@ def preprocessing_report(groups: dict[str, list[dict]]) -> str:
     else:
         lines += ["_Las curvas se generan cuando las tres corridas estén en `reports/runs/`._", ""]
     a, b, c = conds.values()
-    lines += ["## Párrafo para la tesis (corrige la afirmación de la v1)", ""]
+    frozen = {
+        "A — correcto, congelado": (groups.get("prep_a_frozen") or [None])[0],
+        "B — ÷255, congelado": (groups.get("prep_b_frozen") or [None])[0],
+        "C — ×255, congelado": (groups.get("prep_c_frozen") or [None])[0],
+    }
+    fa, fb, fc = frozen.values()
+    lines += ["## Lectura de las condiciones con fine-tuning completo", ""]
     if a and b and c:
+        collapsed = [
+            k for k, r in conds.items() if r["collapse_epochs"] or r["metrics"]["auroc"] < 0.55
+        ]
+        if collapsed:
+            lines.append(
+                f"Colapsaron: {', '.join(collapsed)}. El desajuste de escala basta para producir desempeño de azar."
+            )
+        else:
+            lines.append(
+                f"**Ninguna condición colapsó.** B perdió {a['metrics']['auroc'] - b['metrics']['auroc']:.3f} de AUC-ROC "
+                f"y C {a['metrics']['auroc'] - c['metrics']['auroc']:.3f} respecto a A. Con fine-tuning completo, la "
+                "primera convolución y las capas BatchNorm se reajustan a la escala de entrada en pocas épocas, así "
+                "que el desajuste degrada pero no anula el aprendizaje. Este diseño NO reproduce el escenario de la "
+                "v1, donde el backbone estaba congelado y no podía compensar; por eso se agregan las condiciones con "
+                "backbone congelado (`configs/experiment/prep_*_frozen.yaml`, `model.freeze_backbone: true`: solo se "
+                "entrena la cabeza y el backbone queda en modo eval)."
+            )
+    else:
+        lines.append(PENDING)
+    lines += [
+        "",
+        "## Condiciones con backbone congelado (escenario de la v1)",
+        "",
+        "| condición | AUC-ROC final [IC] | AUPRC final [IC] | colapso (épocas) | std de prob. última época |",
+        "|:--|:--|:--|:--|--:|",
+    ]
+    for label, run in frozen.items():
+        if run:
+            last = run["epochs"][-1] if run["epochs"] else {}
+            lines.append(
+                f"| {label} | {fmt(run['metrics']['auroc'])} {ci_str(run['ci'], 'auroc')} | "
+                f"{fmt(run['metrics']['auprc'])} {ci_str(run['ci'], 'auprc')} | {run['collapse_epochs'] or 'no'} | "
+                f"{fmt(last.get('val/prob_std'), 4)} |"
+            )
+        else:
+            lines.append(f"| {label} | {PENDING} | | | |")
+    fig2 = curves_figure(frozen, "preprocessing_curves_frozen.png")
+    if fig2:
+        lines += [
+            "",
+            f"![curvas por época, backbone congelado]({fig2.relative_to(ROOT / 'reports').as_posix()})",
+        ]
+    lines += ["", "## Párrafo para la tesis (corrige la afirmación de la v1)", ""]
+    if fa and fb and fc and a and b and c:
         lines.append(
             "> En la versión anterior de este trabajo, EfficientNetB3 con el backbone congelado obtuvo una "
             "exactitud del 50.75 %, y se atribuyó el resultado a que «las capas congeladas impidieron un "
-            "aprendizaje adecuado». Esa explicación no se sostiene: congelar un backbone preentrenado es una "
-            "práctica estándar que produce resultados muy por encima del azar. La explicación más probable es "
-            "un desajuste de preprocesamiento: las implementaciones de EfficientNet en Keras incluyen el "
+            "aprendizaje adecuado». Esa explicación no se sostiene por sí sola: congelar un backbone preentrenado "
+            "es una práctica estándar que produce resultados muy por encima del azar. La explicación más probable "
+            "es un desajuste de preprocesamiento: las implementaciones de EfficientNet en Keras incluyen el "
             "reescalado dentro del modelo y esperan píxeles en [0, 255], de modo que entregarles imágenes ya "
-            "normalizadas a [0, 1] reduce 255 veces la señal de entrada. Para comprobar que ese mecanismo basta "
-            "para producir desempeño de azar, se entrenó el mismo ResNet50 con la misma semilla y los mismos "
-            f"datos bajo tres condiciones: preprocesamiento correcto (AUC-ROC {a['metrics']['auroc']:.3f}, "
-            f"AUPRC {a['metrics']['auprc']:.3f}), entrada dividida por 255 de más (AUC-ROC "
-            f"{b['metrics']['auroc']:.3f}, AUPRC {b['metrics']['auprc']:.3f}) y entrada multiplicada por 255 de "
-            f"más (AUC-ROC {c['metrics']['auroc']:.3f}, AUPRC {c['metrics']['auprc']:.3f}). No es posible "
-            "afirmar que ese fue exactamente el error de la versión anterior sin reejecutar aquel código; sí es "
-            "posible afirmar que es consistente con el resultado observado y que la conclusión original era "
-            "incorrecta."
+            "normalizadas a [0, 1] reduce 255 veces la señal de entrada. Para comprobarlo se entrenó un ResNet50 "
+            "preentrenado con la misma semilla y los mismos datos bajo tres condiciones de preprocesamiento. Con "
+            f"el backbone congelado, como en la versión anterior: correcto (AUC-ROC {fa['metrics']['auroc']:.3f}), "
+            f"entrada dividida por 255 de más (AUC-ROC {fb['metrics']['auroc']:.3f}) y multiplicada por 255 de más "
+            f"(AUC-ROC {fc['metrics']['auroc']:.3f}). Con fine-tuning completo el efecto se atenúa "
+            f"({a['metrics']['auroc']:.3f}, {b['metrics']['auroc']:.3f} y {c['metrics']['auroc']:.3f}), porque las "
+            "capas de normalización se reajustan a la escala de entrada. No es posible afirmar que ese fue "
+            "exactamente el error de la versión anterior sin reejecutar aquel código; sí es posible afirmar que es "
+            "consistente con el resultado observado y que la conclusión original era incorrecta."
         )
     else:
         lines.append(
-            "_Se redacta con los números de las tres condiciones cuando estén disponibles. El borrador sin "
-            "números: la v1 atribuyó el 50.75 % a las capas congeladas; la documentación de Keras muestra que "
-            "EfficientNet reescala internamente y espera [0, 255]; el experimento A/B/C muestra que un desajuste "
-            "de 255× basta para producir desempeño de azar; no se afirma que ese fue exactamente el error de la "
-            "v1, solo que es la explicación más probable y consistente._"
+            "_Se redacta cuando estén las seis condiciones (fine-tuning completo y backbone congelado). Con "
+            "fine-tuning completo el desajuste NO produjo desempeño de azar, así que el párrafo no puede afirmar "
+            "que el mecanismo «basta» sin el resultado congelado._"
         )
     lines.append("")
     return "\n".join(lines)

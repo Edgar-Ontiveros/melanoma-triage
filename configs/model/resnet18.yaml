@@ -3,3 +3,6 @@ backbone: resnet18
 pretrained: false
 dropout: 0.0
 num_classes: 1
+# true: solo se entrena la cabeza (backbone con requires_grad=False y en modo eval, como en
+# la v1 de la tesis). Lo usa F2.6 para replicar el escenario de EfficientNet congelado.
+freeze_backbone: false

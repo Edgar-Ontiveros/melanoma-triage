@@ -137,8 +137,16 @@ class LitBinaryClassifier(L.LightningModule):
         return torch.sigmoid(self(x).squeeze(1).float())
 
     # ---- optimización --------------------------------------------------------------------
+    def on_train_epoch_start(self) -> None:
+        # Backbone congelado (F2.6): también en modo eval, para que BatchNorm use las
+        # estadísticas de ImageNet y no pueda adaptarse a una escala de entrada incorrecta.
+        backbone = getattr(self.model, "backbone", None)
+        if backbone is not None and not any(p.requires_grad for p in backbone.parameters()):
+            backbone.eval()
+
     def configure_optimizers(self):
-        optimizer = torch.optim.AdamW(self.parameters(), lr=self.lr, weight_decay=self.weight_decay)
+        params = [p for p in self.parameters() if p.requires_grad]
+        optimizer = torch.optim.AdamW(params, lr=self.lr, weight_decay=self.weight_decay)
         if self.scheduler_name == "none":
             return optimizer
         if self.scheduler_name != "cosine":

@@ -12,16 +12,24 @@ Referencia: un clasificador aleatorio tiene AUC-ROC 0.5 y AUPRC ≈ prevalencia 
 |:--|:--|:--|:--|--:|--:|:--|:--|
 | **B0** metadatos (regresión logística) | `b0` commit `c1600c0` | 0.620 [0.552, 0.691] | 0.044 [0.028, 0.079] | 0.284 | 0.139 | — | — |
 | **B1** ResNet50-224, pos_weight, semilla 0 | `resnet50-224-s0-f431f11` | 0.778 [0.729, 0.822] | 0.077 [0.048, 0.130] | 0.386 | 0.418 | 5 / 11 | no |
+| **B1** ResNet50-224, pos_weight, semilla 1 | `resnet50-224-s1-bcdbbf9` | 0.774 [0.723, 0.819] | 0.076 [0.049, 0.128] | 0.364 | 0.460 | 6 / 12 | no |
+| **B1** ResNet50-224, pos_weight, semilla 2 | `resnet50-224-s2-bcdbbf9` | 0.782 [0.730, 0.830] | 0.079 [0.050, 0.138] | 0.455 | 0.395 | 7 / 13 | no |
+| **B1** ResNet50-224, muestreo ponderado, semilla 0 | `resnet50-224-s0-da55e98` | 0.768 [0.704, 0.824] | 0.115 [0.071, 0.187] | 0.534 | 0.191 | 6 / 12 | no |
 
 ## B1: media y rango sobre semillas
 
-- AUC-ROC: 0.778 (una semilla)
-- AUPRC: 0.077 (una semilla)
-- Semillas: [0] — **faltan semillas para llegar a 3**
+- AUC-ROC: 0.778 (rango 0.774–0.782, n=3)
+- AUPRC: 0.077 (rango 0.076–0.079, n=3)
+- Semillas: [0, 1, 2]
 
 ## pos_weight vs. muestreo ponderado (misma semilla)
 
-_pendiente: corrida de Kaggle no copiada a `reports/runs/`_
+| estrategia | AUC-ROC [IC] | AUPRC [IC] | colapso |
+|:--|:--|:--|:--|
+| pos_weight = 54.9 | 0.778 [0.729, 0.822] | 0.077 [0.048, 0.130] | no |
+| muestreo ponderado | 0.768 [0.704, 0.824] | 0.115 [0.071, 0.187] | no |
+
+**Recomendación para F3:** muestreo ponderado (mayor AUPRC puntual: 0.115 vs 0.077). Los intervalos se traslapan: la diferencia no es concluyente con una semilla; se elige por AUPRC puntual y simplicidad, y F3 puede revisarlo.
 
 ## Lectura
 

@@ -39,6 +39,20 @@ from melanoma.utils import seed_everything
 log = logging.getLogger(__name__)
 
 
+def freeze_backbone(model: torch.nn.Module) -> int:
+    """Congela ``model.backbone`` (sin gradiente) y deja entrenable solo la cabeza.
+
+    Returns:
+        Número de parámetros congelados.
+    """
+    frozen = 0
+    for p in model.backbone.parameters():
+        p.requires_grad_(False)
+        frozen += p.numel()
+    log.info("backbone congelado: %d parámetros sin gradiente", frozen)
+    return frozen
+
+
 def git_sha(root: Path | str, short: bool = True) -> str:
     """SHA del commit actual (``nogit`` si no hay repositorio)."""
     try:
@@ -107,6 +121,8 @@ def run_training(cfg: DictConfig, root: Path | str, run_dir: Path | str) -> dict
         dropout=cfg.model.dropout,
     )
     log.info("data_config del backbone: %s", data_config)
+    if bool(cfg.model.get("freeze_backbone", False)):
+        freeze_backbone(model)
     dm = datamodule_from_config(cfg.data, data_config, root=root)
     dm.setup("fit")
     image_size = dm.image_size if dm.image_size is not None else int(data_config["input_size"][-1])

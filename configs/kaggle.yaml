@@ -60,6 +60,15 @@ runs:
   prep-c:
     kernel: train
     params: {RUN_TAG: prep-c, OVERRIDES: ["+experiment=prep_c_multiply255"]}
+  prep-a-frozen:
+    kernel: train
+    params: {RUN_TAG: prep-a-frozen, OVERRIDES: ["+experiment=prep_a_frozen"]}
+  prep-b-frozen:
+    kernel: train
+    params: {RUN_TAG: prep-b-frozen, OVERRIDES: ["+experiment=prep_b_frozen"]}
+  prep-c-frozen:
+    kernel: train
+    params: {RUN_TAG: prep-c-frozen, OVERRIDES: ["+experiment=prep_c_frozen"]}
 
 # Dataset de imágenes redimensionadas, publicado desde la laptop como UN solo zip (Kaggle extrae
 # zips en el servidor; probado con un dataset pequeño). Subida real hacia Kaggle: ~1.3 MB/s (20 min

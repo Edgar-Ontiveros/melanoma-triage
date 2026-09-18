@@ -57,12 +57,26 @@ En este repositorio el error se inyecta con `data.preprocess_scale` (`melanoma.d
 
 | condición | preprocesamiento | AUC-ROC final [IC] | AUPRC final [IC] | colapso (épocas) | std de prob. última época |
 |:--|:--|:--|:--|:--|--:|
-| A — correcto | | _pendiente: corrida de Kaggle no copiada a `reports/runs/`_ | | | |
-| B — ÷255 de más | | _pendiente: corrida de Kaggle no copiada a `reports/runs/`_ | | | |
-| C — ×255 de más | | _pendiente: corrida de Kaggle no copiada a `reports/runs/`_ | | | |
+| A — correcto | `none` | 0.785 [0.739, 0.828] | 0.085 [0.045, 0.139] | no | 0.2751 |
+| B — ÷255 de más | `divide255` | 0.713 [0.662, 0.764] | 0.040 [0.028, 0.064] | no | 0.2573 |
+| C — ×255 de más | `multiply255` | 0.775 [0.724, 0.818] | 0.053 [0.039, 0.082] | no | 0.2827 |
 
-_Las curvas se generan cuando las tres corridas estén en `reports/runs/`._
+![curvas por época](figures/preprocessing_curves.png)
+
+Curvas por época (pérdida de entrenamiento, AUC-ROC y AUPRC de validación) de las tres condiciones.
+
+## Lectura de las condiciones con fine-tuning completo
+
+**Ninguna condición colapsó.** B perdió 0.072 de AUC-ROC y C 0.011 respecto a A. Con fine-tuning completo, la primera convolución y las capas BatchNorm se reajustan a la escala de entrada en pocas épocas, así que el desajuste degrada pero no anula el aprendizaje. Este diseño NO reproduce el escenario de la v1, donde el backbone estaba congelado y no podía compensar; por eso se agregan las condiciones con backbone congelado (`configs/experiment/prep_*_frozen.yaml`, `model.freeze_backbone: true`: solo se entrena la cabeza y el backbone queda en modo eval).
+
+## Condiciones con backbone congelado (escenario de la v1)
+
+| condición | AUC-ROC final [IC] | AUPRC final [IC] | colapso (épocas) | std de prob. última época |
+|:--|:--|:--|:--|--:|
+| A — correcto, congelado | _pendiente: corrida de Kaggle no copiada a `reports/runs/`_ | | | |
+| B — ÷255, congelado | _pendiente: corrida de Kaggle no copiada a `reports/runs/`_ | | | |
+| C — ×255, congelado | _pendiente: corrida de Kaggle no copiada a `reports/runs/`_ | | | |
 
 ## Párrafo para la tesis (corrige la afirmación de la v1)
 
-_Se redacta con los números de las tres condiciones cuando estén disponibles. El borrador sin números: la v1 atribuyó el 50.75 % a las capas congeladas; la documentación de Keras muestra que EfficientNet reescala internamente y espera [0, 255]; el experimento A/B/C muestra que un desajuste de 255× basta para producir desempeño de azar; no se afirma que ese fue exactamente el error de la v1, solo que es la explicación más probable y consistente._
+_Se redacta cuando estén las seis condiciones (fine-tuning completo y backbone congelado). Con fine-tuning completo el desajuste NO produjo desempeño de azar, así que el párrafo no puede afirmar que el mecanismo «basta» sin el resultado congelado._

@@ -1,0 +1,14 @@
+# @package _global_
+# F2.6 con backbone congelado (el escenario de la v1: EfficientNetB3 congelado). Con fine-tuning
+# completo, BatchNorm compensó en buena parte el desajuste de escala (2026-09-17); congelado, no
+# puede. Misma semilla y datos que prep_b; solo se entrena la cabeza.
+experiment: prep_b_frozen
+
+defaults:
+  - prep_b_divide255
+
+model:
+  freeze_backbone: true
+
+train:
+  lr: 1.0e-3   # solo la cabeza: lr más alta que en fine-tuning completo
