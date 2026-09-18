@@ -1,0 +1,613 @@
+0.00s - Debugger warning: It seems that frozen modules are being used, which may
+0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+0.00s - to python to disable frozen modules.
+0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+0.00s - Debugger warning: It seems that frozen modules are being used, which may
+0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+0.00s - to python to disable frozen modules.
+0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+commit e153979
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 45.0/45.0 kB 2.9 MB/s eta 0:00:00
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 45.0/45.0 kB 2.9 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 168.8/168.8 kB 10.9 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 849.3/849.3 kB 40.4 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 168.8/168.8 kB 10.9 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 849.3/849.3 kB 40.4 MB/s eta 0:00:00
+splits: /kaggle/input/melanoma-isic2020-splits
+splits íntegros: {'train': '701333b2450c363b1ab1b5a9422d3d223d243e1b3af2d643b05f6b86f711968c', 'val': 'b7f727d6cf70d7a12be136e3b7046b42c725eaf5541aadc0723fbac09941ffb1'}
+imágenes copiadas al disco local en 5.3 min
+33126 imágenes en /tmp/images_512
+W&B sin llave (modo offline): Connection error trying to communicate with service.
+/usr/bin/python3 scripts/train.py +experiment=m2_convnext_t_384 train.seed=0 data.env=kaggle data.paths.kaggle.images_dir=/tmp/images_512 data.paths.kaggle.splits_dir=/kaggle/input/melanoma-isic2020-splits data.paths.kaggle.manifest_path=/kaggle/input/melanoma-isic2020-splits/isic2020.csv data.num_workers=4 hydra.run.dir=/kaggle/working/runs/m2-s0-e153979
+data:
+  root: data
+  manifest_path: ${data.root}/manifests/isic2020.csv
+  splits_dir: ${data.root}/splits
+  image_size: 384
+  batch_size: 32
+  num_workers: 4
+  env: kaggle
+  paths:
+    local:
+      images_dir: ${data.root}/processed/isic2020_512
+      manifest_path: ${data.manifest_path}
+      splits_dir: ${data.splits_dir}
+    kaggle:
+      images_dir: /tmp/images_512
+      manifest_path: /kaggle/input/melanoma-isic2020-splits/isic2020.csv
+      splits_dir: /kaggle/input/melanoma-isic2020-splits
+  augment:
+    hflip_p: 0.5
+    vflip_p: 0.5
+    rotate_limit_deg: 20
+    rotate_p: 0.5
+    brightness_limit: 0.2
+    contrast_limit: 0.2
+    brightness_contrast_p: 0.5
+    crop_scale:
+    - 0.8
+    - 1.0
+  val_resize: center_crop
+  sampler: none
+  preprocess_scale: none
+  name: isic2020
+  raw_dir: ${data.root}/raw/isic2020
+  images_zip: ${data.raw_dir}/ISIC_2020_Training_JPEG.zip
+  images_dir: ${data.raw_dir}/train
+  ground_truth_csv: ${data.raw_dir}/ISIC_2020_Training_GroundTruth_v2.csv
+  official_duplicates_csv: ${data.raw_dir}/ISIC_2020_Training_Duplicates.csv
+  reports_dir: reports
+  figures_dir: ${data.reports_dir}/figures
+  test_access_log: logs/test_set_access.log
+  source:
+    base_url: https://isic-challenge-data.s3.amazonaws.com/2020
+    zip_bytes: 24707698022
+    zip_etag: 013145107654177e7dd94091fdf27e9c-2946
+  expected:
+    images: 33126
+    positives: 584
+    patients: 2056
+    prevalence_pct: 1.76
+  hashing:
+    workers: 12
+  phash:
+    hash_size: 8
+    threshold: 0
+    report_max_distance: 16
+    decode_size: 256
+    contact_sheet_pairs: 20
+    thumb_px: 224
+    cache: true
+    sweep_thresholds:
+    - 0
+    - 2
+    - 4
+    - 6
+    - 8
+    sweep_max_group: 10
+    sweep_sample_groups: 10
+    sweep_seed: 20260904
+  split:
+    fractions:
+      train: 0.7
+      val: 0.15
+      test: 0.15
+    seed: 20260904
+    min_test_positives: 80
+    names:
+    - train
+    - val
+    - test
+  resize:
+    long_side: 512
+    jpeg_quality: 95
+    out_dir: ${data.root}/processed/isic2020_512
+    workers: 12
+  verify:
+    sample_size: 200
+    seed: 20260904
+    kaggle_competition_dir: /kaggle/input/competitions/siim-isic-melanoma-classification/jpeg/train
+    kaggle_splits_dir: /kaggle/input/datasets/edgaronti26/melanoma-isic2020-splits
+model:
+  backbone: convnext_tiny.fb_in22k_ft_in1k_384
+  pretrained: true
+  dropout: 0.2
+  num_classes: 1
+  freeze_backbone: false
+train:
+  seed: 0
+  max_epochs: 15
+  lr: 0.0001
+  weight_decay: 0.01
+  precision: 16-mixed
+  deterministic: true
+  accelerator: auto
+  devices: 1
+  accumulate_grad_batches: 4
+  memory_warmup: true
+  pos_weight: auto
+  scheduler: cosine
+  warmup_epochs: 1
+  monitor: val/auprc
+  monitor_mode: max
+  early_stopping_patience: 5
+  checkpoint_dir: null
+  progress_bar: true
+  collapse_std_threshold: 0.01
+  collapse_auc_tolerance: 0.02
+  eval:
+    bootstrap_resamples: 2000
+    bootstrap_seed: 20260904
+    fixed_levels:
+    - 0.9
+    - 0.95
+    threshold_sensitivity: 0.9
+    reliability_bins: 10
+  wandb:
+    enabled: true
+    project: melanoma-triage
+    entity: null
+    mode: online
+experiment: m2
+
+[2026-09-18 17:25:28,377][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/convnext_tiny.fb_in22k_ft_in1k_384)
+[2026-09-18 17:25:28,470][httpx][INFO] - HTTP Request: HEAD https://huggingface.co/timm/convnext_tiny.fb_in22k_ft_in1k_384/resolve/main/model.safetensors "HTTP/1.1 302 Found"
+[2026-09-18 17:25:28,527][httpx][INFO] - HTTP Request: GET https://huggingface.co/api/models/timm/convnext_tiny.fb_in22k_ft_in1k_384/xet-read-token/32c741ba106f9e062174ef829354a16719c3dcac "HTTP/1.1 200 OK"
+data:
+  root: data
+  manifest_path: ${data.root}/manifests/isic2020.csv
+  splits_dir: ${data.root}/splits
+  image_size: 384
+  batch_size: 32
+  num_workers: 4
+  env: kaggle
+  paths:
+    local:
+      images_dir: ${data.root}/processed/isic2020_512
+      manifest_path: ${data.manifest_path}
+      splits_dir: ${data.splits_dir}
+    kaggle:
+      images_dir: /tmp/images_512
+      manifest_path: /kaggle/input/melanoma-isic2020-splits/isic2020.csv
+      splits_dir: /kaggle/input/melanoma-isic2020-splits
+  augment:
+    hflip_p: 0.5
+    vflip_p: 0.5
+    rotate_limit_deg: 20
+    rotate_p: 0.5
+    brightness_limit: 0.2
+    contrast_limit: 0.2
+    brightness_contrast_p: 0.5
+    crop_scale:
+    - 0.8
+    - 1.0
+  val_resize: center_crop
+  sampler: none
+  preprocess_scale: none
+  name: isic2020
+  raw_dir: ${data.root}/raw/isic2020
+  images_zip: ${data.raw_dir}/ISIC_2020_Training_JPEG.zip
+  images_dir: ${data.raw_dir}/train
+  ground_truth_csv: ${data.raw_dir}/ISIC_2020_Training_GroundTruth_v2.csv
+  official_duplicates_csv: ${data.raw_dir}/ISIC_2020_Training_Duplicates.csv
+  reports_dir: reports
+  figures_dir: ${data.reports_dir}/figures
+  test_access_log: logs/test_set_access.log
+  source:
+    base_url: https://isic-challenge-data.s3.amazonaws.com/2020
+    zip_bytes: 24707698022
+    zip_etag: 013145107654177e7dd94091fdf27e9c-2946
+  expected:
+    images: 33126
+    positives: 584
+    patients: 2056
+    prevalence_pct: 1.76
+  hashing:
+    workers: 12
+  phash:
+    hash_size: 8
+    threshold: 0
+    report_max_distance: 16
+    decode_size: 256
+    contact_sheet_pairs: 20
+    thumb_px: 224
+    cache: true
+    sweep_thresholds:
+    - 0
+    - 2
+    - 4
+    - 6
+    - 8
+    sweep_max_group: 10
+    sweep_sample_groups: 10
+    sweep_seed: 20260904
+  split:
+    fractions:
+      train: 0.7
+      val: 0.15
+      test: 0.15
+    seed: 20260904
+    min_test_positives: 80
+    names:
+    - train
+    - val
+    - test
+  resize:
+    long_side: 512
+    jpeg_quality: 95
+    out_dir: ${data.root}/processed/isic2020_512
+    workers: 12
+  verify:
+    sample_size: 200
+    seed: 20260904
+    kaggle_competition_dir: /kaggle/input/competitions/siim-isic-melanoma-classification/jpeg/train
+    kaggle_splits_dir: /kaggle/input/datasets/edgaronti26/melanoma-isic2020-splits
+model:
+  backbone: convnext_tiny.fb_in22k_ft_in1k_384
+  pretrained: true
+  dropout: 0.2
+  num_classes: 1
+  freeze_backbone: false
+train:
+  seed: 0
+  max_epochs: 15
+  lr: 0.0001
+  weight_decay: 0.01
+  precision: 16-mixed
+  deterministic: true
+  accelerator: auto
+  devices: 1
+  accumulate_grad_batches: 4
+  memory_warmup: true
+  pos_weight: auto
+  scheduler: cosine
+  warmup_epochs: 1
+  monitor: val/auprc
+  monitor_mode: max
+  early_stopping_patience: 5
+  checkpoint_dir: null
+  progress_bar: true
+  collapse_std_threshold: 0.01
+  collapse_auc_tolerance: 0.02
+  eval:
+    bootstrap_resamples: 2000
+    bootstrap_seed: 20260904
+    fixed_levels:
+    - 0.9
+    - 0.95
+    threshold_sensitivity: 0.9
+    reliability_bins: 10
+  wandb:
+    enabled: true
+    project: melanoma-triage
+    entity: null
+    mode: online
+experiment: m2
+
+[2026-09-18 17:25:28,377][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/convnext_tiny.fb_in22k_ft_in1k_384)
+[2026-09-18 17:25:28,470][httpx][INFO] - HTTP Request: HEAD https://huggingface.co/timm/convnext_tiny.fb_in22k_ft_in1k_384/resolve/main/model.safetensors "HTTP/1.1 302 Found"
+[2026-09-18 17:25:28,527][httpx][INFO] - HTTP Request: GET https://huggingface.co/api/models/timm/convnext_tiny.fb_in22k_ft_in1k_384/xet-read-token/32c741ba106f9e062174ef829354a16719c3dcac "HTTP/1.1 200 OK"
+[2026-09-18 17:25:30,569][timm.models._hub][INFO] - [timm/convnext_tiny.fb_in22k_ft_in1k_384] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
+[2026-09-18 17:25:30,605][melanoma.train.run][INFO] - data_config del backbone: {'input_size': (3, 384, 384), 'interpolation': 'bicubic', 'mean': (0.485, 0.456, 0.406), 'std': (0.229, 0.224, 0.225), 'crop_pct': 1.0, 'crop_mode': 'squash'}
+[2026-09-18 17:25:30,569][timm.models._hub][INFO] - [timm/convnext_tiny.fb_in22k_ft_in1k_384] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
+[2026-09-18 17:25:30,605][melanoma.train.run][INFO] - data_config del backbone: {'input_size': (3, 384, 384), 'interpolation': 'bicubic', 'mean': (0.485, 0.456, 0.406), 'std': (0.229, 0.224, 0.225), 'crop_pct': 1.0, 'crop_mode': 'squash'}
+[2026-09-18 17:25:31,020][melanoma.train.run][INFO] - corrida convnext_tiny-384-s0-e153979: train 22501 neg / 410 pos, pos_weight=54.88, sampler=none
+[2026-09-18 17:25:31,020][melanoma.train.run][INFO] - corrida convnext_tiny-384-s0-e153979: train 22501 neg / 410 pos, pos_weight=54.88, sampler=none
+[2026-09-18 17:25:45,448][melanoma.train.run][INFO] - calentamiento OK: lote 32 × 384 px, pico 5.71 GB de 14.56 GB (Tesla T4)
+[GPU] calentamiento OK: lote 32 × 384 px, pico 5.71 GB de 14.56 GB (Tesla T4)
+[2026-09-18 17:25:45,588][melanoma.train.run][WARNING] - WANDB_API_KEY no está definida; W&B corre en modo offline
+Using 16bit Automatic Mixed Precision (AMP)
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+💡 Tip: For seamless cloud logging and experiment tracking, try installing [litlogger](https://pypi.org/project/litlogger/) to enable LitLogger, which logs metrics and artifacts automatically to the Lightning Experiments platform.
+wandb: WARNING The anonymous setting has no effect and will be removed in a future version.
+[2026-09-18 17:25:45,448][melanoma.train.run][INFO] - calentamiento OK: lote 32 × 384 px, pico 5.71 GB de 14.56 GB (Tesla T4)
+[GPU] calentamiento OK: lote 32 × 384 px, pico 5.71 GB de 14.56 GB (Tesla T4)
+[2026-09-18 17:25:45,588][melanoma.train.run][WARNING] - WANDB_API_KEY no está definida; W&B corre en modo offline
+Using 16bit Automatic Mixed Precision (AMP)
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+💡 Tip: For seamless cloud logging and experiment tracking, try installing [litlogger](https://pypi.org/project/litlogger/) to enable LitLogger, which logs metrics and artifacts automatically to the Lightning Experiments platform.
+wandb: WARNING The anonymous setting has no effect and will be removed in a future version.
+
+Using 16bit Automatic Mixed Precision (AMP)
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+💡 Tip: For seamless cloud logging and experiment tracking, try installing [litlogger](https://pypi.org/project/litlogger/) to enable LitLogger, which logs metrics and artifacts automatically to the Lightning Experiments platform.
+wandb: WARNING The anonymous setting has no effect and will be removed in a future version.
+wandb: WARNING `resume` will be ignored since W&B syncing is set to `offline`. Starting a new run with run id kvnqlim5.
+wandb: Tracking run with wandb version 0.26.1
+wandb: W&B syncing is set to `offline` in this directory. Run `wandb online` or set WANDB_MODE=online to enable cloud syncing.
+wandb: Run data is saved locally in /kaggle/working/runs/m2-s0-e153979/wandb/offline-run-20260918_172545-kvnqlim5
+wandb: WARNING `resume` will be ignored since W&B syncing is set to `offline`. Starting a new run with run id kvnqlim5.
+wandb: Tracking run with wandb version 0.26.1
+wandb: W&B syncing is set to `offline` in this directory. Run `wandb online` or set WANDB_MODE=online to enable cloud syncing.
+wandb: Run data is saved locally in /kaggle/working/runs/m2-s0-e153979/wandb/offline-run-20260918_172545-kvnqlim5
+
+wandb: WARNING `resume` will be ignored since W&B syncing is set to `offline`. Starting a new run with run id kvnqlim5.
+wandb: Tracking run with wandb version 0.26.1
+wandb: W&B syncing is set to `offline` in this directory. Run `wandb online` or set WANDB_MODE=online to enable cloud syncing.
+wandb: Run data is saved locally in /kaggle/working/runs/m2-s0-e153979/wandb/offline-run-20260918_172545-kvnqlim5
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0,1]
+Loading `train_dataloader` to estimate number of stepping batches.
+/usr/local/lib/python3.12/dist-packages/lightning/pytorch/utilities/_pytree.py:21: `isinstance(treespec, LeafSpec)` is deprecated, use `isinstance(treespec, TreeSpec) and treespec.is_leaf()` instead.
+/usr/local/lib/python3.12/dist-packages/lightning/pytorch/utilities/model_summary/model_summary.py:242: Precision 16-mixed is not supported by the model summary.  Estimated model size in MB will not be accurate. Using 32 bits instead.
+┏━━━┳━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━┳━━━━━━━┓
+┃   ┃ Name      ┃ Type                   ┃ Params ┃ Mode  ┃ FLOPs ┃
+┡━━━╇━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━╇━━━━━━━┩
+│ 0 │ model     │ BackboneClassifier     │ 27.8 M │ train │     0 │
+│ 1 │ criterion │ BCEWithLogitsLoss      │      0 │ train │     0 │
+│ 2 │ val_auroc │ BinaryAUROC            │      0 │ train │     0 │
+│ 3 │ val_auprc │ BinaryAveragePrecision │      0 │ train │     0 │
+└───┴───────────┴────────────────────────┴────────┴───────┴───────┘
+Trainable params: 27.8 M                                                        
+Non-trainable params: 0                                                         
+Total params: 27.8 M                                                            
+Total estimated model params size (MB): 111.284                                 
+Modules in train mode: 256                                                      
+Modules in eval mode: 0                                                         
+Total FLOPs: 0                                                                  
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0,1]
+Loading `train_dataloader` to estimate number of stepping batches.
+/usr/local/lib/python3.12/dist-packages/lightning/pytorch/utilities/_pytree.py:21: `isinstance(treespec, LeafSpec)` is deprecated, use `isinstance(treespec, TreeSpec) and treespec.is_leaf()` instead.
+/usr/local/lib/python3.12/dist-packages/lightning/pytorch/utilities/model_summary/model_summary.py:242: Precision 16-mixed is not supported by the model summary.  Estimated model size in MB will not be accurate. Using 32 bits instead.
+
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0,1]
+Loading `train_dataloader` to estimate number of stepping batches.
+/usr/local/lib/python3.12/dist-packages/lightning/pytorch/utilities/_pytree.py:21: `isinstance(treespec, LeafSpec)` is deprecated, use `isinstance(treespec, TreeSpec) and treespec.is_leaf()` instead.
+/usr/local/lib/python3.12/dist-packages/lightning/pytorch/utilities/model_summary/model_summary.py:242: Precision 16-mixed is not supported by the model summary.  Estimated model size in MB will not be accurate. Using 32 bits instead.
+┏━━━┳━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━┳━━━━━━━┓
+┃   ┃ Name      ┃ Type                   ┃ Params ┃ Mode  ┃ FLOPs ┃
+┡━━━╇━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━╇━━━━━━━┩
+│ 0 │ model     │ BackboneClassifier     │ 27.8 M │ train │     0 │
+│ 1 │ criterion │ BCEWithLogitsLoss      │      0 │ train │     0 │
+│ 2 │ val_auroc │ BinaryAUROC            │      0 │ train │     0 │
+│ 3 │ val_auprc │ BinaryAveragePrecision │      0 │ train │     0 │
+└───┴───────────┴────────────────────────┴────────┴───────┴───────┘
+Trainable params: 27.8 M                                                        
+Non-trainable params: 0                                                         
+Total params: 27.8 M                                                            
+Total estimated model params size (MB): 111.284                                 
+Modules in train mode: 256                                                      
+Modules in eval mode: 0                                                         
+Total FLOPs: 0                                                                  
+/usr/local/lib/python3.12/dist-packages/torchmetrics/utilities/prints.py:43: UserWarning: No positive samples in targets, true positive value should be meaningless. Returning zero tensor in true positive score
+  warnings.warn(*args, **kwargs)
+/usr/local/lib/python3.12/dist-packages/torchmetrics/utilities/prints.py:43: UserWarning: No positive samples found in target, recall is undefined. Setting recall to one for all thresholds.
+  warnings.warn(*args, **kwargs)
+/usr/local/lib/python3.12/dist-packages/torchmetrics/utilities/prints.py:43: UserWarning: No positive samples in targets, true positive value should be meaningless. Returning zero tensor in true positive score
+  warnings.warn(*args, **kwargs)
+/usr/local/lib/python3.12/dist-packages/torchmetrics/utilities/prints.py:43: UserWarning: No positive samples found in target, recall is undefined. Setting recall to one for all thresholds.
+  warnings.warn(*args, **kwargs)
+
+/usr/local/lib/python3.12/dist-packages/torchmetrics/utilities/prints.py:43: UserWarning: No positive samples in targets, true positive value should be meaningless. Returning zero tensor in true positive score
+  warnings.warn(*args, **kwargs)
+/usr/local/lib/python3.12/dist-packages/torchmetrics/utilities/prints.py:43: UserWarning: No positive samples found in target, recall is undefined. Setting recall to one for all thresholds.
+  warnings.warn(*args, **kwargs)
+/usr/local/lib/python3.12/dist-packages/lightning/pytorch/core/module.py:1333: Detected call of `lr_scheduler.step()` before `optimizer.step()`. In PyTorch 1.1.0 and later, you should call them in the opposite order: `optimizer.step()` before `lr_scheduler.step()`.  Failure to do this will result in PyTorch skipping the first value of the learning rate schedule. See more details at https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate
+/usr/local/lib/python3.12/dist-packages/lightning/pytorch/core/module.py:1333: Detected call of `lr_scheduler.step()` before `optimizer.step()`. In PyTorch 1.1.0 and later, you should call them in the opposite order: `optimizer.step()` before `lr_scheduler.step()`.  Failure to do this will result in PyTorch skipping the first value of the learning rate schedule. See more details at https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate
+
+/usr/local/lib/python3.12/dist-packages/lightning/pytorch/core/module.py:1333: Detected call of `lr_scheduler.step()` before `optimizer.step()`. In PyTorch 1.1.0 and later, you should call them in the opposite order: `optimizer.step()` before `lr_scheduler.step()`.  Failure to do this will result in PyTorch skipping the first value of the learning rate schedule. See more details at https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate
+[2026-09-18 17:31:29,233][melanoma.train.callbacks][INFO] - época 0: 5.6 min, espera de datos 44 %, GPU 98 %
+
+[E/S] época 0: 5.6 min, espera de datos 44 %, GPU 98 %
+Metric val/auprc improved. New best score: 0.043
+[2026-09-18 17:31:29,233][melanoma.train.callbacks][INFO] - época 0: 5.6 min, espera de datos 44 %, GPU 98 %
+
+[E/S] época 0: 5.6 min, espera de datos 44 %, GPU 98 %
+Metric val/auprc improved. New best score: 0.043
+
+Metric val/auprc improved. New best score: 0.043
+[2026-09-18 17:36:57,132][melanoma.train.callbacks][INFO] - época 1: 5.4 min, espera de datos 46 %, GPU 99 %
+
+[E/S] época 1: 5.4 min, espera de datos 46 %, GPU 99 %
+Metric val/auprc improved by 0.026 >= min_delta = 0.0. New best score: 0.069
+[2026-09-18 17:36:57,132][melanoma.train.callbacks][INFO] - época 1: 5.4 min, espera de datos 46 %, GPU 99 %
+
+[E/S] época 1: 5.4 min, espera de datos 46 %, GPU 99 %
+Metric val/auprc improved by 0.026 >= min_delta = 0.0. New best score: 0.069
+
+Metric val/auprc improved by 0.026 >= min_delta = 0.0. New best score: 0.069
+[2026-09-18 17:42:24,437][melanoma.train.callbacks][INFO] - época 2: 5.4 min, espera de datos 46 %, GPU 98 %
+
+[E/S] época 2: 5.4 min, espera de datos 46 %, GPU 98 %
+[2026-09-18 17:42:24,437][melanoma.train.callbacks][INFO] - época 2: 5.4 min, espera de datos 46 %, GPU 98 %
+
+[E/S] época 2: 5.4 min, espera de datos 46 %, GPU 98 %
+[2026-09-18 17:47:49,268][melanoma.train.callbacks][INFO] - época 3: 5.4 min, espera de datos 46 %, GPU 99 %
+
+[E/S] época 3: 5.4 min, espera de datos 46 %, GPU 99 %
+Metric val/auprc improved by 0.009 >= min_delta = 0.0. New best score: 0.078
+[2026-09-18 17:47:49,268][melanoma.train.callbacks][INFO] - época 3: 5.4 min, espera de datos 46 %, GPU 99 %
+
+[E/S] época 3: 5.4 min, espera de datos 46 %, GPU 99 %
+Metric val/auprc improved by 0.009 >= min_delta = 0.0. New best score: 0.078
+
+Metric val/auprc improved by 0.009 >= min_delta = 0.0. New best score: 0.078
+[2026-09-18 17:53:15,389][melanoma.train.callbacks][INFO] - época 4: 5.4 min, espera de datos 46 %, GPU 99 %
+
+[E/S] época 4: 5.4 min, espera de datos 46 %, GPU 99 %
+Metric val/auprc improved by 0.018 >= min_delta = 0.0. New best score: 0.096
+[2026-09-18 17:53:15,389][melanoma.train.callbacks][INFO] - época 4: 5.4 min, espera de datos 46 %, GPU 99 %
+
+[E/S] época 4: 5.4 min, espera de datos 46 %, GPU 99 %
+Metric val/auprc improved by 0.018 >= min_delta = 0.0. New best score: 0.096
+
+Metric val/auprc improved by 0.018 >= min_delta = 0.0. New best score: 0.096
+[2026-09-18 17:58:41,041][melanoma.train.callbacks][INFO] - época 5: 5.4 min, espera de datos 46 %, GPU 99 %
+
+[E/S] época 5: 5.4 min, espera de datos 46 %, GPU 99 %
+[2026-09-18 17:58:41,041][melanoma.train.callbacks][INFO] - época 5: 5.4 min, espera de datos 46 %, GPU 99 %
+
+[E/S] época 5: 5.4 min, espera de datos 46 %, GPU 99 %
+[2026-09-18 18:04:04,240][melanoma.train.callbacks][INFO] - época 6: 5.4 min, espera de datos 46 %, GPU 98 %
+
+[E/S] época 6: 5.4 min, espera de datos 46 %, GPU 98 %
+Metric val/auprc improved by 0.018 >= min_delta = 0.0. New best score: 0.114
+[2026-09-18 18:04:04,240][melanoma.train.callbacks][INFO] - época 6: 5.4 min, espera de datos 46 %, GPU 98 %
+
+[E/S] época 6: 5.4 min, espera de datos 46 %, GPU 98 %
+Metric val/auprc improved by 0.018 >= min_delta = 0.0. New best score: 0.114
+
+Metric val/auprc improved by 0.018 >= min_delta = 0.0. New best score: 0.114
+[2026-09-18 18:09:29,371][melanoma.train.callbacks][INFO] - época 7: 5.4 min, espera de datos 46 %, GPU 99 %
+
+[E/S] época 7: 5.4 min, espera de datos 46 %, GPU 99 %
+[2026-09-18 18:09:29,371][melanoma.train.callbacks][INFO] - época 7: 5.4 min, espera de datos 46 %, GPU 99 %
+
+[E/S] época 7: 5.4 min, espera de datos 46 %, GPU 99 %
+[2026-09-18 18:14:52,456][melanoma.train.callbacks][INFO] - época 8: 5.4 min, espera de datos 46 %, GPU 99 %
+
+[E/S] época 8: 5.4 min, espera de datos 46 %, GPU 99 %
+[2026-09-18 18:14:52,456][melanoma.train.callbacks][INFO] - época 8: 5.4 min, espera de datos 46 %, GPU 99 %
+
+[E/S] época 8: 5.4 min, espera de datos 46 %, GPU 99 %
+[2026-09-18 18:20:14,715][melanoma.train.callbacks][INFO] - época 9: 5.4 min, espera de datos 46 %, GPU 99 %
+
+[E/S] época 9: 5.4 min, espera de datos 46 %, GPU 99 %
+Metric val/auprc improved by 0.017 >= min_delta = 0.0. New best score: 0.131
+[2026-09-18 18:20:14,715][melanoma.train.callbacks][INFO] - época 9: 5.4 min, espera de datos 46 %, GPU 99 %
+
+[E/S] época 9: 5.4 min, espera de datos 46 %, GPU 99 %
+Metric val/auprc improved by 0.017 >= min_delta = 0.0. New best score: 0.131
+
+Metric val/auprc improved by 0.017 >= min_delta = 0.0. New best score: 0.131
+[2026-09-18 18:25:37,710][melanoma.train.callbacks][INFO] - época 10: 5.4 min, espera de datos 46 %, GPU 99 %
+
+[E/S] época 10: 5.4 min, espera de datos 46 %, GPU 99 %
+[2026-09-18 18:25:37,710][melanoma.train.callbacks][INFO] - época 10: 5.4 min, espera de datos 46 %, GPU 99 %
+
+[E/S] época 10: 5.4 min, espera de datos 46 %, GPU 99 %
+[2026-09-18 18:30:58,701][melanoma.train.callbacks][INFO] - época 11: 5.3 min, espera de datos 46 %, GPU 99 %
+
+[E/S] época 11: 5.3 min, espera de datos 46 %, GPU 99 %
+Metric val/auprc improved by 0.024 >= min_delta = 0.0. New best score: 0.155
+[2026-09-18 18:30:58,701][melanoma.train.callbacks][INFO] - época 11: 5.3 min, espera de datos 46 %, GPU 99 %
+
+[E/S] época 11: 5.3 min, espera de datos 46 %, GPU 99 %
+Metric val/auprc improved by 0.024 >= min_delta = 0.0. New best score: 0.155
+
+Metric val/auprc improved by 0.024 >= min_delta = 0.0. New best score: 0.155
+[2026-09-18 18:36:21,356][melanoma.train.callbacks][INFO] - época 12: 5.4 min, espera de datos 46 %, GPU 99 %
+
+[E/S] época 12: 5.4 min, espera de datos 46 %, GPU 99 %
+[2026-09-18 18:36:21,356][melanoma.train.callbacks][INFO] - época 12: 5.4 min, espera de datos 46 %, GPU 99 %
+
+[E/S] época 12: 5.4 min, espera de datos 46 %, GPU 99 %
+[2026-09-18 18:41:42,640][melanoma.train.callbacks][INFO] - época 13: 5.4 min, espera de datos 46 %, GPU 99 %
+
+[E/S] época 13: 5.4 min, espera de datos 46 %, GPU 99 %
+[2026-09-18 18:41:42,640][melanoma.train.callbacks][INFO] - época 13: 5.4 min, espera de datos 46 %, GPU 99 %
+
+[E/S] época 13: 5.4 min, espera de datos 46 %, GPU 99 %
+[2026-09-18 18:47:03,867][melanoma.train.callbacks][INFO] - época 14: 5.4 min, espera de datos 46 %, GPU 98 %
+
+[E/S] época 14: 5.4 min, espera de datos 46 %, GPU 98 %
+`Trainer.fit` stopped: `max_epochs=15` reached.
+[2026-09-18 18:47:03,867][melanoma.train.callbacks][INFO] - época 14: 5.4 min, espera de datos 46 %, GPU 98 %
+
+[E/S] época 14: 5.4 min, espera de datos 46 %, GPU 98 %
+`Trainer.fit` stopped: `max_epochs=15` reached.
+
+`Trainer.fit` stopped: `max_epochs=15` reached.
+Epoch 14/14 ━━━━━━━━━━━━━━━━ 716/716 0:04:56 •        2.42it/s v_num: lim5      
+                                     0:00:00                   train/loss_step: 
+                                                               0.024 val/auroc: 
+                                                               0.838 val/auprc: 
+                                                               0.154            
+                                                               train/loss_epoch:
+                                                               0.082            
+Epoch 14/14 ━━━━━━━━━━━━━━━━ 716/716 0:04:56 •        2.42it/s v_num: lim5      
+                                     0:00:00                   train/loss_step: 
+                                                               0.024 val/auroc: 
+                                                               0.838 val/auprc: 
+                                                               0.154            
+                                                               train/loss_epoch:
+                                                               0.082            
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0,1]
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0,1]
+
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0,1]
+Predicting ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 156/156 0:00:23 • 0:00:00 6.57it/s 
+Predicting ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 156/156 0:00:23 • 0:00:00 6.57it/s 
+
+convnext_tiny-384-s0-e153979: AUROC 0.8404  AUPRC 0.1547  (prevalencia 0.0177)  épocas 15  colapsos []
+→ /kaggle/working/runs/m2-s0-e153979
+[1;34mwandb[0m: 
+[1;34mwandb[0m: You can sync this run to the cloud by running:
+[1;34mwandb[0m: [1mwandb sync /kaggle/working/runs/m2-s0-e153979/wandb/offline-run-20260918_172545-kvnqlim5[0m
+[1;34mwandb[0m: Find logs at: [1;35m../runs/m2-s0-e153979/wandb/offline-run-20260918_172545-kvnqlim5/logs[0m
+
+convnext_tiny-384-s0-e153979: AUROC 0.8404  AUPRC 0.1547  (prevalencia 0.0177)  épocas 15  colapsos []
+→ /kaggle/working/runs/m2-s0-e153979
+[1;34mwandb[0m: 
+[1;34mwandb[0m: You can sync this run to the cloud by running:
+[1;34mwandb[0m: [1mwandb sync /kaggle/working/runs/m2-s0-e153979/wandb/offline-run-20260918_172545-kvnqlim5[0m
+[1;34mwandb[0m: Find logs at: [1;35m../runs/m2-s0-e153979/wandb/offline-run-20260918_172545-kvnqlim5/logs[0m
+{
+  "run_name": "convnext_tiny-384-s0-e153979",
+  "best_checkpoint": "/kaggle/working/runs/m2-s0-e153979/checkpoints/convnext_tiny-384-s0-e153979-11-0.0000.ckpt",
+  "epochs_run": 15,
+  "collapse_epochs": []
+}
+{
+  "n_images": 4963,
+  "n_positives": 88,
+  "n_patients": 568,
+  "prevalence": 0.017731210961112232,
+  "auprc_random": 0.017731210961112232,
+  "auroc": 0.8403846153846154,
+  "auprc": 0.15470085817015503,
+  "threshold_policy": "sensibilidad>=0.9",
+  "confusion": {
+    "threshold": 0.0005132579244673252,
+    "tn": 2560,
+    "fp": 2315,
+    "fn": 8,
+    "tp": 80,
+    "sensitivity": 0.9090909090909091,
+    "specificity": 0.5251282051282051,
+    "ppv": 0.033402922755741124,
+    "npv": 0.9968847352024922
+  },
+  "sens_at_spec090": 0.6136363636363636,
+  "spec_at_sens090": 0.5251282051282051,
+  "sens_at_spec095": 0.48863636363636365,
+  "spec_at_sens095": 0.294974358974359
+}
+# convnext_tiny-384-s0-e153979
+
+commit `e153979` · splits {'train': '701333b2450c363b1ab1b5a9422d3d223d243e1b3af2d643b05f6b86f711968c', 'val': 'b7f727d6cf70d7a12be136e3b7046b42c725eaf5541aadc0723fbac09941ffb1'}
+
+| métrica | valor | IC 95 % (bootstrap por paciente) |
+|:--|--:|:--|
+| AUC-ROC | 0.840 | [0.792, 0.883] |
+| AUPRC (primaria) | 0.155 | [0.100, 0.238] |
+| Sensibilidad a especificidad 0.90 | 0.614 | [0.500, 0.713] |
+| Sensibilidad a especificidad 0.95 | 0.489 | [0.355, 0.594] |
+| Especificidad a sensibilidad 0.90 | 0.525 | [0.293, 0.688] |
+| Especificidad a sensibilidad 0.95 | 0.295 | [0.190, 0.609] |
+| Prevalencia (AUPRC de un clasificador aleatorio) | 0.0177 | |
+
+Umbral: 0.0005 (política: sensibilidad>=0.9; la selección definitiva de umbral es de F4).
+
+| | pred. benigno | pred. melanoma |
+|:--|--:|--:|
+| real benigno | 2560 | 2315 |
+| real melanoma | 8 | 80 |
+
+| métrica en el umbral | valor |
+|:--|--:|
+| Sensibilidad | 0.909 |
+| Especificidad | 0.525 |
+| VPP a la prevalencia observada (0.0177) | 0.033 |
+| VPN a la prevalencia observada | 0.997 |
+
+/usr/local/lib/python3.12/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\|'
+  cells[i][c] = re.sub('\\\\\|', '|', cell)
+/usr/local/lib/python3.12/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\_'
+  text = re.sub(r'_', '\_', text) # Escape underscores in display text
+[NbConvertApp] Converting notebook __notebook__.ipynb to notebook
+[NbConvertApp] Writing 34452 bytes to __notebook__.ipynb
+[NbConvertApp] Converting notebook __notebook__.ipynb to html
+[NbConvertApp] Writing 319138 bytes to __results__.html

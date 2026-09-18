@@ -1,0 +1,613 @@
+[{"stream_name":"stderr","time":7.264089616,"data":"0.00s - Debugger warning: It seems that frozen modules are being used, which may\n"}
+,{"stream_name":"stderr","time":7.264158351,"data":"0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off\n"}
+,{"stream_name":"stderr","time":7.264162906,"data":"0.00s - to python to disable frozen modules.\n"}
+,{"stream_name":"stderr","time":7.264165736,"data":"0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.\n"}
+,{"stream_name":"stderr","time":7.87708588,"data":"0.00s - Debugger warning: It seems that frozen modules are being used, which may\n"}
+,{"stream_name":"stderr","time":7.87711781,"data":"0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off\n"}
+,{"stream_name":"stderr","time":7.877123114,"data":"0.00s - to python to disable frozen modules.\n"}
+,{"stream_name":"stderr","time":7.877127316,"data":"0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.\n"}
+,{"stream_name":"stdout","time":11.246663359,"data":"commit e153979\n"}
+,{"stream_name":"stdout","time":20.936467151,"data":"     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 45.0/45.0 kB 2.3 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":21.13845346,"data":"     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 45.0/45.0 kB 2.3 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":21.629738221,"data":"   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 168.8/168.8 kB 9.3 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":21.663930077,"data":"   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 849.3/849.3 kB 34.0 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":21.831540136,"data":"   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 168.8/168.8 kB 9.3 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":21.831567542,"data":"   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 849.3/849.3 kB 34.0 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":53.654918912,"data":"splits: /kaggle/input/datasets/edgaronti26/melanoma-isic2020-splits\n"}
+,{"stream_name":"stdout","time":53.654975251,"data":"splits íntegros: {'train': '701333b2450c363b1ab1b5a9422d3d223d243e1b3af2d643b05f6b86f711968c', 'val': 'b7f727d6cf70d7a12be136e3b7046b42c725eaf5541aadc0723fbac09941ffb1'}\n"}
+,{"stream_name":"stdout","time":384.525464335,"data":"imágenes copiadas al disco local en 5.5 min\n"}
+,{"stream_name":"stdout","time":384.525537091,"data":"33126 imágenes en /tmp/images_512\n"}
+,{"stream_name":"stdout","time":384.682862943,"data":"W\u0026B sin llave (modo offline): Connection error trying to communicate with service.\n"}
+,{"stream_name":"stdout","time":384.883462073,"data":"/usr/bin/python3 scripts/train.py +experiment=m2_convnext_t_384 train.seed=2 data.env=kaggle data.paths.kaggle.images_dir=/tmp/images_512 data.paths.kaggle.splits_dir=/kaggle/input/datasets/edgaronti26/melanoma-isic2020-splits data.paths.kaggle.manifest_path=/kaggle/input/datasets/edgaronti26/melanoma-isic2020-splits/isic2020.csv data.num_workers=4 hydra.run.dir=/kaggle/working/runs/m2-s2-e153979\n"}
+,{"stream_name":"stdout","time":398.352132171,"data":"data:\n"}
+,{"stream_name":"stdout","time":398.352163771,"data":"  root: data\n"}
+,{"stream_name":"stdout","time":398.352168152,"data":"  manifest_path: ${data.root}/manifests/isic2020.csv\n"}
+,{"stream_name":"stdout","time":398.352186976,"data":"  splits_dir: ${data.root}/splits\n"}
+,{"stream_name":"stdout","time":398.352190154,"data":"  image_size: 384\n"}
+,{"stream_name":"stdout","time":398.352193178,"data":"  batch_size: 32\n"}
+,{"stream_name":"stdout","time":398.352196017,"data":"  num_workers: 4\n"}
+,{"stream_name":"stdout","time":398.352199031,"data":"  env: kaggle\n"}
+,{"stream_name":"stdout","time":398.352201849,"data":"  paths:\n"}
+,{"stream_name":"stdout","time":398.352204574,"data":"    local:\n"}
+,{"stream_name":"stdout","time":398.352207327,"data":"      images_dir: ${data.root}/processed/isic2020_512\n"}
+,{"stream_name":"stdout","time":398.352210199,"data":"      manifest_path: ${data.manifest_path}\n"}
+,{"stream_name":"stdout","time":398.352213164,"data":"      splits_dir: ${data.splits_dir}\n"}
+,{"stream_name":"stdout","time":398.352216027,"data":"    kaggle:\n"}
+,{"stream_name":"stdout","time":398.352218824,"data":"      images_dir: /tmp/images_512\n"}
+,{"stream_name":"stdout","time":398.352221659,"data":"      manifest_path: /kaggle/input/datasets/edgaronti26/melanoma-isic2020-splits/isic2020.csv\n"}
+,{"stream_name":"stdout","time":398.352225082,"data":"      splits_dir: /kaggle/input/datasets/edgaronti26/melanoma-isic2020-splits\n"}
+,{"stream_name":"stdout","time":398.352227987,"data":"  augment:\n"}
+,{"stream_name":"stdout","time":398.352230723,"data":"    hflip_p: 0.5\n"}
+,{"stream_name":"stdout","time":398.352233486,"data":"    vflip_p: 0.5\n"}
+,{"stream_name":"stdout","time":398.352236359,"data":"    rotate_limit_deg: 20\n"}
+,{"stream_name":"stdout","time":398.352239181,"data":"    rotate_p: 0.5\n"}
+,{"stream_name":"stdout","time":398.352241913,"data":"    brightness_limit: 0.2\n"}
+,{"stream_name":"stdout","time":398.352245319,"data":"    contrast_limit: 0.2\n"}
+,{"stream_name":"stdout","time":398.352248155,"data":"    brightness_contrast_p: 0.5\n"}
+,{"stream_name":"stdout","time":398.352250984,"data":"    crop_scale:\n"}
+,{"stream_name":"stdout","time":398.352253721,"data":"    - 0.8\n"}
+,{"stream_name":"stdout","time":398.352256459,"data":"    - 1.0\n"}
+,{"stream_name":"stdout","time":398.352259185,"data":"  val_resize: center_crop\n"}
+,{"stream_name":"stdout","time":398.352261953,"data":"  sampler: none\n"}
+,{"stream_name":"stdout","time":398.352264682,"data":"  preprocess_scale: none\n"}
+,{"stream_name":"stdout","time":398.352267452,"data":"  name: isic2020\n"}
+,{"stream_name":"stdout","time":398.352270221,"data":"  raw_dir: ${data.root}/raw/isic2020\n"}
+,{"stream_name":"stdout","time":398.352273001,"data":"  images_zip: ${data.raw_dir}/ISIC_2020_Training_JPEG.zip\n"}
+,{"stream_name":"stdout","time":398.352275876,"data":"  images_dir: ${data.raw_dir}/train\n"}
+,{"stream_name":"stdout","time":398.352278669,"data":"  ground_truth_csv: ${data.raw_dir}/ISIC_2020_Training_GroundTruth_v2.csv\n"}
+,{"stream_name":"stdout","time":398.352281531,"data":"  official_duplicates_csv: ${data.raw_dir}/ISIC_2020_Training_Duplicates.csv\n"}
+,{"stream_name":"stdout","time":398.352284397,"data":"  reports_dir: reports\n"}
+,{"stream_name":"stdout","time":398.352287308,"data":"  figures_dir: ${data.reports_dir}/figures\n"}
+,{"stream_name":"stdout","time":398.352290192,"data":"  test_access_log: logs/test_set_access.log\n"}
+,{"stream_name":"stdout","time":398.352293021,"data":"  source:\n"}
+,{"stream_name":"stdout","time":398.352295811,"data":"    base_url: https://isic-challenge-data.s3.amazonaws.com/2020\n"}
+,{"stream_name":"stdout","time":398.352298669,"data":"    zip_bytes: 24707698022\n"}
+,{"stream_name":"stdout","time":398.352304456,"data":"    zip_etag: 013145107654177e7dd94091fdf27e9c-2946\n"}
+,{"stream_name":"stdout","time":398.352307482,"data":"  expected:\n"}
+,{"stream_name":"stdout","time":398.352310254,"data":"    images: 33126\n"}
+,{"stream_name":"stdout","time":398.352313068,"data":"    positives: 584\n"}
+,{"stream_name":"stdout","time":398.352315856,"data":"    patients: 2056\n"}
+,{"stream_name":"stdout","time":398.352318717,"data":"    prevalence_pct: 1.76\n"}
+,{"stream_name":"stdout","time":398.352321492,"data":"  hashing:\n"}
+,{"stream_name":"stdout","time":398.352324233,"data":"    workers: 12\n"}
+,{"stream_name":"stdout","time":398.352326999,"data":"  phash:\n"}
+,{"stream_name":"stdout","time":398.352329742,"data":"    hash_size: 8\n"}
+,{"stream_name":"stdout","time":398.352332454,"data":"    threshold: 0\n"}
+,{"stream_name":"stdout","time":398.352335208,"data":"    report_max_distance: 16\n"}
+,{"stream_name":"stdout","time":398.352338086,"data":"    decode_size: 256\n"}
+,{"stream_name":"stdout","time":398.352340967,"data":"    contact_sheet_pairs: 20\n"}
+,{"stream_name":"stdout","time":398.35234393,"data":"    thumb_px: 224\n"}
+,{"stream_name":"stdout","time":398.352346692,"data":"    cache: true\n"}
+,{"stream_name":"stdout","time":398.352349422,"data":"    sweep_thresholds:\n"}
+,{"stream_name":"stdout","time":398.352352197,"data":"    - 0\n"}
+,{"stream_name":"stdout","time":398.352354915,"data":"    - 2\n"}
+,{"stream_name":"stdout","time":398.352357653,"data":"    - 4\n"}
+,{"stream_name":"stdout","time":398.352360449,"data":"    - 6\n"}
+,{"stream_name":"stdout","time":398.352363166,"data":"    - 8\n"}
+,{"stream_name":"stdout","time":398.352365861,"data":"    sweep_max_group: 10\n"}
+,{"stream_name":"stdout","time":398.352368689,"data":"    sweep_sample_groups: 10\n"}
+,{"stream_name":"stdout","time":398.352371462,"data":"    sweep_seed: 20260904\n"}
+,{"stream_name":"stdout","time":398.352374214,"data":"  split:\n"}
+,{"stream_name":"stdout","time":398.352376985,"data":"    fractions:\n"}
+,{"stream_name":"stdout","time":398.352379715,"data":"      train: 0.7\n"}
+,{"stream_name":"stdout","time":398.352382501,"data":"      val: 0.15\n"}
+,{"stream_name":"stdout","time":398.352385266,"data":"      test: 0.15\n"}
+,{"stream_name":"stdout","time":398.352388029,"data":"    seed: 20260904\n"}
+,{"stream_name":"stdout","time":398.35239077,"data":"    min_test_positives: 80\n"}
+,{"stream_name":"stdout","time":398.352393694,"data":"    names:\n"}
+,{"stream_name":"stdout","time":398.352396437,"data":"    - train\n"}
+,{"stream_name":"stdout","time":398.352399147,"data":"    - val\n"}
+,{"stream_name":"stdout","time":398.352401879,"data":"    - test\n"}
+,{"stream_name":"stdout","time":398.352404624,"data":"  resize:\n"}
+,{"stream_name":"stdout","time":398.352407346,"data":"    long_side: 512\n"}
+,{"stream_name":"stdout","time":398.352410086,"data":"    jpeg_quality: 95\n"}
+,{"stream_name":"stdout","time":398.352413836,"data":"    out_dir: ${data.root}/processed/isic2020_512\n"}
+,{"stream_name":"stdout","time":398.352416706,"data":"    workers: 12\n"}
+,{"stream_name":"stdout","time":398.352419487,"data":"  verify:\n"}
+,{"stream_name":"stdout","time":398.352422226,"data":"    sample_size: 200\n"}
+,{"stream_name":"stdout","time":398.352425009,"data":"    seed: 20260904\n"}
+,{"stream_name":"stdout","time":398.352427977,"data":"    kaggle_competition_dir: /kaggle/input/competitions/siim-isic-melanoma-classification/jpeg/train\n"}
+,{"stream_name":"stdout","time":398.352431049,"data":"    kaggle_splits_dir: /kaggle/input/datasets/edgaronti26/melanoma-isic2020-splits\n"}
+,{"stream_name":"stdout","time":398.35243624,"data":"model:\n"}
+,{"stream_name":"stdout","time":398.352439254,"data":"  backbone: convnext_tiny.fb_in22k_ft_in1k_384\n"}
+,{"stream_name":"stdout","time":398.352442119,"data":"  pretrained: true\n"}
+,{"stream_name":"stdout","time":398.352445032,"data":"  dropout: 0.2\n"}
+,{"stream_name":"stdout","time":398.352447771,"data":"  num_classes: 1\n"}
+,{"stream_name":"stdout","time":398.352450542,"data":"  freeze_backbone: false\n"}
+,{"stream_name":"stdout","time":398.352453309,"data":"train:\n"}
+,{"stream_name":"stdout","time":398.352456094,"data":"  seed: 2\n"}
+,{"stream_name":"stdout","time":398.352458876,"data":"  max_epochs: 15\n"}
+,{"stream_name":"stdout","time":398.352461603,"data":"  lr: 0.0001\n"}
+,{"stream_name":"stdout","time":398.352464597,"data":"  weight_decay: 0.01\n"}
+,{"stream_name":"stdout","time":398.352467432,"data":"  precision: 16-mixed\n"}
+,{"stream_name":"stdout","time":398.352470176,"data":"  deterministic: true\n"}
+,{"stream_name":"stdout","time":398.352472897,"data":"  accelerator: auto\n"}
+,{"stream_name":"stdout","time":398.352475694,"data":"  devices: 1\n"}
+,{"stream_name":"stdout","time":398.352478481,"data":"  accumulate_grad_batches: 4\n"}
+,{"stream_name":"stdout","time":398.352481277,"data":"  memory_warmup: true\n"}
+,{"stream_name":"stdout","time":398.352484049,"data":"  pos_weight: auto\n"}
+,{"stream_name":"stdout","time":398.352486778,"data":"  scheduler: cosine\n"}
+,{"stream_name":"stdout","time":398.352489508,"data":"  warmup_epochs: 1\n"}
+,{"stream_name":"stdout","time":398.352492251,"data":"  monitor: val/auprc\n"}
+,{"stream_name":"stdout","time":398.352495063,"data":"  monitor_mode: max\n"}
+,{"stream_name":"stdout","time":398.352497824,"data":"  early_stopping_patience: 5\n"}
+,{"stream_name":"stdout","time":398.352500616,"data":"  checkpoint_dir: null\n"}
+,{"stream_name":"stdout","time":398.352503354,"data":"  progress_bar: true\n"}
+,{"stream_name":"stdout","time":398.352506227,"data":"  collapse_std_threshold: 0.01\n"}
+,{"stream_name":"stdout","time":398.352509006,"data":"  collapse_auc_tolerance: 0.02\n"}
+,{"stream_name":"stdout","time":398.35251179,"data":"  eval:\n"}
+,{"stream_name":"stdout","time":398.352514529,"data":"    bootstrap_resamples: 2000\n"}
+,{"stream_name":"stdout","time":398.352517301,"data":"    bootstrap_seed: 20260904\n"}
+,{"stream_name":"stdout","time":398.352520104,"data":"    fixed_levels:\n"}
+,{"stream_name":"stdout","time":398.352523005,"data":"    - 0.9\n"}
+,{"stream_name":"stdout","time":398.352525776,"data":"    - 0.95\n"}
+,{"stream_name":"stdout","time":398.352528848,"data":"    threshold_sensitivity: 0.9\n"}
+,{"stream_name":"stdout","time":398.352532063,"data":"    reliability_bins: 10\n"}
+,{"stream_name":"stdout","time":398.352535195,"data":"  wandb:\n"}
+,{"stream_name":"stdout","time":398.352537906,"data":"    enabled: true\n"}
+,{"stream_name":"stdout","time":398.352540762,"data":"    project: melanoma-triage\n"}
+,{"stream_name":"stdout","time":398.352543543,"data":"    entity: null\n"}
+,{"stream_name":"stdout","time":398.352546237,"data":"    mode: online\n"}
+,{"stream_name":"stdout","time":398.35254898,"data":"experiment: m2\n"}
+,{"stream_name":"stdout","time":398.352551716,"data":"\n"}
+,{"stream_name":"stdout","time":398.352554495,"data":"[2026-09-18 18:57:46,345][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/convnext_tiny.fb_in22k_ft_in1k_384)\n"}
+,{"stream_name":"stdout","time":398.530467676,"data":"[2026-09-18 18:57:46,524][httpx][INFO] - HTTP Request: HEAD https://huggingface.co/timm/convnext_tiny.fb_in22k_ft_in1k_384/resolve/main/model.safetensors \"HTTP/1.1 302 Found\"\n"}
+,{"stream_name":"stdout","time":398.554556358,"data":"data:\n"}
+,{"stream_name":"stdout","time":398.554580422,"data":"  root: data\n"}
+,{"stream_name":"stdout","time":398.554597936,"data":"  manifest_path: ${data.root}/manifests/isic2020.csv\n"}
+,{"stream_name":"stdout","time":398.554602289,"data":"  splits_dir: ${data.root}/splits\n"}
+,{"stream_name":"stdout","time":398.554606181,"data":"  image_size: 384\n"}
+,{"stream_name":"stdout","time":398.554609809,"data":"  batch_size: 32\n"}
+,{"stream_name":"stdout","time":398.554613637,"data":"  num_workers: 4\n"}
+,{"stream_name":"stdout","time":398.554617391,"data":"  env: kaggle\n"}
+,{"stream_name":"stdout","time":398.554621227,"data":"  paths:\n"}
+,{"stream_name":"stdout","time":398.554625001,"data":"    local:\n"}
+,{"stream_name":"stdout","time":398.554628807,"data":"      images_dir: ${data.root}/processed/isic2020_512\n"}
+,{"stream_name":"stdout","time":398.55463306,"data":"      manifest_path: ${data.manifest_path}\n"}
+,{"stream_name":"stdout","time":398.554637049,"data":"      splits_dir: ${data.splits_dir}\n"}
+,{"stream_name":"stdout","time":398.554640758,"data":"    kaggle:\n"}
+,{"stream_name":"stdout","time":398.554644133,"data":"      images_dir: /tmp/images_512\n"}
+,{"stream_name":"stdout","time":398.554647528,"data":"      manifest_path: /kaggle/input/datasets/edgaronti26/melanoma-isic2020-splits/isic2020.csv\n"}
+,{"stream_name":"stdout","time":398.554651289,"data":"      splits_dir: /kaggle/input/datasets/edgaronti26/melanoma-isic2020-splits\n"}
+,{"stream_name":"stdout","time":398.554654884,"data":"  augment:\n"}
+,{"stream_name":"stdout","time":398.554658216,"data":"    hflip_p: 0.5\n"}
+,{"stream_name":"stdout","time":398.554666128,"data":"    vflip_p: 0.5\n"}
+,{"stream_name":"stdout","time":398.554669024,"data":"    rotate_limit_deg: 20\n"}
+,{"stream_name":"stdout","time":398.55467123,"data":"    rotate_p: 0.5\n"}
+,{"stream_name":"stdout","time":398.554673408,"data":"    brightness_limit: 0.2\n"}
+,{"stream_name":"stdout","time":398.554675571,"data":"    contrast_limit: 0.2\n"}
+,{"stream_name":"stdout","time":398.554677859,"data":"    brightness_contrast_p: 0.5\n"}
+,{"stream_name":"stdout","time":398.55468019,"data":"    crop_scale:\n"}
+,{"stream_name":"stdout","time":398.554682385,"data":"    - 0.8\n"}
+,{"stream_name":"stdout","time":398.554684558,"data":"    - 1.0\n"}
+,{"stream_name":"stdout","time":398.554686774,"data":"  val_resize: center_crop\n"}
+,{"stream_name":"stdout","time":398.554688926,"data":"  sampler: none\n"}
+,{"stream_name":"stdout","time":398.554691106,"data":"  preprocess_scale: none\n"}
+,{"stream_name":"stdout","time":398.554693351,"data":"  name: isic2020\n"}
+,{"stream_name":"stdout","time":398.554695602,"data":"  raw_dir: ${data.root}/raw/isic2020\n"}
+,{"stream_name":"stdout","time":398.554697828,"data":"  images_zip: ${data.raw_dir}/ISIC_2020_Training_JPEG.zip\n"}
+,{"stream_name":"stdout","time":398.554700456,"data":"  images_dir: ${data.raw_dir}/train\n"}
+,{"stream_name":"stdout","time":398.554715984,"data":"  ground_truth_csv: ${data.raw_dir}/ISIC_2020_Training_GroundTruth_v2.csv\n"}
+,{"stream_name":"stdout","time":398.554719997,"data":"  official_duplicates_csv: ${data.raw_dir}/ISIC_2020_Training_Duplicates.csv\n"}
+,{"stream_name":"stdout","time":398.554724054,"data":"  reports_dir: reports\n"}
+,{"stream_name":"stdout","time":398.554728168,"data":"  figures_dir: ${data.reports_dir}/figures\n"}
+,{"stream_name":"stdout","time":398.554767749,"data":"  test_access_log: logs/test_set_access.log\n"}
+,{"stream_name":"stdout","time":398.554771568,"data":"  source:\n"}
+,{"stream_name":"stdout","time":398.554774819,"data":"    base_url: https://isic-challenge-data.s3.amazonaws.com/2020\n"}
+,{"stream_name":"stdout","time":398.554780104,"data":"    zip_bytes: 24707698022\n"}
+,{"stream_name":"stdout","time":398.554786512,"data":"    zip_etag: 013145107654177e7dd94091fdf27e9c-2946\n"}
+,{"stream_name":"stdout","time":398.554788858,"data":"  expected:\n"}
+,{"stream_name":"stdout","time":398.554790992,"data":"    images: 33126\n"}
+,{"stream_name":"stdout","time":398.554793163,"data":"    positives: 584\n"}
+,{"stream_name":"stdout","time":398.554795325,"data":"    patients: 2056\n"}
+,{"stream_name":"stdout","time":398.554797519,"data":"    prevalence_pct: 1.76\n"}
+,{"stream_name":"stdout","time":398.55480051,"data":"  hashing:\n"}
+,{"stream_name":"stdout","time":398.554825497,"data":"    workers: 12\n"}
+,{"stream_name":"stdout","time":398.554829371,"data":"  phash:\n"}
+,{"stream_name":"stdout","time":398.554833104,"data":"    hash_size: 8\n"}
+,{"stream_name":"stdout","time":398.554836973,"data":"    threshold: 0\n"}
+,{"stream_name":"stdout","time":398.554840968,"data":"    report_max_distance: 16\n"}
+,{"stream_name":"stdout","time":398.554844285,"data":"    decode_size: 256\n"}
+,{"stream_name":"stdout","time":398.554847595,"data":"    contact_sheet_pairs: 20\n"}
+,{"stream_name":"stdout","time":398.554850875,"data":"    thumb_px: 224\n"}
+,{"stream_name":"stdout","time":398.554854087,"data":"    cache: true\n"}
+,{"stream_name":"stdout","time":398.554857276,"data":"    sweep_thresholds:\n"}
+,{"stream_name":"stdout","time":398.554860531,"data":"    - 0\n"}
+,{"stream_name":"stdout","time":398.554863694,"data":"    - 2\n"}
+,{"stream_name":"stdout","time":398.554866856,"data":"    - 4\n"}
+,{"stream_name":"stdout","time":398.554870034,"data":"    - 6\n"}
+,{"stream_name":"stdout","time":398.554873261,"data":"    - 8\n"}
+,{"stream_name":"stdout","time":398.554876429,"data":"    sweep_max_group: 10\n"}
+,{"stream_name":"stdout","time":398.554879714,"data":"    sweep_sample_groups: 10\n"}
+,{"stream_name":"stdout","time":398.554883011,"data":"    sweep_seed: 20260904\n"}
+,{"stream_name":"stdout","time":398.554886297,"data":"  split:\n"}
+,{"stream_name":"stdout","time":398.554889486,"data":"    fractions:\n"}
+,{"stream_name":"stdout","time":398.554892776,"data":"      train: 0.7\n"}
+,{"stream_name":"stdout","time":398.554897677,"data":"      val: 0.15\n"}
+,{"stream_name":"stdout","time":398.554904569,"data":"      test: 0.15\n"}
+,{"stream_name":"stdout","time":398.554907635,"data":"    seed: 20260904\n"}
+,{"stream_name":"stdout","time":398.554922398,"data":"    min_test_positives: 80\n"}
+,{"stream_name":"stdout","time":398.554926207,"data":"    names:\n"}
+,{"stream_name":"stdout","time":398.554930133,"data":"    - train\n"}
+,{"stream_name":"stdout","time":398.554933997,"data":"    - val\n"}
+,{"stream_name":"stdout","time":398.554941007,"data":"    - test\n"}
+,{"stream_name":"stdout","time":398.554944216,"data":"  resize:\n"}
+,{"stream_name":"stdout","time":398.554947558,"data":"    long_side: 512\n"}
+,{"stream_name":"stdout","time":398.554950805,"data":"    jpeg_quality: 95\n"}
+,{"stream_name":"stdout","time":398.554955733,"data":"    out_dir: ${data.root}/processed/isic2020_512\n"}
+,{"stream_name":"stdout","time":398.554959134,"data":"    workers: 12\n"}
+,{"stream_name":"stdout","time":398.554962344,"data":"  verify:\n"}
+,{"stream_name":"stdout","time":398.554973393,"data":"    sample_size: 200\n"}
+,{"stream_name":"stdout","time":398.554976769,"data":"    seed: 20260904\n"}
+,{"stream_name":"stdout","time":398.554980119,"data":"    kaggle_competition_dir: /kaggle/input/competitions/siim-isic-melanoma-classification/jpeg/train\n"}
+,{"stream_name":"stdout","time":398.554983659,"data":"    kaggle_splits_dir: /kaggle/input/datasets/edgaronti26/melanoma-isic2020-splits\n"}
+,{"stream_name":"stdout","time":398.55498716,"data":"model:\n"}
+,{"stream_name":"stdout","time":398.554992106,"data":"  backbone: convnext_tiny.fb_in22k_ft_in1k_384\n"}
+,{"stream_name":"stdout","time":398.554998738,"data":"  pretrained: true\n"}
+,{"stream_name":"stdout","time":398.555001341,"data":"  dropout: 0.2\n"}
+,{"stream_name":"stdout","time":398.555015758,"data":"  num_classes: 1\n"}
+,{"stream_name":"stdout","time":398.555019586,"data":"  freeze_backbone: false\n"}
+,{"stream_name":"stdout","time":398.555023465,"data":"train:\n"}
+,{"stream_name":"stdout","time":398.555027187,"data":"  seed: 2\n"}
+,{"stream_name":"stdout","time":398.555030894,"data":"  max_epochs: 15\n"}
+,{"stream_name":"stdout","time":398.555034075,"data":"  lr: 0.0001\n"}
+,{"stream_name":"stdout","time":398.555037309,"data":"  weight_decay: 0.01\n"}
+,{"stream_name":"stdout","time":398.555040538,"data":"  precision: 16-mixed\n"}
+,{"stream_name":"stdout","time":398.555043808,"data":"  deterministic: true\n"}
+,{"stream_name":"stdout","time":398.555046976,"data":"  accelerator: auto\n"}
+,{"stream_name":"stdout","time":398.555050951,"data":"  devices: 1\n"}
+,{"stream_name":"stdout","time":398.555074096,"data":"  accumulate_grad_batches: 4\n"}
+,{"stream_name":"stdout","time":398.555077805,"data":"  memory_warmup: true\n"}
+,{"stream_name":"stdout","time":398.555081068,"data":"  pos_weight: auto\n"}
+,{"stream_name":"stdout","time":398.555084538,"data":"  scheduler: cosine\n"}
+,{"stream_name":"stdout","time":398.555087771,"data":"  warmup_epochs: 1\n"}
+,{"stream_name":"stdout","time":398.555091012,"data":"  monitor: val/auprc\n"}
+,{"stream_name":"stdout","time":398.555094233,"data":"  monitor_mode: max\n"}
+,{"stream_name":"stdout","time":398.555097508,"data":"  early_stopping_patience: 5\n"}
+,{"stream_name":"stdout","time":398.55510083,"data":"  checkpoint_dir: null\n"}
+,{"stream_name":"stdout","time":398.555104026,"data":"  progress_bar: true\n"}
+,{"stream_name":"stdout","time":398.555107285,"data":"  collapse_std_threshold: 0.01\n"}
+,{"stream_name":"stdout","time":398.555115229,"data":"  collapse_auc_tolerance: 0.02\n"}
+,{"stream_name":"stdout","time":398.555118666,"data":"  eval:\n"}
+,{"stream_name":"stdout","time":398.555126375,"data":"    bootstrap_resamples: 2000\n"}
+,{"stream_name":"stdout","time":398.555131911,"data":"    bootstrap_seed: 20260904\n"}
+,{"stream_name":"stdout","time":398.555146372,"data":"    fixed_levels:\n"}
+,{"stream_name":"stdout","time":398.555150637,"data":"    - 0.9\n"}
+,{"stream_name":"stdout","time":398.55515427,"data":"    - 0.95\n"}
+,{"stream_name":"stdout","time":398.555157741,"data":"    threshold_sensitivity: 0.9\n"}
+,{"stream_name":"stdout","time":398.555161263,"data":"    reliability_bins: 10\n"}
+,{"stream_name":"stdout","time":398.555165102,"data":"  wandb:\n"}
+,{"stream_name":"stdout","time":398.555168706,"data":"    enabled: true\n"}
+,{"stream_name":"stdout","time":398.555172196,"data":"    project: melanoma-triage\n"}
+,{"stream_name":"stdout","time":398.555176156,"data":"    entity: null\n"}
+,{"stream_name":"stdout","time":398.555180018,"data":"    mode: online\n"}
+,{"stream_name":"stdout","time":398.555193115,"data":"experiment: m2\n"}
+,{"stream_name":"stdout","time":398.555196779,"data":"\n"}
+,{"stream_name":"stdout","time":398.555200184,"data":"[2026-09-18 18:57:46,345][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/convnext_tiny.fb_in22k_ft_in1k_384)\n"}
+,{"stream_name":"stdout","time":398.555203997,"data":"[2026-09-18 18:57:46,524][httpx][INFO] - HTTP Request: HEAD https://huggingface.co/timm/convnext_tiny.fb_in22k_ft_in1k_384/resolve/main/model.safetensors \"HTTP/1.1 302 Found\"\n"}
+,{"stream_name":"stdout","time":398.676537618,"data":"[2026-09-18 18:57:46,670][httpx][INFO] - HTTP Request: GET https://huggingface.co/api/models/timm/convnext_tiny.fb_in22k_ft_in1k_384/xet-read-token/32c741ba106f9e062174ef829354a16719c3dcac \"HTTP/1.1 200 OK\"\n"}
+,{"stream_name":"stdout","time":398.878618638,"data":"[2026-09-18 18:57:46,670][httpx][INFO] - HTTP Request: GET https://huggingface.co/api/models/timm/convnext_tiny.fb_in22k_ft_in1k_384/xet-read-token/32c741ba106f9e062174ef829354a16719c3dcac \"HTTP/1.1 200 OK\"\n"}
+,{"stream_name":"stdout","time":400.91980391,"data":"[2026-09-18 18:57:48,913][timm.models._hub][INFO] - [timm/convnext_tiny.fb_in22k_ft_in1k_384] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.\n"}
+,{"stream_name":"stdout","time":400.960751074,"data":"[2026-09-18 18:57:48,954][melanoma.train.run][INFO] - data_config del backbone: {'input_size': (3, 384, 384), 'interpolation': 'bicubic', 'mean': (0.485, 0.456, 0.406), 'std': (0.229, 0.224, 0.225), 'crop_pct': 1.0, 'crop_mode': 'squash'}\n"}
+,{"stream_name":"stdout","time":401.122901052,"data":"[2026-09-18 18:57:48,913][timm.models._hub][INFO] - [timm/convnext_tiny.fb_in22k_ft_in1k_384] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.\n"}
+,{"stream_name":"stdout","time":401.122931653,"data":"[2026-09-18 18:57:48,954][melanoma.train.run][INFO] - data_config del backbone: {'input_size': (3, 384, 384), 'interpolation': 'bicubic', 'mean': (0.485, 0.456, 0.406), 'std': (0.229, 0.224, 0.225), 'crop_pct': 1.0, 'crop_mode': 'squash'}\n"}
+,{"stream_name":"stdout","time":401.390035262,"data":"[2026-09-18 18:57:49,383][melanoma.train.run][INFO] - corrida convnext_tiny-384-s2-e153979: train 22501 neg / 410 pos, pos_weight=54.88, sampler=none\n"}
+,{"stream_name":"stdout","time":401.592084959,"data":"[2026-09-18 18:57:49,383][melanoma.train.run][INFO] - corrida convnext_tiny-384-s2-e153979: train 22501 neg / 410 pos, pos_weight=54.88, sampler=none\n"}
+,{"stream_name":"stdout","time":415.494202516,"data":"[2026-09-18 18:58:03,487][melanoma.train.run][INFO] - calentamiento OK: lote 32 × 384 px, pico 5.71 GB de 14.56 GB (Tesla T4)\n"}
+,{"stream_name":"stdout","time":415.494239399,"data":"[GPU] calentamiento OK: lote 32 × 384 px, pico 5.71 GB de 14.56 GB (Tesla T4)\n"}
+,{"stream_name":"stdout","time":415.639015357,"data":"[2026-09-18 18:58:03,632][melanoma.train.run][WARNING] - WANDB_API_KEY no está definida; W\u0026B corre en modo offline\n"}
+,{"stream_name":"stderr","time":415.64262523,"data":"Using 16bit Automatic Mixed Precision (AMP)\n"}
+,{"stream_name":"stderr","time":415.69109073,"data":"GPU available: True (cuda), used: True\n"}
+,{"stream_name":"stderr","time":415.691122336,"data":"TPU available: False, using: 0 TPU cores\n"}
+,{"stream_name":"stderr","time":415.691958819,"data":"💡 Tip: For seamless cloud logging and experiment tracking, try installing [litlogger](https://pypi.org/project/litlogger/) to enable LitLogger, which logs metrics and artifacts automatically to the Lightning Experiments platform.\n"}
+,{"stream_name":"stderr","time":415.696385028,"data":"wandb: WARNING The anonymous setting has no effect and will be removed in a future version.\n"}
+,{"stream_name":"stdout","time":415.700303003,"data":"[2026-09-18 18:58:03,487][melanoma.train.run][INFO] - calentamiento OK: lote 32 × 384 px, pico 5.71 GB de 14.56 GB (Tesla T4)\n"}
+,{"stream_name":"stdout","time":415.700323428,"data":"[GPU] calentamiento OK: lote 32 × 384 px, pico 5.71 GB de 14.56 GB (Tesla T4)\n"}
+,{"stream_name":"stdout","time":415.700329357,"data":"[2026-09-18 18:58:03,632][melanoma.train.run][WARNING] - WANDB_API_KEY no está definida; W\u0026B corre en modo offline\n"}
+,{"stream_name":"stderr","time":415.845924384,"data":"Using 16bit Automatic Mixed Precision (AMP)\n"}
+,{"stream_name":"stderr","time":415.845949972,"data":"GPU available: True (cuda), used: True\n"}
+,{"stream_name":"stderr","time":415.845955231,"data":"TPU available: False, using: 0 TPU cores\n"}
+,{"stream_name":"stderr","time":415.845959886,"data":"💡 Tip: For seamless cloud logging and experiment tracking, try installing [litlogger](https://pypi.org/project/litlogger/) to enable LitLogger, which logs metrics and artifacts automatically to the Lightning Experiments platform.\n"}
+,{"stream_name":"stderr","time":415.845976789,"data":"wandb: WARNING The anonymous setting has no effect and will be removed in a future version.\n"}
+,{"stream_name":"stderr","time":415.845980499,"data":"\n"}
+,{"stream_name":"stderr","time":415.845983814,"data":"Using 16bit Automatic Mixed Precision (AMP)\n"}
+,{"stream_name":"stderr","time":415.845987352,"data":"GPU available: True (cuda), used: True\n"}
+,{"stream_name":"stderr","time":415.845990998,"data":"TPU available: False, using: 0 TPU cores\n"}
+,{"stream_name":"stderr","time":415.845996408,"data":"💡 Tip: For seamless cloud logging and experiment tracking, try installing [litlogger](https://pypi.org/project/litlogger/) to enable LitLogger, which logs metrics and artifacts automatically to the Lightning Experiments platform.\n"}
+,{"stream_name":"stderr","time":415.846004716,"data":"wandb: WARNING The anonymous setting has no effect and will be removed in a future version.\n"}
+,{"stream_name":"stderr","time":416.633471632,"data":"wandb: WARNING `resume` will be ignored since W\u0026B syncing is set to `offline`. Starting a new run with run id in02zivf.\n"}
+,{"stream_name":"stderr","time":416.643844195,"data":"wandb: Tracking run with wandb version 0.26.1\n"}
+,{"stream_name":"stderr","time":416.645032974,"data":"wandb: W\u0026B syncing is set to `offline` in this directory. Run `wandb online` or set WANDB_MODE=online to enable cloud syncing.\n"}
+,{"stream_name":"stderr","time":416.645069376,"data":"wandb: Run data is saved locally in /kaggle/working/runs/m2-s2-e153979/wandb/offline-run-20260918_185803-in02zivf\n"}
+,{"stream_name":"stderr","time":416.835820877,"data":"wandb: WARNING `resume` will be ignored since W\u0026B syncing is set to `offline`. Starting a new run with run id in02zivf.\n"}
+,{"stream_name":"stderr","time":416.835855122,"data":"wandb: Tracking run with wandb version 0.26.1\n"}
+,{"stream_name":"stderr","time":416.835860308,"data":"wandb: W\u0026B syncing is set to `offline` in this directory. Run `wandb online` or set WANDB_MODE=online to enable cloud syncing.\n"}
+,{"stream_name":"stderr","time":416.835864621,"data":"wandb: Run data is saved locally in /kaggle/working/runs/m2-s2-e153979/wandb/offline-run-20260918_185803-in02zivf\n"}
+,{"stream_name":"stderr","time":416.835868515,"data":"\n"}
+,{"stream_name":"stderr","time":416.835872155,"data":"wandb: WARNING `resume` will be ignored since W\u0026B syncing is set to `offline`. Starting a new run with run id in02zivf.\n"}
+,{"stream_name":"stderr","time":416.83587635599997,"data":"wandb: Tracking run with wandb version 0.26.1\n"}
+,{"stream_name":"stderr","time":416.835880083,"data":"wandb: W\u0026B syncing is set to `offline` in this directory. Run `wandb online` or set WANDB_MODE=online to enable cloud syncing.\n"}
+,{"stream_name":"stderr","time":416.835902708,"data":"wandb: Run data is saved locally in /kaggle/working/runs/m2-s2-e153979/wandb/offline-run-20260918_185803-in02zivf\n"}
+,{"stream_name":"stderr","time":417.484686859,"data":"LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0,1]\n"}
+,{"stream_name":"stderr","time":417.491135985,"data":"Loading `train_dataloader` to estimate number of stepping batches.\n"}
+,{"stream_name":"stderr","time":417.492108291,"data":"/usr/local/lib/python3.12/dist-packages/lightning/pytorch/utilities/_pytree.py:21: `isinstance(treespec, LeafSpec)` is deprecated, use `isinstance(treespec, TreeSpec) and treespec.is_leaf()` instead.\n"}
+,{"stream_name":"stderr","time":417.644130474,"data":"/usr/local/lib/python3.12/dist-packages/lightning/pytorch/utilities/model_summary/model_summary.py:242: Precision 16-mixed is not supported by the model summary.  Estimated model size in MB will not be accurate. Using 32 bits instead.\n"}
+,{"stream_name":"stdout","time":417.666220279,"data":"┏━━━┳━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━┳━━━━━━━┓\n"}
+,{"stream_name":"stdout","time":417.66624957,"data":"┃   ┃ Name      ┃ Type                   ┃ Params ┃ Mode  ┃ FLOPs ┃\n"}
+,{"stream_name":"stdout","time":417.666255516,"data":"┡━━━╇━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━╇━━━━━━━┩\n"}
+,{"stream_name":"stdout","time":417.666260664,"data":"│ 0 │ model     │ BackboneClassifier     │ 27.8 M │ train │     0 │\n"}
+,{"stream_name":"stdout","time":417.666264799,"data":"│ 1 │ criterion │ BCEWithLogitsLoss      │      0 │ train │     0 │\n"}
+,{"stream_name":"stdout","time":417.666268903,"data":"│ 2 │ val_auroc │ BinaryAUROC            │      0 │ train │     0 │\n"}
+,{"stream_name":"stdout","time":417.666273247,"data":"│ 3 │ val_auprc │ BinaryAveragePrecision │      0 │ train │     0 │\n"}
+,{"stream_name":"stdout","time":417.666277479,"data":"└───┴───────────┴────────────────────────┴────────┴───────┴───────┘\n"}
+,{"stream_name":"stdout","time":417.676222782,"data":"Trainable params: 27.8 M                                                        \n"}
+,{"stream_name":"stdout","time":417.676244967,"data":"Non-trainable params: 0                                                         \n"}
+,{"stream_name":"stdout","time":417.676249638,"data":"Total params: 27.8 M                                                            \n"}
+,{"stream_name":"stdout","time":417.67628308,"data":"Total estimated model params size (MB): 111.284                                 \n"}
+,{"stream_name":"stdout","time":417.676288111,"data":"Modules in train mode: 256                                                      \n"}
+,{"stream_name":"stdout","time":417.676292823,"data":"Modules in eval mode: 0                                                         \n"}
+,{"stream_name":"stdout","time":417.676296976,"data":"Total FLOPs: 0                                                                  \n"}
+,{"stream_name":"stderr","time":417.692180658,"data":"LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0,1]\n"}
+,{"stream_name":"stderr","time":417.692203435,"data":"Loading `train_dataloader` to estimate number of stepping batches.\n"}
+,{"stream_name":"stderr","time":417.692208821,"data":"/usr/local/lib/python3.12/dist-packages/lightning/pytorch/utilities/_pytree.py:21: `isinstance(treespec, LeafSpec)` is deprecated, use `isinstance(treespec, TreeSpec) and treespec.is_leaf()` instead.\n"}
+,{"stream_name":"stderr","time":417.692225026,"data":"/usr/local/lib/python3.12/dist-packages/lightning/pytorch/utilities/model_summary/model_summary.py:242: Precision 16-mixed is not supported by the model summary.  Estimated model size in MB will not be accurate. Using 32 bits instead.\n"}
+,{"stream_name":"stderr","time":417.692230812,"data":"\n"}
+,{"stream_name":"stderr","time":417.693263891,"data":"LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0,1]\n"}
+,{"stream_name":"stderr","time":417.693318328,"data":"Loading `train_dataloader` to estimate number of stepping batches.\n"}
+,{"stream_name":"stderr","time":417.693325546,"data":"/usr/local/lib/python3.12/dist-packages/lightning/pytorch/utilities/_pytree.py:21: `isinstance(treespec, LeafSpec)` is deprecated, use `isinstance(treespec, TreeSpec) and treespec.is_leaf()` instead.\n"}
+,{"stream_name":"stderr","time":417.693331185,"data":"/usr/local/lib/python3.12/dist-packages/lightning/pytorch/utilities/model_summary/model_summary.py:242: Precision 16-mixed is not supported by the model summary.  Estimated model size in MB will not be accurate. Using 32 bits instead.\n"}
+,{"stream_name":"stdout","time":417.880753616,"data":"┏━━━┳━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━┳━━━━━━━┓\n"}
+,{"stream_name":"stdout","time":417.880799453,"data":"┃   ┃ Name      ┃ Type                   ┃ Params ┃ Mode  ┃ FLOPs ┃\n"}
+,{"stream_name":"stdout","time":417.880806645,"data":"┡━━━╇━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━╇━━━━━━━┩\n"}
+,{"stream_name":"stdout","time":417.880812916,"data":"│ 0 │ model     │ BackboneClassifier     │ 27.8 M │ train │     0 │\n"}
+,{"stream_name":"stdout","time":417.88081839,"data":"│ 1 │ criterion │ BCEWithLogitsLoss      │      0 │ train │     0 │\n"}
+,{"stream_name":"stdout","time":417.880824261,"data":"│ 2 │ val_auroc │ BinaryAUROC            │      0 │ train │     0 │\n"}
+,{"stream_name":"stdout","time":417.880830063,"data":"│ 3 │ val_auprc │ BinaryAveragePrecision │      0 │ train │     0 │\n"}
+,{"stream_name":"stdout","time":417.88083568,"data":"└───┴───────────┴────────────────────────┴────────┴───────┴───────┘\n"}
+,{"stream_name":"stdout","time":417.880841624,"data":"Trainable params: 27.8 M                                                        \n"}
+,{"stream_name":"stdout","time":417.880848,"data":"Non-trainable params: 0                                                         \n"}
+,{"stream_name":"stdout","time":417.88085321,"data":"Total params: 27.8 M                                                            \n"}
+,{"stream_name":"stdout","time":417.880857954,"data":"Total estimated model params size (MB): 111.284                                 \n"}
+,{"stream_name":"stdout","time":417.880862834,"data":"Modules in train mode: 256                                                      \n"}
+,{"stream_name":"stdout","time":417.880867997,"data":"Modules in eval mode: 0                                                         \n"}
+,{"stream_name":"stdout","time":417.880873189,"data":"Total FLOPs: 0                                                                  \n"}
+,{"stream_name":"stderr","time":420.689401834,"data":"/usr/local/lib/python3.12/dist-packages/torchmetrics/utilities/prints.py:43: UserWarning: No positive samples in targets, true positive value should be meaningless. Returning zero tensor in true positive score\n"}
+,{"stream_name":"stderr","time":420.689457603,"data":"  warnings.warn(*args, **kwargs)\n"}
+,{"stream_name":"stderr","time":420.692904183,"data":"/usr/local/lib/python3.12/dist-packages/torchmetrics/utilities/prints.py:43: UserWarning: No positive samples found in target, recall is undefined. Setting recall to one for all thresholds.\n"}
+,{"stream_name":"stderr","time":420.69292884,"data":"  warnings.warn(*args, **kwargs)\n"}
+,{"stream_name":"stderr","time":420.892612771,"data":"/usr/local/lib/python3.12/dist-packages/torchmetrics/utilities/prints.py:43: UserWarning: No positive samples in targets, true positive value should be meaningless. Returning zero tensor in true positive score\n"}
+,{"stream_name":"stderr","time":420.892640621,"data":"  warnings.warn(*args, **kwargs)\n"}
+,{"stream_name":"stderr","time":420.892649767,"data":"/usr/local/lib/python3.12/dist-packages/torchmetrics/utilities/prints.py:43: UserWarning: No positive samples found in target, recall is undefined. Setting recall to one for all thresholds.\n"}
+,{"stream_name":"stderr","time":420.892668223,"data":"  warnings.warn(*args, **kwargs)\n"}
+,{"stream_name":"stderr","time":420.892672452,"data":"\n"}
+,{"stream_name":"stderr","time":420.892676913,"data":"/usr/local/lib/python3.12/dist-packages/torchmetrics/utilities/prints.py:43: UserWarning: No positive samples in targets, true positive value should be meaningless. Returning zero tensor in true positive score\n"}
+,{"stream_name":"stderr","time":420.892681516,"data":"  warnings.warn(*args, **kwargs)\n"}
+,{"stream_name":"stderr","time":420.892685584,"data":"/usr/local/lib/python3.12/dist-packages/torchmetrics/utilities/prints.py:43: UserWarning: No positive samples found in target, recall is undefined. Setting recall to one for all thresholds.\n"}
+,{"stream_name":"stderr","time":420.892689885,"data":"  warnings.warn(*args, **kwargs)\n"}
+,{"stream_name":"stderr","time":422.321982813,"data":"/usr/local/lib/python3.12/dist-packages/lightning/pytorch/core/module.py:1333: Detected call of `lr_scheduler.step()` before `optimizer.step()`. In PyTorch 1.1.0 and later, you should call them in the opposite order: `optimizer.step()` before `lr_scheduler.step()`.  Failure to do this will result in PyTorch skipping the first value of the learning rate schedule. See more details at https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate\n"}
+,{"stream_name":"stderr","time":422.524430402,"data":"/usr/local/lib/python3.12/dist-packages/lightning/pytorch/core/module.py:1333: Detected call of `lr_scheduler.step()` before `optimizer.step()`. In PyTorch 1.1.0 and later, you should call them in the opposite order: `optimizer.step()` before `lr_scheduler.step()`.  Failure to do this will result in PyTorch skipping the first value of the learning rate schedule. See more details at https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate\n"}
+,{"stream_name":"stderr","time":422.524498042,"data":"\n"}
+,{"stream_name":"stderr","time":422.52450399,"data":"/usr/local/lib/python3.12/dist-packages/lightning/pytorch/core/module.py:1333: Detected call of `lr_scheduler.step()` before `optimizer.step()`. In PyTorch 1.1.0 and later, you should call them in the opposite order: `optimizer.step()` before `lr_scheduler.step()`.  Failure to do this will result in PyTorch skipping the first value of the learning rate schedule. See more details at https://pytorch.org/docs/stable/optim.html#how-to-adjust-learning-rate\n"}
+,{"stream_name":"stdout","time":809.474673585,"data":"[2026-09-18 19:04:37,467][melanoma.train.callbacks][INFO] - época 0: 6.5 min, espera de datos 45 %, GPU 99 %\n"}
+,{"stream_name":"stdout","time":809.475092829,"data":"\n"}
+,{"stream_name":"stdout","time":809.475109176,"data":"[E/S] época 0: 6.5 min, espera de datos 45 %, GPU 99 %\n"}
+,{"stream_name":"stderr","time":809.490158019,"data":"Metric val/auprc improved. New best score: 0.057\n"}
+,{"stream_name":"stdout","time":809.680706274,"data":"[2026-09-18 19:04:37,467][melanoma.train.callbacks][INFO] - época 0: 6.5 min, espera de datos 45 %, GPU 99 %\n"}
+,{"stream_name":"stdout","time":809.680738739,"data":"\n"}
+,{"stream_name":"stdout","time":809.680743927,"data":"[E/S] época 0: 6.5 min, espera de datos 45 %, GPU 99 %\n"}
+,{"stream_name":"stderr","time":809.69319532,"data":"Metric val/auprc improved. New best score: 0.057\n"}
+,{"stream_name":"stderr","time":809.693233423,"data":"\n"}
+,{"stream_name":"stderr","time":809.69323902,"data":"Metric val/auprc improved. New best score: 0.057\n"}
+,{"stream_name":"stdout","time":1195.344593508,"data":"[2026-09-18 19:11:03,338][melanoma.train.callbacks][INFO] - época 1: 6.4 min, espera de datos 47 %, GPU 98 %\n"}
+,{"stream_name":"stdout","time":1195.344994576,"data":"\n"}
+,{"stream_name":"stdout","time":1195.345019215,"data":"[E/S] época 1: 6.4 min, espera de datos 47 %, GPU 98 %\n"}
+,{"stream_name":"stderr","time":1195.346749427,"data":"Metric val/auprc improved by 0.003 \u003e= min_delta = 0.0. New best score: 0.060\n"}
+,{"stream_name":"stdout","time":1195.550283644,"data":"[2026-09-18 19:11:03,338][melanoma.train.callbacks][INFO] - época 1: 6.4 min, espera de datos 47 %, GPU 98 %\n"}
+,{"stream_name":"stdout","time":1195.550313577,"data":"\n"}
+,{"stream_name":"stdout","time":1195.550319547,"data":"[E/S] época 1: 6.4 min, espera de datos 47 %, GPU 98 %\n"}
+,{"stream_name":"stderr","time":1195.551309747,"data":"Metric val/auprc improved by 0.003 \u003e= min_delta = 0.0. New best score: 0.060\n"}
+,{"stream_name":"stderr","time":1195.551330677,"data":"\n"}
+,{"stream_name":"stderr","time":1195.551335757,"data":"Metric val/auprc improved by 0.003 \u003e= min_delta = 0.0. New best score: 0.060\n"}
+,{"stream_name":"stdout","time":1578.430218297,"data":"[2026-09-18 19:17:26,423][melanoma.train.callbacks][INFO] - época 2: 6.4 min, espera de datos 46 %, GPU 98 %\n"}
+,{"stream_name":"stdout","time":1578.430736976,"data":"\n"}
+,{"stream_name":"stdout","time":1578.430755877,"data":"[E/S] época 2: 6.4 min, espera de datos 46 %, GPU 98 %\n"}
+,{"stream_name":"stderr","time":1578.432232767,"data":"Metric val/auprc improved by 0.016 \u003e= min_delta = 0.0. New best score: 0.076\n"}
+,{"stream_name":"stdout","time":1578.636782765,"data":"[2026-09-18 19:17:26,423][melanoma.train.callbacks][INFO] - época 2: 6.4 min, espera de datos 46 %, GPU 98 %\n"}
+,{"stream_name":"stdout","time":1578.636825728,"data":"\n"}
+,{"stream_name":"stdout","time":1578.636834728,"data":"[E/S] época 2: 6.4 min, espera de datos 46 %, GPU 98 %\n"}
+,{"stream_name":"stderr","time":1578.637904862,"data":"Metric val/auprc improved by 0.016 \u003e= min_delta = 0.0. New best score: 0.076\n"}
+,{"stream_name":"stderr","time":1578.637924909,"data":"\n"}
+,{"stream_name":"stderr","time":1578.637929711,"data":"Metric val/auprc improved by 0.016 \u003e= min_delta = 0.0. New best score: 0.076\n"}
+,{"stream_name":"stdout","time":1961.449087744,"data":"[2026-09-18 19:23:49,442][melanoma.train.callbacks][INFO] - época 3: 6.4 min, espera de datos 47 %, GPU 99 %\n"}
+,{"stream_name":"stdout","time":1961.449646606,"data":"\n"}
+,{"stream_name":"stdout","time":1961.449695822,"data":"[E/S] época 3: 6.4 min, espera de datos 47 %, GPU 99 %\n"}
+,{"stream_name":"stdout","time":1961.671211057,"data":"[2026-09-18 19:23:49,442][melanoma.train.callbacks][INFO] - época 3: 6.4 min, espera de datos 47 %, GPU 99 %\n"}
+,{"stream_name":"stdout","time":1961.671257428,"data":"\n"}
+,{"stream_name":"stdout","time":1961.671266126,"data":"[E/S] época 3: 6.4 min, espera de datos 47 %, GPU 99 %\n"}
+,{"stream_name":"stdout","time":2341.713943453,"data":"[2026-09-18 19:30:09,706][melanoma.train.callbacks][INFO] - época 4: 6.3 min, espera de datos 46 %, GPU 99 %\n"}
+,{"stream_name":"stdout","time":2341.714003578,"data":"\n"}
+,{"stream_name":"stdout","time":2341.714012617,"data":"[E/S] época 4: 6.3 min, espera de datos 46 %, GPU 99 %\n"}
+,{"stream_name":"stdout","time":2341.930247924,"data":"[2026-09-18 19:30:09,706][melanoma.train.callbacks][INFO] - época 4: 6.3 min, espera de datos 46 %, GPU 99 %\n"}
+,{"stream_name":"stdout","time":2341.930280712,"data":"\n"}
+,{"stream_name":"stdout","time":2341.930286263,"data":"[E/S] época 4: 6.3 min, espera de datos 46 %, GPU 99 %\n"}
+,{"stream_name":"stdout","time":2721.089816355,"data":"[2026-09-18 19:36:29,083][melanoma.train.callbacks][INFO] - época 5: 6.3 min, espera de datos 46 %, GPU 99 %\n"}
+,{"stream_name":"stdout","time":2721.090589456,"data":"\n"}
+,{"stream_name":"stdout","time":2721.090611653,"data":"[E/S] época 5: 6.3 min, espera de datos 46 %, GPU 99 %\n"}
+,{"stream_name":"stderr","time":2721.092187082,"data":"Metric val/auprc improved by 0.030 \u003e= min_delta = 0.0. New best score: 0.106\n"}
+,{"stream_name":"stdout","time":2721.298544917,"data":"[2026-09-18 19:36:29,083][melanoma.train.callbacks][INFO] - época 5: 6.3 min, espera de datos 46 %, GPU 99 %\n"}
+,{"stream_name":"stdout","time":2721.298575017,"data":"\n"}
+,{"stream_name":"stdout","time":2721.298580834,"data":"[E/S] época 5: 6.3 min, espera de datos 46 %, GPU 99 %\n"}
+,{"stream_name":"stderr","time":2721.299740995,"data":"Metric val/auprc improved by 0.030 \u003e= min_delta = 0.0. New best score: 0.106\n"}
+,{"stream_name":"stderr","time":2721.299756882,"data":"\n"}
+,{"stream_name":"stderr","time":2721.299762291,"data":"Metric val/auprc improved by 0.030 \u003e= min_delta = 0.0. New best score: 0.106\n"}
+,{"stream_name":"stdout","time":3100.818989918,"data":"[2026-09-18 19:42:48,812][melanoma.train.callbacks][INFO] - época 6: 6.3 min, espera de datos 46 %, GPU 98 %\n"}
+,{"stream_name":"stdout","time":3100.819034507,"data":"\n"}
+,{"stream_name":"stdout","time":3100.819041928,"data":"[E/S] época 6: 6.3 min, espera de datos 46 %, GPU 98 %\n"}
+,{"stream_name":"stdout","time":3101.042368424,"data":"[2026-09-18 19:42:48,812][melanoma.train.callbacks][INFO] - época 6: 6.3 min, espera de datos 46 %, GPU 98 %\n"}
+,{"stream_name":"stdout","time":3101.042394934,"data":"\n"}
+,{"stream_name":"stdout","time":3101.042400561,"data":"[E/S] época 6: 6.3 min, espera de datos 46 %, GPU 98 %\n"}
+,{"stream_name":"stdout","time":3478.792042213,"data":"[2026-09-18 19:49:06,785][melanoma.train.callbacks][INFO] - época 7: 6.3 min, espera de datos 46 %, GPU 98 %\n"}
+,{"stream_name":"stdout","time":3478.792439116,"data":"\n"}
+,{"stream_name":"stdout","time":3478.792462771,"data":"[E/S] época 7: 6.3 min, espera de datos 46 %, GPU 98 %\n"}
+,{"stream_name":"stderr","time":3478.794363455,"data":"Metric val/auprc improved by 0.039 \u003e= min_delta = 0.0. New best score: 0.145\n"}
+,{"stream_name":"stdout","time":3478.997932064,"data":"[2026-09-18 19:49:06,785][melanoma.train.callbacks][INFO] - época 7: 6.3 min, espera de datos 46 %, GPU 98 %\n"}
+,{"stream_name":"stdout","time":3478.997957888,"data":"\n"}
+,{"stream_name":"stdout","time":3478.997963378,"data":"[E/S] época 7: 6.3 min, espera de datos 46 %, GPU 98 %\n"}
+,{"stream_name":"stderr","time":3478.99898479,"data":"Metric val/auprc improved by 0.039 \u003e= min_delta = 0.0. New best score: 0.145\n"}
+,{"stream_name":"stderr","time":3478.999007748,"data":"\n"}
+,{"stream_name":"stderr","time":3478.999029154,"data":"Metric val/auprc improved by 0.039 \u003e= min_delta = 0.0. New best score: 0.145\n"}
+,{"stream_name":"stdout","time":3856.152553405,"data":"[2026-09-18 19:55:24,146][melanoma.train.callbacks][INFO] - época 8: 6.3 min, espera de datos 46 %, GPU 99 %\n"}
+,{"stream_name":"stdout","time":3856.153161512,"data":"\n"}
+,{"stream_name":"stdout","time":3856.153190829,"data":"[E/S] época 8: 6.3 min, espera de datos 46 %, GPU 99 %\n"}
+,{"stream_name":"stdout","time":3856.372228321,"data":"[2026-09-18 19:55:24,146][melanoma.train.callbacks][INFO] - época 8: 6.3 min, espera de datos 46 %, GPU 99 %\n"}
+,{"stream_name":"stdout","time":3856.372259533,"data":"\n"}
+,{"stream_name":"stdout","time":3856.372265619,"data":"[E/S] época 8: 6.3 min, espera de datos 46 %, GPU 99 %\n"}
+,{"stream_name":"stdout","time":4229.689413739,"data":"[2026-09-18 20:01:37,682][melanoma.train.callbacks][INFO] - época 9: 6.2 min, espera de datos 46 %, GPU 99 %\n"}
+,{"stream_name":"stdout","time":4229.689734379,"data":"\n"}
+,{"stream_name":"stdout","time":4229.689756609,"data":"[E/S] época 9: 6.2 min, espera de datos 46 %, GPU 99 %\n"}
+,{"stream_name":"stderr","time":4229.691557062,"data":"Metric val/auprc improved by 0.019 \u003e= min_delta = 0.0. New best score: 0.163\n"}
+,{"stream_name":"stdout","time":4229.895232809,"data":"[2026-09-18 20:01:37,682][melanoma.train.callbacks][INFO] - época 9: 6.2 min, espera de datos 46 %, GPU 99 %\n"}
+,{"stream_name":"stdout","time":4229.895265738,"data":"\n"}
+,{"stream_name":"stdout","time":4229.89527217,"data":"[E/S] época 9: 6.2 min, espera de datos 46 %, GPU 99 %\n"}
+,{"stream_name":"stderr","time":4229.89632109,"data":"Metric val/auprc improved by 0.019 \u003e= min_delta = 0.0. New best score: 0.163\n"}
+,{"stream_name":"stderr","time":4229.896344027,"data":"\n"}
+,{"stream_name":"stderr","time":4229.89635333,"data":"Metric val/auprc improved by 0.019 \u003e= min_delta = 0.0. New best score: 0.163\n"}
+,{"stream_name":"stdout","time":4602.33367151,"data":"[2026-09-18 20:07:50,327][melanoma.train.callbacks][INFO] - época 10: 6.2 min, espera de datos 46 %, GPU 99 %\n"}
+,{"stream_name":"stdout","time":4602.334042616,"data":"\n"}
+,{"stream_name":"stdout","time":4602.334096948,"data":"[E/S] época 10: 6.2 min, espera de datos 46 %, GPU 99 %\n"}
+,{"stream_name":"stdout","time":4602.561257287,"data":"[2026-09-18 20:07:50,327][melanoma.train.callbacks][INFO] - época 10: 6.2 min, espera de datos 46 %, GPU 99 %\n"}
+,{"stream_name":"stdout","time":4602.561289399,"data":"\n"}
+,{"stream_name":"stdout","time":4602.561297315,"data":"[E/S] época 10: 6.2 min, espera de datos 46 %, GPU 99 %\n"}
+,{"stream_name":"stdout","time":4971.423015454,"data":"[2026-09-18 20:13:59,416][melanoma.train.callbacks][INFO] - época 11: 6.2 min, espera de datos 46 %, GPU 98 %\n"}
+,{"stream_name":"stdout","time":4971.423334984,"data":"\n"}
+,{"stream_name":"stdout","time":4971.423355529,"data":"[E/S] época 11: 6.2 min, espera de datos 46 %, GPU 98 %\n"}
+,{"stream_name":"stdout","time":4971.637588323,"data":"[2026-09-18 20:13:59,416][melanoma.train.callbacks][INFO] - época 11: 6.2 min, espera de datos 46 %, GPU 98 %\n"}
+,{"stream_name":"stdout","time":4971.637619564,"data":"\n"}
+,{"stream_name":"stdout","time":4971.637625873,"data":"[E/S] época 11: 6.2 min, espera de datos 46 %, GPU 98 %\n"}
+,{"stream_name":"stdout","time":5339.184165572,"data":"[2026-09-18 20:20:07,177][melanoma.train.callbacks][INFO] - época 12: 6.1 min, espera de datos 46 %, GPU 99 %\n"}
+,{"stream_name":"stdout","time":5339.184508612,"data":"\n"}
+,{"stream_name":"stdout","time":5339.184561814,"data":"[E/S] época 12: 6.1 min, espera de datos 46 %, GPU 99 %\n"}
+,{"stream_name":"stdout","time":5339.401798726,"data":"[2026-09-18 20:20:07,177][melanoma.train.callbacks][INFO] - época 12: 6.1 min, espera de datos 46 %, GPU 99 %\n"}
+,{"stream_name":"stdout","time":5339.401822359,"data":"\n"}
+,{"stream_name":"stdout","time":5339.401826559,"data":"[E/S] época 12: 6.1 min, espera de datos 46 %, GPU 99 %\n"}
+,{"stream_name":"stdout","time":5706.712599123,"data":"[2026-09-18 20:26:14,706][melanoma.train.callbacks][INFO] - época 13: 6.1 min, espera de datos 46 %, GPU 99 %\n"}
+,{"stream_name":"stdout","time":5706.713040798,"data":"\n"}
+,{"stream_name":"stdout","time":5706.713081693,"data":"[E/S] época 13: 6.1 min, espera de datos 46 %, GPU 99 %\n"}
+,{"stream_name":"stdout","time":5706.935469423,"data":"[2026-09-18 20:26:14,706][melanoma.train.callbacks][INFO] - época 13: 6.1 min, espera de datos 46 %, GPU 99 %\n"}
+,{"stream_name":"stdout","time":5706.935517316,"data":"\n"}
+,{"stream_name":"stdout","time":5706.935523059,"data":"[E/S] época 13: 6.1 min, espera de datos 46 %, GPU 99 %\n"}
+,{"stream_name":"stdout","time":6074.146016578,"data":"[2026-09-18 20:32:22,139][melanoma.train.callbacks][INFO] - época 14: 6.1 min, espera de datos 46 %, GPU 98 %\n"}
+,{"stream_name":"stdout","time":6074.146489988,"data":"\n"}
+,{"stream_name":"stdout","time":6074.146513078,"data":"[E/S] época 14: 6.1 min, espera de datos 46 %, GPU 98 %\n"}
+,{"stream_name":"stderr","time":6074.14796791,"data":"Monitored metric val/auprc did not improve in the last 5 records. Best score: 0.163. Signaling Trainer to stop.\n"}
+,{"stream_name":"stderr","time":6074.151500125,"data":"`Trainer.fit` stopped: `max_epochs=15` reached.\n"}
+,{"stream_name":"stdout","time":6074.356264501,"data":"[2026-09-18 20:32:22,139][melanoma.train.callbacks][INFO] - época 14: 6.1 min, espera de datos 46 %, GPU 98 %\n"}
+,{"stream_name":"stderr","time":6074.356287014,"data":"Monitored metric val/auprc did not improve in the last 5 records. Best score: 0.163. Signaling Trainer to stop.\n"}
+,{"stream_name":"stderr","time":6074.356319893,"data":"`Trainer.fit` stopped: `max_epochs=15` reached.\n"}
+,{"stream_name":"stdout","time":6074.356297875,"data":"\n"}
+,{"stream_name":"stderr","time":6074.356327756,"data":"\n"}
+,{"stream_name":"stderr","time":6074.356352923,"data":"Monitored metric val/auprc did not improve in the last 5 records. Best score: 0.163. Signaling Trainer to stop.\n"}
+,{"stream_name":"stdout","time":6074.356352451,"data":"[E/S] época 14: 6.1 min, espera de datos 46 %, GPU 98 %\n"}
+,{"stream_name":"stderr","time":6074.356358885,"data":"`Trainer.fit` stopped: `max_epochs=15` reached.\n"}
+,{"stream_name":"stdout","time":6074.568795699,"data":"Epoch 14/14 ━━━━━━━━━━━━━━━━ 716/716 0:05:39 •        2.09it/s v_num: zivf      \n"}
+,{"stream_name":"stdout","time":6074.568871742,"data":"                                     0:00:00                   train/loss_step: \n"}
+,{"stream_name":"stdout","time":6074.568881837,"data":"                                                               0.047 val/auroc: \n"}
+,{"stream_name":"stdout","time":6074.568886867,"data":"                                                               0.840 val/auprc: \n"}
+,{"stream_name":"stdout","time":6074.568891751,"data":"                                                               0.162            \n"}
+,{"stream_name":"stdout","time":6074.568896137,"data":"                                                               train/loss_epoch:\n"}
+,{"stream_name":"stdout","time":6074.569498449,"data":"                                                               0.079            \n"}
+,{"stream_name":"stdout","time":6074.771215491,"data":"Epoch 14/14 ━━━━━━━━━━━━━━━━ 716/716 0:05:39 •        2.09it/s v_num: zivf      \n"}
+,{"stream_name":"stdout","time":6074.77128087,"data":"                                     0:00:00                   train/loss_step: \n"}
+,{"stream_name":"stdout","time":6074.771289132,"data":"                                                               0.047 val/auroc: \n"}
+,{"stream_name":"stdout","time":6074.771294614,"data":"                                                               0.840 val/auprc: \n"}
+,{"stream_name":"stdout","time":6074.771305478,"data":"                                                               0.162            \n"}
+,{"stream_name":"stdout","time":6074.771310364,"data":"                                                               train/loss_epoch:\n"}
+,{"stream_name":"stdout","time":6074.771315462,"data":"                                                               0.079            \n"}
+,{"stream_name":"stderr","time":6075.031596873,"data":"LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0,1]\n"}
+,{"stream_name":"stderr","time":6075.23719264,"data":"LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0,1]\n"}
+,{"stream_name":"stderr","time":6075.237228679,"data":"\n"}
+,{"stream_name":"stderr","time":6075.23723312,"data":"LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0,1]\n"}
+,{"stream_name":"stdout","time":6103.906579482,"data":"Predicting ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 156/156 0:00:28 • 0:00:00 5.55it/s \n"}
+,{"stream_name":"stdout","time":6104.108696878,"data":"Predicting ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 156/156 0:00:28 • 0:00:00 5.55it/s \n"}
+,{"stream_name":"stdout","time":6127.651895487,"data":"\n"}
+,{"stream_name":"stdout","time":6127.651934058,"data":"convnext_tiny-384-s2-e153979: AUROC 0.8283  AUPRC 0.1635  (prevalencia 0.0177)  épocas 15  colapsos []\n"}
+,{"stream_name":"stdout","time":6127.651940033,"data":"→ /kaggle/working/runs/m2-s2-e153979\n"}
+,{"stream_name":"stdout","time":6127.657930636,"data":"\u001b[1;34mwandb\u001b[0m: \n"}
+,{"stream_name":"stdout","time":6127.657956523,"data":"\u001b[1;34mwandb\u001b[0m: You can sync this run to the cloud by running:\n"}
+,{"stream_name":"stdout","time":6127.657966642,"data":"\u001b[1;34mwandb\u001b[0m: \u001b[1mwandb sync /kaggle/working/runs/m2-s2-e153979/wandb/offline-run-20260918_185803-in02zivf\u001b[0m\n"}
+,{"stream_name":"stdout","time":6127.657974915,"data":"\u001b[1;34mwandb\u001b[0m: Find logs at: \u001b[1;35m../runs/m2-s2-e153979/wandb/offline-run-20260918_185803-in02zivf/logs\u001b[0m\n"}
+,{"stream_name":"stdout","time":6127.858113864,"data":"\n"}
+,{"stream_name":"stdout","time":6127.858141703,"data":"convnext_tiny-384-s2-e153979: AUROC 0.8283  AUPRC 0.1635  (prevalencia 0.0177)  épocas 15  colapsos []\n"}
+,{"stream_name":"stdout","time":6127.858148215,"data":"→ /kaggle/working/runs/m2-s2-e153979\n"}
+,{"stream_name":"stdout","time":6127.858152888,"data":"\u001b[1;34mwandb\u001b[0m: \n"}
+,{"stream_name":"stdout","time":6127.858158093,"data":"\u001b[1;34mwandb\u001b[0m: You can sync this run to the cloud by running:\n"}
+,{"stream_name":"stdout","time":6127.858164551,"data":"\u001b[1;34mwandb\u001b[0m: \u001b[1mwandb sync /kaggle/working/runs/m2-s2-e153979/wandb/offline-run-20260918_185803-in02zivf\u001b[0m\n"}
+,{"stream_name":"stdout","time":6127.858173043,"data":"\u001b[1;34mwandb\u001b[0m: Find logs at: \u001b[1;35m../runs/m2-s2-e153979/wandb/offline-run-20260918_185803-in02zivf/logs\u001b[0m\n"}
+,{"stream_name":"stdout","time":6131.599347407,"data":"{\n"}
+,{"stream_name":"stdout","time":6131.599378442,"data":"  \"run_name\": \"convnext_tiny-384-s2-e153979\",\n"}
+,{"stream_name":"stdout","time":6131.599384369,"data":"  \"best_checkpoint\": \"/kaggle/working/runs/m2-s2-e153979/checkpoints/convnext_tiny-384-s2-e153979-09-0.0000.ckpt\",\n"}
+,{"stream_name":"stdout","time":6131.599403372,"data":"  \"epochs_run\": 15,\n"}
+,{"stream_name":"stdout","time":6131.599406331,"data":"  \"collapse_epochs\": []\n"}
+,{"stream_name":"stdout","time":6131.599408619,"data":"}\n"}
+,{"stream_name":"stdout","time":6131.599410808,"data":"{\n"}
+,{"stream_name":"stdout","time":6131.599412891,"data":"  \"n_images\": 4963,\n"}
+,{"stream_name":"stdout","time":6131.599415116,"data":"  \"n_positives\": 88,\n"}
+,{"stream_name":"stdout","time":6131.599417395,"data":"  \"n_patients\": 568,\n"}
+,{"stream_name":"stdout","time":6131.599419733,"data":"  \"prevalence\": 0.017731210961112232,\n"}
+,{"stream_name":"stdout","time":6131.59942195,"data":"  \"auprc_random\": 0.017731210961112232,\n"}
+,{"stream_name":"stdout","time":6131.599424322,"data":"  \"auroc\": 0.8282750582750582,\n"}
+,{"stream_name":"stdout","time":6131.599426842,"data":"  \"auprc\": 0.16346478233818743,\n"}
+,{"stream_name":"stdout","time":6131.599429144,"data":"  \"threshold_policy\": \"sensibilidad\u003e=0.9\",\n"}
+,{"stream_name":"stdout","time":6131.599431943,"data":"  \"confusion\": {\n"}
+,{"stream_name":"stdout","time":6131.599434146,"data":"    \"threshold\": 0.00214894930832088,\n"}
+,{"stream_name":"stdout","time":6131.599436417,"data":"    \"tn\": 2637,\n"}
+,{"stream_name":"stdout","time":6131.599438583,"data":"    \"fp\": 2238,\n"}
+,{"stream_name":"stdout","time":6131.599440719,"data":"    \"fn\": 8,\n"}
+,{"stream_name":"stdout","time":6131.59944296,"data":"    \"tp\": 80,\n"}
+,{"stream_name":"stdout","time":6131.59944513,"data":"    \"sensitivity\": 0.9090909090909091,\n"}
+,{"stream_name":"stdout","time":6131.599447363,"data":"    \"specificity\": 0.540923076923077,\n"}
+,{"stream_name":"stdout","time":6131.599449543,"data":"    \"ppv\": 0.03451251078515962,\n"}
+,{"stream_name":"stdout","time":6131.59945176,"data":"    \"npv\": 0.9969754253308128\n"}
+,{"stream_name":"stdout","time":6131.599453963,"data":"  },\n"}
+,{"stream_name":"stdout","time":6131.599456084,"data":"  \"sens_at_spec090\": 0.5568181818181818,\n"}
+,{"stream_name":"stdout","time":6131.599458335,"data":"  \"spec_at_sens090\": 0.5409230769230768,\n"}
+,{"stream_name":"stdout","time":6131.599460542,"data":"  \"sens_at_spec095\": 0.38636363636363635,\n"}
+,{"stream_name":"stdout","time":6131.599462739,"data":"  \"spec_at_sens095\": 0.3107692307692308\n"}
+,{"stream_name":"stdout","time":6131.599464937,"data":"}\n"}
+,{"stream_name":"stdout","time":6131.599467013,"data":"# convnext_tiny-384-s2-e153979\n"}
+,{"stream_name":"stdout","time":6131.599469204,"data":"\n"}
+,{"stream_name":"stdout","time":6131.599471387,"data":"commit `e153979` · splits {'train': '701333b2450c363b1ab1b5a9422d3d223d243e1b3af2d643b05f6b86f711968c', 'val': 'b7f727d6cf70d7a12be136e3b7046b42c725eaf5541aadc0723fbac09941ffb1'}\n"}
+,{"stream_name":"stdout","time":6131.599474497,"data":"\n"}
+,{"stream_name":"stdout","time":6131.599476596,"data":"| métrica | valor | IC 95 % (bootstrap por paciente) |\n"}
+,{"stream_name":"stdout","time":6131.599478851,"data":"|:--|--:|:--|\n"}
+,{"stream_name":"stdout","time":6131.599481003,"data":"| AUC-ROC | 0.828 | [0.780, 0.872] |\n"}
+,{"stream_name":"stdout","time":6131.599483217,"data":"| AUPRC (primaria) | 0.163 | [0.100, 0.249] |\n"}
+,{"stream_name":"stdout","time":6131.599485477,"data":"| Sensibilidad a especificidad 0.90 | 0.557 | [0.437, 0.662] |\n"}
+,{"stream_name":"stdout","time":6131.599487681,"data":"| Sensibilidad a especificidad 0.95 | 0.386 | [0.280, 0.490] |\n"}
+,{"stream_name":"stdout","time":6131.599489878,"data":"| Especificidad a sensibilidad 0.90 | 0.541 | [0.316, 0.662] |\n"}
+,{"stream_name":"stdout","time":6131.599494648,"data":"| Especificidad a sensibilidad 0.95 | 0.311 | [0.174, 0.580] |\n"}
+,{"stream_name":"stdout","time":6131.599496977,"data":"| Prevalencia (AUPRC de un clasificador aleatorio) | 0.0177 | |\n"}
+,{"stream_name":"stdout","time":6131.599499228,"data":"\n"}
+,{"stream_name":"stdout","time":6131.599501316,"data":"Umbral: 0.0021 (política: sensibilidad\u003e=0.9; la selección definitiva de umbral es de F4).\n"}
+,{"stream_name":"stdout","time":6131.599503756,"data":"\n"}
+,{"stream_name":"stdout","time":6131.599505812,"data":"| | pred. benigno | pred. melanoma |\n"}
+,{"stream_name":"stdout","time":6131.599508007,"data":"|:--|--:|--:|\n"}
+,{"stream_name":"stdout","time":6131.59951014,"data":"| real benigno | 2637 | 2238 |\n"}
+,{"stream_name":"stdout","time":6131.599512322,"data":"| real melanoma | 8 | 80 |\n"}
+,{"stream_name":"stdout","time":6131.599514471,"data":"\n"}
+,{"stream_name":"stdout","time":6131.599516565,"data":"| métrica en el umbral | valor |\n"}
+,{"stream_name":"stdout","time":6131.599518858,"data":"|:--|--:|\n"}
+,{"stream_name":"stdout","time":6131.599520974,"data":"| Sensibilidad | 0.909 |\n"}
+,{"stream_name":"stdout","time":6131.599523125,"data":"| Especificidad | 0.541 |\n"}
+,{"stream_name":"stdout","time":6131.599525281,"data":"| VPP a la prevalencia observada (0.0177) | 0.035 |\n"}
+,{"stream_name":"stdout","time":6131.599527581,"data":"| VPN a la prevalencia observada | 0.997 |\n"}
+,{"stream_name":"stdout","time":6131.599529783,"data":"\n"}
+,{"stream_name":"stderr","time":6136.219958096,"data":"/usr/local/lib/python3.12/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\\|'\n"}
+,{"stream_name":"stderr","time":6136.21998924,"data":"  cells[i][c] = re.sub('\\\\\\\\\\|', '|', cell)\n"}
+,{"stream_name":"stderr","time":6136.379772866,"data":"/usr/local/lib/python3.12/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\\_'\n"}
+,{"stream_name":"stderr","time":6136.379806219,"data":"  text = re.sub(r'_', '\\_', text) # Escape underscores in display text\n"}
+,{"stream_name":"stderr","time":6137.016123085,"data":"[NbConvertApp] Converting notebook __notebook__.ipynb to notebook\n"}
+,{"stream_name":"stderr","time":6137.317016302,"data":"[NbConvertApp] Writing 34457 bytes to __notebook__.ipynb\n"}
+,{"stream_name":"stderr","time":6139.774408478,"data":"[NbConvertApp] Converting notebook __notebook__.ipynb to html\n"}
+,{"stream_name":"stderr","time":6140.633333156,"data":"[NbConvertApp] Writing 319001 bytes to __results__.html\n"}
+]

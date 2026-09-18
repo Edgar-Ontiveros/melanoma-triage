@@ -1,0 +1,8 @@
+{
+  "run": "a1-s0",
+  "file": "tf_efficientnetv2_s-224-s0-e153979-04-0.0000.ckpt",
+  "bytes": 243447866,
+  "sha256": "e0ecf981adaa125dd707d2e5e3b75cff003335e56aaa7356fca9e961d4710040",
+  "date": "2026-09-18",
+  "dataset": "edgaronti26/melanoma-f3-final"
+}

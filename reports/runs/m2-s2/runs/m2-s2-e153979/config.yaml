@@ -1,0 +1,130 @@
+data:
+  root: data
+  manifest_path: data/manifests/isic2020.csv
+  splits_dir: data/splits
+  image_size: 384
+  batch_size: 32
+  num_workers: 4
+  env: kaggle
+  paths:
+    local:
+      images_dir: data/processed/isic2020_512
+      manifest_path: data/manifests/isic2020.csv
+      splits_dir: data/splits
+    kaggle:
+      images_dir: /tmp/images_512
+      manifest_path: /kaggle/input/datasets/edgaronti26/melanoma-isic2020-splits/isic2020.csv
+      splits_dir: /kaggle/input/datasets/edgaronti26/melanoma-isic2020-splits
+  augment:
+    hflip_p: 0.5
+    vflip_p: 0.5
+    rotate_limit_deg: 20
+    rotate_p: 0.5
+    brightness_limit: 0.2
+    contrast_limit: 0.2
+    brightness_contrast_p: 0.5
+    crop_scale:
+    - 0.8
+    - 1.0
+  val_resize: center_crop
+  sampler: none
+  preprocess_scale: none
+  name: isic2020
+  raw_dir: data/raw/isic2020
+  images_zip: data/raw/isic2020/ISIC_2020_Training_JPEG.zip
+  images_dir: data/raw/isic2020/train
+  ground_truth_csv: data/raw/isic2020/ISIC_2020_Training_GroundTruth_v2.csv
+  official_duplicates_csv: data/raw/isic2020/ISIC_2020_Training_Duplicates.csv
+  reports_dir: reports
+  figures_dir: reports/figures
+  test_access_log: logs/test_set_access.log
+  source:
+    base_url: https://isic-challenge-data.s3.amazonaws.com/2020
+    zip_bytes: 24707698022
+    zip_etag: 013145107654177e7dd94091fdf27e9c-2946
+  expected:
+    images: 33126
+    positives: 584
+    patients: 2056
+    prevalence_pct: 1.76
+  hashing:
+    workers: 12
+  phash:
+    hash_size: 8
+    threshold: 0
+    report_max_distance: 16
+    decode_size: 256
+    contact_sheet_pairs: 20
+    thumb_px: 224
+    cache: true
+    sweep_thresholds:
+    - 0
+    - 2
+    - 4
+    - 6
+    - 8
+    sweep_max_group: 10
+    sweep_sample_groups: 10
+    sweep_seed: 20260904
+  split:
+    fractions:
+      train: 0.7
+      val: 0.15
+      test: 0.15
+    seed: 20260904
+    min_test_positives: 80
+    names:
+    - train
+    - val
+    - test
+  resize:
+    long_side: 512
+    jpeg_quality: 95
+    out_dir: data/processed/isic2020_512
+    workers: 12
+  verify:
+    sample_size: 200
+    seed: 20260904
+    kaggle_competition_dir: /kaggle/input/competitions/siim-isic-melanoma-classification/jpeg/train
+    kaggle_splits_dir: /kaggle/input/datasets/edgaronti26/melanoma-isic2020-splits
+model:
+  backbone: convnext_tiny.fb_in22k_ft_in1k_384
+  pretrained: true
+  dropout: 0.2
+  num_classes: 1
+  freeze_backbone: false
+train:
+  seed: 2
+  max_epochs: 15
+  lr: 0.0001
+  weight_decay: 0.01
+  precision: 16-mixed
+  deterministic: true
+  accelerator: auto
+  devices: 1
+  accumulate_grad_batches: 4
+  memory_warmup: true
+  pos_weight: auto
+  scheduler: cosine
+  warmup_epochs: 1
+  monitor: val/auprc
+  monitor_mode: max
+  early_stopping_patience: 5
+  checkpoint_dir: null
+  progress_bar: true
+  collapse_std_threshold: 0.01
+  collapse_auc_tolerance: 0.02
+  eval:
+    bootstrap_resamples: 2000
+    bootstrap_seed: 20260904
+    fixed_levels:
+    - 0.9
+    - 0.95
+    threshold_sensitivity: 0.9
+    reliability_bins: 10
+  wandb:
+    enabled: true
+    project: melanoma-triage
+    entity: null
+    mode: online
+experiment: m2
