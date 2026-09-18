@@ -1,6 +1,6 @@
 # F3 — Matriz de modelos: comparación controlada sobre validación
 
-Generado por `scripts/f3_report.py`. Lo fijo (idéntico a B1): cabeza de la fábrica, BCE con `pos_weight` automático, AdamW 1e-4, cosine con warmup, 15 épocas con early stopping por AUPRC (paciencia 5), aumentación de F2, lado corto + CenterCrop en validación, **lote efectivo 128** (acumulación de gradiente), semillas 0/1/2, 16-mixed. Lo variable: backbone y resolución. Lo vigila `tests/test_f3_matrix.py`. `test.txt` no se toca.
+Generado por `scripts/f3_report.py`. Lo fijo (idéntico a B1): cabeza de la fábrica, BCE con `pos_weight` automático, AdamW 1e-4, cosine con warmup, 15 épocas con early stopping por AUPRC (paciencia 5), aumentación de F2, lado corto + CenterCrop en validación, **lote efectivo 128** (acumulación de gradiente), semillas 0/1/2, 16-mixed. Lo variable: backbone y resolución. Lo vigila `tests/test_f3_matrix.py`. el split de prueba no se toca.
 
 ## 1. Tabla principal
 
@@ -8,7 +8,7 @@ Generado por `scripts/f3_report.py`. Lo fijo (idéntico a B1): cabeza de la fáb
 |:--|:--|--:|--:|:--|:--|:--|:--|:--|:--|
 | **B1** | `resnet50.a1_in1k` | 224 | 3 | 0.778 (0.774–0.782) | 0.077 (0.076–0.079) | 0.402 (0.364–0.455) | 0.261 (0.239–0.284) | 0.424 (0.395–0.460) | 0.313 (0.262–0.363) |
 | **A1** | `tf_efficientnetv2_s.in21k_ft_in1k` | 224 | 0 | n/d | n/d | n/d | n/d | n/d | n/d |
-| **M1** | `tf_efficientnetv2_s.in21k_ft_in1k` | 384 | 0 | n/d | n/d | n/d | n/d | n/d | n/d |
+| **M1** | `tf_efficientnetv2_s.in21k_ft_in1k` | 384 | 1 | 0.838 (1 semilla) | 0.164 (1 semilla) | 0.614 (1 semilla) | 0.466 (1 semilla) | 0.435 (1 semilla) | 0.224 (1 semilla) |
 | **M2** | `convnext_tiny.fb_in22k_ft_in1k_384` | 384 | 0 | n/d | n/d | n/d | n/d | n/d | n/d |
 
 Media y rango (mín–máx) sobre semillas; cada corrida evaluada sobre `val.txt` con IC por paciente en su `metrics.json`.
@@ -32,6 +32,7 @@ _pendiente_
 | `resnet50-224-s0-f431f11` | `f431f11` | 11 (5) | 22 | n/d | n/d | n/d | no |
 | `resnet50-224-s1-bcdbbf9` | `bcdbbf9` | 12 (6) | 24 | n/d | n/d | n/d | no |
 | `resnet50-224-s2-bcdbbf9` | `bcdbbf9` | 13 (7) | 26 | n/d | n/d | n/d | no |
+| `tf_efficientnetv2_s-384-s0-d294744` | `d294744` | 15 (12) | 95 | 6.2 | 29 % | 99 % | no |
 
 Espera de datos: fracción del tiempo del bucle de entrenamiento que el DataLoader tiene a la GPU ociosa (`ThroughputMonitor`). Por debajo de ~70 % de GPU se documenta y se considera más `num_workers` o un redimensionado previo (F3.4).
 
