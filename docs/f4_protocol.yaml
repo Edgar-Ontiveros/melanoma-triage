@@ -1,0 +1,77 @@
+# F4.3 — Protocolo congelado de la evaluación clínica.
+# Escrito y commiteado ANTES de que exista scripts/evaluate_test.py y antes de leer test.txt.
+# Todo lo de aquí se decidió sobre validación (reports/f4_calibration.json, commit 2822128).
+# Nada se reajusta después de ver el test. scripts/evaluate_test.py se niega a correr si este
+# archivo tiene cambios sin commitear (tests/test_f4_protocol.py::test_protocol_committed).
+frozen_on: "2026-09-18"
+decided_on: val   # split de validación (4,963 imágenes, 88 melanomas, 568 pacientes)
+
+model:
+  experiment: a1            # EfficientNetV2-S a 224 px, semilla 0 (F3.7)
+  backbone: tf_efficientnetv2_s.in21k_ft_in1k
+  image_size: 224
+  val_resize: center_crop   # lado corto a 224 + CenterCrop, como en validación
+  checkpoint_file: tf_efficientnetv2_s-224-s0-e153979-04-0.0000.ckpt
+  checkpoint_sha256: e0ecf981adaa125dd707d2e5e3b75cff003335e56aaa7356fca9e961d4710040
+  train_run_git_sha: e153979   # commit con el que se entrenó a1-s0
+  git_sha_calibration: 7377047   # commit con el que se calibró
+  pos_weight_used: 54.88
+
+calibration:
+  method: platt             # primaria; corrige escala y desplazamiento (pos_weight)
+  a: 0.4845898727556983
+  b: -3.8073929308826067
+  expected_b: -4.00514898341763   # -ln(pos_weight); observado b ≈ expected_b - 0.2
+  fitted_on: val
+  secondary:
+    method: temperature
+    T: 1.8304953959638577
+
+thresholds:
+  method: "bootstrap-median, 2000 resamples, patient-level, on Platt-calibrated probabilities"
+  seed: 20260904
+  tau_95: 0.0038890622237550752       # mediana; p5 0.001330, p95 0.006301; corte único 0.003889
+  tau_90: 0.006630038044694367       # mediana; p5 0.004008, p95 0.011222; corte único 0.006301
+  on_val:
+    tau_95: {sensitivity: 0.9545, specificity: 0.4000, ppv: 0.0279, npv: 0.9980}
+    tau_90: {sensitivity: 0.8977, specificity: 0.5374, ppv: 0.0338, npv: 0.9966}
+
+metrics:
+  - auroc
+  - auprc
+  - sens_at_spec_090
+  - sens_at_spec_095
+  - spec_at_sens_090
+  - spec_at_sens_095
+  - ece            # 10 bins uniformes y 10 por cuantiles, con la calibración congelada
+  - brier
+  - confusion_at_tau_95
+  - confusion_at_tau_90
+ppv_npv_projection_prevalences: [0.01, 0.02, 0.05]
+
+bootstrap:
+  n: 2000
+  unit: patient
+  seed: 20260904
+  ci: 0.95
+
+subgroups:   # exploratorio: 86 melanomas en test, 5–30 por subgrupo; IC anchos
+  age: ["<40", "40-59", "60+", "unknown"]     # age_approx: <40, 40–59, ≥60, NaN
+  sex: [male, female, unknown]
+  site: [as_in_manifest, unknown]             # anatom_site del manifiesto + faltante
+  reference_rule: "no se concluye nada de una diferencia cuyo IC cruce el del grupo de referencia"
+
+test_access:
+  budget_total: 2
+  used_by_this_phase: 1
+  log: logs/test_set_access.log
+
+ddi:
+  primary_task: malignant_vs_benign      # etiqueta de DDI; cambio de tarea, se declara
+  secondary_task: melanoma_vs_rest       # disease contiene "melanoma"
+  groups: [fst_12, fst_34, fst_56]       # skin_tone 12 / 34 / 56
+  bootstrap_unit: image                  # DDI no tiene id de paciente; limitación declarada
+  preprocessing: same_as_val             # lado corto + CenterCrop 224; no se adapta a DDI
+  calibration: isic_platt_as_is          # se aplica la de ISIC y se reporta el ECE
+  runs_on: local_cpu                     # DDI no sale de la laptop
+  anchor: "Daneshjou et al. 2022, Sci Adv 8(31):eabq6147, doi:10.1126/sciadv.abq6147"
