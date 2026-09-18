@@ -135,3 +135,55 @@ competencia y el dataset privado
 `data/splits/test.txt` se lee únicamente desde `scripts/evaluate_test.py` (F4), **dos veces
 en todo el proyecto**. Cada acceso se registra en `logs/test_set_access.log`. La prueba
 `tests/test_test_split_isolation.py` impide que cualquier módulo de `src/` lo referencie.
+
+## DDI (Diverse Dermatology Images)
+
+**Qué es.** Conjunto de 656 imágenes clínicas (no dermatoscópicas) de lesiones cutáneas con
+diagnóstico confirmado por biopsia, construido por Stanford para evaluar el desempeño de
+clasificadores en distintos tonos de piel: tres grupos de la escala de Fitzpatrick (I–II,
+III–IV, V–VI) con tamaños comparables. En este proyecto se usa **solo como conjunto de
+evaluación externa en F4**: nunca se entrena con él.
+
+**De dónde viene.** Stanford AIMI, distribuido por Redivis:
+<https://stanford.redivis.com/datasets/3r16-5mby7gfer>, DOI 10.71718/kqee-3z39. Descargado el
+2026-09-18 tras aceptar el acuerdo de uso. Cita (archivo `.apa` incluido en la descarga):
+
+> Stanford AIMI. (2026). DDI - Diverse Dermatology Images (Version 1.0) [Dataset]. Redivis.
+> https://stanford.redivis.com/datasets/3r16-5mby7gfer?v=1.0
+
+**Archivos locales** (`data/raw/ddi/`, fuera de git):
+
+| archivo | contenido | SHA256 |
+|:--|:--|:--|
+| `DDI - Diverse Dermatology Images_files.zip` | 656 PNG (238,670,195 bytes) + copia de la tabla de metadatos, extraído en `images/` | `57f7b1126b43101f8563aa87b15cfb027e512df75a789cba77924b487f473e96` |
+| `ddi_metadata.csv` | tabla de metadatos, 656 filas (idéntica a la copia dentro del zip) | `47884b2b1b65a685b2d6321e122333b4ecb750fc5885ad022f46a80439e1a074` |
+| `Redivis-files-2026-09-18.csv` | índice de archivos de Redivis (nombre, carpeta, tamaño) | — |
+| `ddi_diverse_dermatology_images.apa` | cita bibliográfica | — |
+
+**Verificación contra la publicación (2026-09-18):**
+
+| cantidad | esperado | obtenido | ok |
+|:--|--:|--:|:--|
+| filas / imágenes | 656 | 656 | sí |
+| tono I–II (`skin_tone` = 12) | 208 | 208 | sí |
+| tono III–IV (`skin_tone` = 34) | 241 | 241 | sí |
+| tono V–VI (`skin_tone` = 56) | 207 | 207 | sí |
+| malignas (`malignant` = true) | 171 | 171 | sí |
+| benignas | 485 | 485 | sí |
+| filas con PNG existente en el zip | 656 | 656 | sí |
+
+Columnas de `ddi_metadata.csv`: `_unnamed_var` (índice 0..655), `DDI_ID` (1..656, único),
+`DDI_file` (`000001.png`…), `skin_tone` (12 / 34 / 56 = grupos de Fitzpatrick), `malignant`
+(true/false) y `disease` (78 diagnósticos distintos; los más frecuentes: melanocytic-nevi 119,
+seborrheic-keratosis 58, verruca-vulgaris 50, basal-cell-carcinoma 41, epidermal-cyst 35,
+mycosis-fungoides 32). Malignas por tono: 49 / 74 / 48. No hay `patient_id`: cada imagen se
+trata como observación independiente en F4, y así se declara.
+
+**Restricciones del acuerdo de uso que afectan al proyecto:**
+
+1. **No va a git.** `data/raw/ddi/` está en `.gitignore` (entrada explícita, además de
+   `data/raw/`); el acuerdo prohíbe redistribuir el dataset.
+2. **No se sube a Kaggle.** La evaluación externa de F4 corre en local, en CPU, con el
+   checkpoint final de F3 descargado (`melanoma-f3-final`).
+3. **No se reproducen imágenes** de DDI en la tesis ni en la presentación: solo métricas
+   agregadas (por grupo de tono, con intervalos), nunca ejemplos.
