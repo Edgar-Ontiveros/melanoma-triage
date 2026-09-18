@@ -1,0 +1,389 @@
+{
+  "date": "2026-09-18T21:56:02+00:00",
+  "git_sha": "23d817a",
+  "checkpoint_sha256": "e0ecf981adaa125dd707d2e5e3b75cff003335e56aaa7356fca9e961d4710040",
+  "protocol": {
+    "primary_task": "malignant_vs_benign",
+    "secondary_task": "melanoma_vs_rest",
+    "groups": "['fst_12', 'fst_34', 'fst_56']",
+    "bootstrap_unit": "image",
+    "preprocessing": "same_as_val",
+    "calibration": "isic_platt_as_is",
+    "runs_on": "local_cpu",
+    "anchor": "Daneshjou et al. 2022, Sci Adv 8(31):eabq6147, doi:10.1126/sciadv.abq6147"
+  },
+  "n_images": 656,
+  "n_malignant": 171,
+  "n_melanoma": 21,
+  "melanoma_diagnoses": [
+    "melanoma",
+    "melanoma-acral-lentiginous",
+    "melanoma-in-situ",
+    "nodular-melanoma-(nm)"
+  ],
+  "group_sizes": {
+    "fst_12": {
+      "n": 208,
+      "malignant": 49,
+      "melanoma": 7
+    },
+    "fst_34": {
+      "n": 241,
+      "malignant": 74,
+      "melanoma": 7
+    },
+    "fst_56": {
+      "n": 207,
+      "malignant": 48,
+      "melanoma": 7
+    }
+  },
+  "tasks": {
+    "malignant_vs_benign": {
+      "all": {
+        "n": 656,
+        "positives": 171,
+        "prevalence": 0.2606707317073171,
+        "auroc": 0.595984807379273,
+        "auroc_lo": 0.541169759570495,
+        "auroc_hi": 0.6477829536098013,
+        "auprc": 0.3666258349610486,
+        "auprc_lo": 0.3057182263741359,
+        "auprc_hi": 0.44571511904101435,
+        "at_tau_95": {
+          "threshold": 0.0038890622237550752,
+          "tn": 5,
+          "fp": 480,
+          "fn": 0,
+          "tp": 171,
+          "sensitivity": 1.0,
+          "specificity": 0.010309278350515464,
+          "ppv": 0.2626728110599078,
+          "npv": 1.0
+        }
+      },
+      "by_group": {
+        "fst_12": {
+          "n": 208,
+          "positives": 49,
+          "prevalence": 0.23557692307692307,
+          "auroc": 0.5899114362726222,
+          "auroc_lo": 0.4937653700034391,
+          "auroc_hi": 0.6778460971937768,
+          "auprc": 0.3255825312107578,
+          "auprc_lo": 0.22754112301280197,
+          "auprc_hi": 0.4568042502997185,
+          "at_tau_95": {
+            "threshold": 0.0038890622237550752,
+            "tn": 1,
+            "fp": 158,
+            "fn": 0,
+            "tp": 49,
+            "sensitivity": 1.0,
+            "specificity": 0.006289308176100629,
+            "ppv": 0.23671497584541062,
+            "npv": 1.0
+          }
+        },
+        "fst_34": {
+          "n": 241,
+          "positives": 74,
+          "prevalence": 0.3070539419087137,
+          "auroc": 0.5956465447483411,
+          "auroc_lo": 0.5119657426000297,
+          "auroc_hi": 0.6759484283841488,
+          "auprc": 0.44865018063338413,
+          "auprc_lo": 0.34758738446596865,
+          "auprc_hi": 0.5726067133474293,
+          "at_tau_95": {
+            "threshold": 0.0038890622237550752,
+            "tn": 2,
+            "fp": 165,
+            "fn": 0,
+            "tp": 74,
+            "sensitivity": 1.0,
+            "specificity": 0.011976047904191617,
+            "ppv": 0.30962343096234307,
+            "npv": 1.0
+          }
+        },
+        "fst_56": {
+          "n": 207,
+          "positives": 48,
+          "prevalence": 0.2318840579710145,
+          "auroc": 0.6035115303983228,
+          "auroc_lo": 0.5057812910277782,
+          "auroc_hi": 0.7018062240325925,
+          "auprc": 0.3530565712315624,
+          "auprc_lo": 0.24999715633699693,
+          "auprc_hi": 0.5041053150115716,
+          "at_tau_95": {
+            "threshold": 0.0038890622237550752,
+            "tn": 2,
+            "fp": 157,
+            "fn": 0,
+            "tp": 48,
+            "sensitivity": 1.0,
+            "specificity": 0.012578616352201259,
+            "ppv": 0.23414634146341465,
+            "npv": 1.0
+          }
+        }
+      }
+    },
+    "melanoma_vs_rest": {
+      "all": {
+        "n": 656,
+        "positives": 21,
+        "prevalence": 0.03201219512195122,
+        "auroc": 0.5322084739407574,
+        "auroc_lo": 0.40790310985562894,
+        "auroc_hi": 0.6570313110968554,
+        "auprc": 0.03707347081693792,
+        "auprc_lo": 0.02230132086960082,
+        "auprc_hi": 0.07050521929176007,
+        "at_tau_95": {
+          "threshold": 0.0038890622237550752,
+          "tn": 5,
+          "fp": 630,
+          "fn": 0,
+          "tp": 21,
+          "sensitivity": 1.0,
+          "specificity": 0.007874015748031496,
+          "ppv": 0.03225806451612903,
+          "npv": 1.0
+        }
+      },
+      "by_group": {
+        "fst_12": {
+          "n": 208,
+          "positives": 7,
+          "prevalence": 0.03365384615384615,
+          "auroc": 0.4612651030561478,
+          "auroc_lo": 0.29064039408866993,
+          "auroc_hi": 0.6345812807881772,
+          "auprc": 0.03339224690619584,
+          "auprc_lo": 0.01486325406544735,
+          "auprc_hi": 0.07285980066445182,
+          "at_tau_95": {
+            "threshold": 0.0038890622237550752,
+            "tn": 1,
+            "fp": 200,
+            "fn": 0,
+            "tp": 7,
+            "sensitivity": 1.0,
+            "specificity": 0.004975124378109453,
+            "ppv": 0.033816425120772944,
+            "npv": 1.0
+          }
+        },
+        "fst_34": {
+          "n": 241,
+          "positives": 7,
+          "prevalence": 0.029045643153526972,
+          "auroc": 0.4371184371184371,
+          "auroc_lo": 0.13900478953670442,
+          "auroc_hi": 0.7374404955101157,
+          "auprc": 0.04536517689865603,
+          "auprc_lo": 0.01230733276431456,
+          "auprc_hi": 0.1929481063241389,
+          "at_tau_95": {
+            "threshold": 0.0038890622237550752,
+            "tn": 2,
+            "fp": 232,
+            "fn": 0,
+            "tp": 7,
+            "sensitivity": 1.0,
+            "specificity": 0.008547008547008548,
+            "ppv": 0.029288702928870293,
+            "npv": 1.0
+          }
+        },
+        "fst_56": {
+          "n": 207,
+          "positives": 7,
+          "prevalence": 0.033816425120772944,
+          "auroc": 0.7121428571428573,
+          "auroc_lo": 0.4963054187192118,
+          "auroc_hi": 0.8561597817518968,
+          "auprc": 0.07070984746688634,
+          "auprc_lo": 0.029481523378582203,
+          "auprc_hi": 0.15786591503498157,
+          "at_tau_95": {
+            "threshold": 0.0038890622237550752,
+            "tn": 2,
+            "fp": 198,
+            "fn": 0,
+            "tp": 7,
+            "sensitivity": 1.0,
+            "specificity": 0.01,
+            "ppv": 0.03414634146341464,
+            "npv": 1.0
+          }
+        }
+      }
+    }
+  },
+  "calibration_isic_platt_on_ddi": {
+    "brier": 0.24179041112999278,
+    "ece_uniform": {
+      "ece": 0.2287335442631989,
+      "strategy": "uniform",
+      "edges": [
+        0.0,
+        0.1,
+        0.2,
+        0.30000000000000004,
+        0.4,
+        0.5,
+        0.6000000000000001,
+        0.7000000000000001,
+        0.8,
+        0.9,
+        1.0
+      ],
+      "bins": [
+        {
+          "bin": 0,
+          "n": 640,
+          "confidence": 0.02960835431918562,
+          "observed": 0.2546875
+        },
+        {
+          "bin": 1,
+          "n": 16,
+          "confidence": 0.12509051244142128,
+          "observed": 0.5
+        },
+        {
+          "bin": 2,
+          "n": 0,
+          "confidence": null,
+          "observed": null
+        },
+        {
+          "bin": 3,
+          "n": 0,
+          "confidence": null,
+          "observed": null
+        },
+        {
+          "bin": 4,
+          "n": 0,
+          "confidence": null,
+          "observed": null
+        },
+        {
+          "bin": 5,
+          "n": 0,
+          "confidence": null,
+          "observed": null
+        },
+        {
+          "bin": 6,
+          "n": 0,
+          "confidence": null,
+          "observed": null
+        },
+        {
+          "bin": 7,
+          "n": 0,
+          "confidence": null,
+          "observed": null
+        },
+        {
+          "bin": 8,
+          "n": 0,
+          "confidence": null,
+          "observed": null
+        },
+        {
+          "bin": 9,
+          "n": 0,
+          "confidence": null,
+          "observed": null
+        }
+      ]
+    },
+    "ece_quantile": {
+      "ece": 0.22873354426319886,
+      "strategy": "quantile",
+      "edges": [
+        0.0031980586040181364,
+        0.009902274064148715,
+        0.01309616892275793,
+        0.01630020645518515,
+        0.019977509563200817,
+        0.024843652472789544,
+        0.029855929999937046,
+        0.036999560603967606,
+        0.04670302635810629,
+        0.06326227197233253,
+        0.18309602420054988
+      ],
+      "bins": [
+        {
+          "bin": 0,
+          "n": 66,
+          "confidence": 0.007520323801644233,
+          "observed": 0.21212121212121213
+        },
+        {
+          "bin": 1,
+          "n": 65,
+          "confidence": 0.01170082328035815,
+          "observed": 0.2153846153846154
+        },
+        {
+          "bin": 2,
+          "n": 66,
+          "confidence": 0.014552071190381516,
+          "observed": 0.19696969696969696
+        },
+        {
+          "bin": 3,
+          "n": 65,
+          "confidence": 0.01810357421285097,
+          "observed": 0.3384615384615385
+        },
+        {
+          "bin": 4,
+          "n": 66,
+          "confidence": 0.022194914982710277,
+          "observed": 0.13636363636363635
+        },
+        {
+          "bin": 5,
+          "n": 65,
+          "confidence": 0.027372015514788614,
+          "observed": 0.15384615384615385
+        },
+        {
+          "bin": 6,
+          "n": 66,
+          "confidence": 0.033082786263557984,
+          "observed": 0.22727272727272727
+        },
+        {
+          "bin": 7,
+          "n": 65,
+          "confidence": 0.040989725858749326,
+          "observed": 0.27692307692307694
+        },
+        {
+          "bin": 8,
+          "n": 66,
+          "confidence": 0.05388477921509914,
+          "observed": 0.3787878787878788
+        },
+        {
+          "bin": 9,
+          "n": 66,
+          "confidence": 0.08952263874362165,
+          "observed": 0.4696969696969697
+        }
+      ]
+    }
+  },
+  "elapsed_min": 1.4464430171000155
+}
