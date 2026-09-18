@@ -11,7 +11,8 @@ import re
 from pathlib import Path
 
 PATTERNS = [
-    r"0\.485|0\.456|0\.406|0\.229|0\.224|0\.225",
+    # Con límites: "10.48550" (prefijo DOI) no es 0.485.
+    r"(?<![\d.])0\.(?:485|456|406|229|224|225)(?!\d)",
     r"IMAGENET_DEFAULT_MEAN|IMAGENET_DEFAULT_STD|IMAGENET_INCEPTION",
     r"\bmean\s*=\s*[\[(]\s*0\.",
     r"\bstd\s*=\s*[\[(]\s*0\.",
