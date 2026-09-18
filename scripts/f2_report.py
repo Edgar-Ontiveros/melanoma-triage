@@ -142,19 +142,21 @@ def baselines_report(b0: dict | None, groups: dict[str, list[dict]]) -> str:
             f"{fmt(b['metrics']['auprc'])} {ci_str(b['ci'], 'auprc')} | {b['collapse_epochs'] or 'no'} |",
             "",
         ]
-        better = a if a["metrics"]["auprc"] >= b["metrics"]["auprc"] else b
-        other = b if better is a else a
-        overlap = better["ci"]["auprc"]["lo"] <= other["ci"]["auprc"]["hi"]
-        lines.append(
-            f"**Recomendación para F3:** {'pos_weight' if better is a else 'muestreo ponderado'} "
-            f"(mayor AUPRC puntual: {better['metrics']['auprc']:.3f} vs {other['metrics']['auprc']:.3f}). "
-            + (
-                "Los intervalos se traslapan: la diferencia no es concluyente con una semilla; se elige "
-                "por AUPRC puntual y simplicidad, y F3 puede revisarlo."
-                if overlap
-                else "Los intervalos no se traslapan."
-            )
-        )
+        sa, sb = a["metrics"]["spec_at_sens090"], b["metrics"]["spec_at_sens090"]
+        lines += [
+            "| punto de operación (sensibilidad ≥ 0.90) | pos_weight | muestreo ponderado |",
+            "|:--|--:|--:|",
+            f"| especificidad | {sa:.3f} | {sb:.3f} |",
+            f"| sensibilidad a especificidad 0.90 | {a['metrics']['sens_at_spec090']:.3f} | "
+            f"{b['metrics']['sens_at_spec090']:.3f} |",
+            "",
+            "**Decisión para F3 (Edgar, 2026-09-17): `pos_weight`.** El AUPRC resume todos los umbrales, "
+            "pero el sistema opera en uno: en triage el punto de operación es de sensibilidad alta, y a "
+            f"sensibilidad 0.90 el muestreo ponderado deja una especificidad de {sb:.2f} frente a {sa:.2f} con "
+            "`pos_weight`. El AUPRC puntual mayor del muestreo ponderado "
+            f"({b['metrics']['auprc']:.3f} vs {a['metrics']['auprc']:.3f}, intervalos traslapados, una semilla) no "
+            "compensa perder más de la mitad de la especificidad en el punto que importa.",
+        ]
     else:
         lines.append(PENDING)
     lines += ["", "## Lectura", ""]
