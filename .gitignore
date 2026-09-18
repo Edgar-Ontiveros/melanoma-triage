@@ -24,6 +24,8 @@ logs/*
 
 # Datos y pesos: nunca al repositorio
 data/raw/
+# DDI (Stanford AIMI): el acuerdo de uso prohíbe redistribuirlo. Explícito además de data/raw/.
+data/raw/ddi/
 data/processed/
 data/**/*.jpg
 data/**/*.png
