@@ -152,7 +152,8 @@ b7f727d6cf70d7a12be136e3b7046b42c725eaf5541aadc0723fbac09941ffb1  val.txt
 ### Conjunto de prueba bloqueado
 
 `data/splits/test.txt` se usa **como máximo dos veces en todo el proyecto**, ambas desde
-`scripts/evaluate_test.py` (F4), y cada acceso se anota en `logs/test_set_access.log`. Ningún
+`scripts/evaluate_test.py` (F4), y cada acceso se anota en `logs/test_set_access.log`
+(primer acceso: 2026-09-18, evaluación clínica de F4; queda uno en reserva). Ningún
 módulo de `src/` puede referenciarlo: lo vigila `tests/test_test_split_isolation.py` en CI.
 
 ### Kaggle

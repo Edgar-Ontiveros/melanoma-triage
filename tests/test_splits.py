@@ -54,7 +54,17 @@ def test_split_hashes_match_readme(root_dir: Path, prepare_cfg: DictConfig) -> N
         assert listed[path.name] == actual, f"SHA256 de {path.name} distinto al del README"
 
 
-def test_test_set_access_log_exists_and_is_empty(root_dir: Path, prepare_cfg: DictConfig) -> None:
+def test_test_set_access_log_within_budget(root_dir: Path, prepare_cfg: DictConfig) -> None:
+    """Presupuesto declarado: dos accesos al conjunto de prueba en todo el proyecto. Cada
+    línea lleva timestamp, commit y hash del protocolo (F4.4). Estuvo vacío hasta el
+    2026-09-18; el primer acceso fue la evaluación clínica de F4."""
     log = root_dir / prepare_cfg.data.test_access_log
     assert log.exists(), "falta logs/test_set_access.log"
-    assert log.stat().st_size == 0, "el registro de accesos al conjunto de prueba no está vacío"
+    lines = [ln for ln in log.read_text(encoding="utf-8").splitlines() if ln.strip()]
+    assert len(lines) <= 2, f"presupuesto de accesos al test excedido: {len(lines)} > 2"
+    for line in lines:
+        fields = dict(f.split("=", 1) for f in line.split("\t")[1:])
+        assert re.match(r"^\d{4}-\d{2}-\d{2}T", line), line
+        assert re.fullmatch(r"[0-9a-f]{7,40}", fields.get("git", "")), line
+        assert re.fullmatch(r"[0-9a-f]{64}", fields.get("protocol_sha256", "")), line
+        assert fields.get("split") == "test" and fields.get("reason"), line
