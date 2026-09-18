@@ -88,7 +88,10 @@ ddi:
 
 ## 2. Bitácora del acceso al test
 
-`logs/test_set_access.log` está vacío: el test no se ha abierto.
+```
+2026-09-18T22:10:55+00:00	git=be931a6	protocol_sha256=8c45394e1219d67706076ec9a407427b15616386635b7df52be1969637515e93	split=test	reason=F4.4 evaluación clínica (primer acceso)
+```
+1 línea(s) en `logs/test_set_access.log` (presupuesto: 2).
 
 ## 3. Calibración sobre validación
 
@@ -116,19 +119,78 @@ Sobre probabilidades calibradas con Platt; 2,000 remuestreos por paciente. Con 8
 
 ## 4. Resultados sobre el test
 
-_pendiente: el conjunto de prueba no se ha abierto (sesión 3 de F4)_
+| métrica | test (IC 95 % por paciente) |
+|:--|:--|
+| AUC-ROC | 0.834 [0.795, 0.872] |
+| AUPRC | 0.096 [0.065, 0.154] |
+| sensibilidad a especificidad 0.90 | 0.512 [0.404, 0.613] |
+| sensibilidad a especificidad 0.95 | 0.337 [0.239, 0.438] |
+| especificidad a sensibilidad 0.90 | 0.524 [0.455, 0.695] |
+| especificidad a sensibilidad 0.95 | 0.481 [0.377, 0.618] |
+| ECE uniforme / cuantiles (Platt congelada) | 0.0006 / 0.0039 (crudas: 0.2103) |
+| Brier (Platt congelada) | 0.0155 (crudas: 0.1434) |
+| prevalencia observada | 0.0164 (86 de 5,252, 540 pacientes) |
+
+![ROC test](figures/f4_test_roc.png) ![PR test](figures/f4_test_pr.png) ![fiabilidad test](figures/f4_test_reliability.png)
 
 ## 5. Punto de operación
 
-_pendiente: el conjunto de prueba no se ha abierto (sesión 3 de F4)_
+**τ95 = 0.0039**
+
+| | pred. benigno | pred. melanoma |
+|:--|--:|--:|
+| real benigno | 2213 | 2953 |
+| real melanoma | 3 | 83 |
+
+sensibilidad 0.965 · especificidad 0.428 · VPP 0.027 · VPN 0.9986 a la prevalencia observada (0.0164)
+
+**τ90 = 0.0066**
+
+| | pred. benigno | pred. melanoma |
+|:--|--:|--:|
+| real benigno | 2938 | 2228 |
+| real melanoma | 9 | 77 |
+
+sensibilidad 0.895 · especificidad 0.569 · VPP 0.033 · VPN 0.9969 a la prevalencia observada (0.0164)
+
+**Proyección de τ95 a otras prevalencias** (aritmética desde sensibilidad y especificidad del test):
+
+| prevalencia | VPP | VPN | fracción referida |
+|--:|--:|--:|--:|
+| 1 % | 0.017 | 0.9992 | 0.576 |
+| 2 % | 0.033 | 0.9983 | 0.579 |
+| 5 % | 0.082 | 0.9957 | 0.591 |
 
 ## 6. Validación vs test
 
-_pendiente: el conjunto de prueba no se ha abierto (sesión 3 de F4)_
+| métrica | validación (gastada) | test (limpio) | brecha |
+|:--|--:|--:|--:|
+| AUC-ROC | 0.834 | 0.834 | +0.000 |
+| AUPRC | 0.132 | 0.096 | -0.036 |
+| spec@sens 0.90 | 0.525 | 0.524 | -0.001 |
+| spec@sens 0.95 | 0.400 | 0.481 | +0.081 |
+
+**Advertencia de selección.** Sobre validación se eligieron la línea base, el desbalance, la arquitectura, la resolución, la época de cada corrida, la calibración y el umbral; sus métricas están sesgadas al alza. El test es la única estimación limpia; una brecha negativa es la brecha de generalización, no un bug.
 
 ## 7. Subgrupos (exploratorio)
 
-_pendiente: el conjunto de prueba no se ha abierto (sesión 3 de F4)_
+| dimensión | grupo | n | melanomas | AUC-ROC [IC] | sens@τ95 | spec@τ95 |
+|:--|:--|--:|--:|:--|--:|--:|
+| age | 40-59 | 2661 | 32 | 0.780 [0.704, 0.855] | 0.938 | 0.446 |
+| age | 60+ | 1668 | 42 | 0.858 [0.816, 0.898] | 0.976 | 0.436 |
+| age | <40 | 920 | 12 | 0.857 [0.761, 0.933] | 1.000 | 0.366 |
+| age | unknown | 3 | 0 | n/d [n/d, n/d] | n/d | 0.000 |
+| sex | female | 2506 | 35 | 0.823 [0.760, 0.881] | 0.971 | 0.472 |
+| sex | male | 2746 | 51 | 0.841 [0.792, 0.886] | 0.961 | 0.388 |
+| site | head/neck | 294 | 7 | 0.875 [0.748, 0.975] | 1.000 | 0.272 |
+| site | lower extremity | 1354 | 22 | 0.817 [0.739, 0.888] | 0.955 | 0.458 |
+| site | oral/genital | 20 | 1 | 0.789 [0.647, 1.000] | 1.000 | 0.053 |
+| site | palms/soles | 66 | 0 | n/d [n/d, n/d] | n/d | 0.318 |
+| site | torso | 2695 | 39 | 0.848 [0.790, 0.899] | 0.949 | 0.439 |
+| site | unknown | 35 | 1 | 1.000 [1.000, 1.000] | 1.000 | 0.382 |
+| site | upper extremity | 788 | 16 | 0.807 [0.708, 0.894] | 1.000 | 0.421 |
+
+**Exploratorio.** Con 86 melanomas en test, los subgrupos tienen entre 5 y 30 positivos y los intervalos son anchos: este análisis detecta diferencias grandes, no confirma diferencias pequeñas. No se concluye nada de una diferencia cuyo intervalo cruce el del grupo de referencia.
 
 ## 8. Evaluación externa en DDI
 
