@@ -1,0 +1,37 @@
+# F4 — evaluación clínica con el modelo final de F3 (A1: EfficientNetV2-S a 224 px, semilla 0).
+# Compone el mismo grupo de datos y el mismo modelo que el experimento a1_effnetv2s_224; nada
+# del modelo cambia en F4. Uso: uv run python scripts/f4_val.py
+defaults:
+  - data: isic2020
+  - model: effnetv2s_384
+  - train: matrix
+  - _self_
+
+data:
+  env: local
+  image_size: 224
+  batch_size: 32
+  num_workers: 4
+
+f4:
+  checkpoint: data/models/tf_efficientnetv2_s-224-s0-e153979-04-0.0000.ckpt
+  checkpoint_manifest: reports/f3_final_model.json
+  pos_weight_used: 54.88   # negativos/positivos del split de entrenamiento (metrics.json de a1-s0)
+  val_predictions: reports/predictions/f4_val.csv
+  calibration_json: reports/f4_calibration.json
+  figures_dir: reports/figures
+  protocol: docs/f4_protocol.yaml
+  test_results_json: reports/f4_test_results.json
+  test_predictions: reports/predictions/f4_test.csv
+  access_log: logs/test_set_access.log
+  ddi:
+    root: data/raw/ddi
+    metadata: data/raw/ddi/ddi_metadata.csv
+    images_dir: data/raw/ddi/images
+    results_json: reports/f4_ddi_results.json
+
+hydra:
+  run:
+    dir: outputs/f4/${now:%Y-%m-%d}/${now:%H-%M-%S}
+  job:
+    chdir: false

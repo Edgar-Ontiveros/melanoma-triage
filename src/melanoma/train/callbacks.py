@@ -74,6 +74,14 @@ class ThroughputMonitor(Callback):
         print(f"\n[E/S] {msg}", flush=True)
 
 
+def checkpoint_filename(run_name: str, monitor: str) -> str:
+    """Plantilla ``{run}-{epoch:02d}-{tag}{valor:.4f}``. La clave de la métrica va tal cual
+    dentro de las llaves (``{val/auprc:.4f}``): Lightning la busca así en ``callback_metrics``.
+    En F3 se sustituía la barra también dentro de las llaves y el valor salía ``0.0000``."""
+    tag = monitor.split("/")[-1]
+    return f"{run_name}-{{epoch:02d}}-{tag}{{{monitor}:.4f}}"
+
+
 def build_callbacks(
     checkpoint_dir: Path | str,
     monitor: str,
@@ -81,10 +89,9 @@ def build_callbacks(
     patience: int,
     run_name: str = "run",
 ) -> tuple[ModelCheckpoint, EarlyStopping, LearningRateMonitor]:
-    metric_tag = monitor.replace("/", "_")
     checkpoint = ModelCheckpoint(
         dirpath=str(checkpoint_dir),
-        filename=f"{run_name}-{{epoch:02d}}-{{{monitor}:.4f}}".replace(monitor, metric_tag),
+        filename=checkpoint_filename(run_name, monitor),
         monitor=monitor,
         mode=mode,
         save_top_k=1,

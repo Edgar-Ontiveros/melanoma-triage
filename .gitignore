@@ -41,6 +41,8 @@ reports/*.npz
 # Kaggle: el dataset se arma en kaggle/dataset/ a partir de archivos ya versionados
 kaggle/dataset/
 *.ckpt
+# Checkpoints descargados de Kaggle (F4): nunca al repositorio
+data/models/
 *.pt
 *.pth
 *.onnx

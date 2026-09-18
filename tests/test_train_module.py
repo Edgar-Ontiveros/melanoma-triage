@@ -136,3 +136,14 @@ def test_collapse_reports_nan_as_divergence(smoke_cfg: DictConfig) -> None:
     probs = np.array([0.1, np.nan, 0.3, np.nan])
     report = detect_collapse(probs, auroc=float("nan"), std_threshold=thr, auc_tolerance=tol)
     assert report.collapsed and "divergió" in report.reason
+
+
+def test_checkpoint_filename_interpolates_metric(tmp_path) -> None:
+    """El nombre del checkpoint lleva el valor real de la métrica (en F3 salía 0.0000)."""
+    from melanoma.train.callbacks import build_callbacks, checkpoint_filename
+
+    template = checkpoint_filename("run", "val/auprc")
+    assert template == "run-{epoch:02d}-auprc{val/auprc:.4f}"
+    ckpt, _, _ = build_callbacks(tmp_path, "val/auprc", "max", 3, run_name="run")
+    name = ckpt.format_checkpoint_name({"epoch": 4, "val/auprc": 0.1321})
+    assert name.endswith("run-04-auprc0.1321.ckpt"), name
