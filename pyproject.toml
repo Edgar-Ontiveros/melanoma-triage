@@ -48,6 +48,7 @@ api = [
     "pillow>=10.0",
     "python-multipart>=0.0.12",
     "numpy>=2.0",
+    "opencv-python-headless>=4.10",
 ]
 dev = [
     "pytest>=8.3",

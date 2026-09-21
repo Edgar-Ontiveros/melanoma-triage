@@ -82,7 +82,7 @@ def test_predict_contract(client: TestClient) -> None:
             assert im.size == (224, 224) and im.format == "PNG"
     else:
         assert cam["png_base64"] is None
-    assert {"decode", "preprocess", "onnx", "cam", "render"} <= set(body["timings_ms"])
+    assert {"decode_stage1", "preprocess", "onnx", "cam", "render"} <= set(body["timings_ms"])
     assert "logit" not in body and "prob_raw" not in body  # nunca la probabilidad cruda
 
 

@@ -1,5 +1,6 @@
-"""Cadena de inferencia de la API: bytes → PIL → preprocesamiento numpy → ONNX → Platt →
-decisión en τ95 → CAM. Devuelve además el desglose de tiempos para F6.4."""
+"""Cadena de inferencia de la API: bytes → PIL → etapa 1 (F1: lado largo 512, Lanczos, JPEG 95)
+→ etapa 2 (cúbico a 224 + recorte central + normalización) → ONNX → Platt → decisión en τ95
+→ CAM. Devuelve además el desglose de tiempos para F6.4."""
 
 from __future__ import annotations
 
@@ -39,26 +40,36 @@ class Prediction:
     timings_ms: dict[str, float]
 
 
-def decode_image(data: bytes) -> tuple[np.ndarray, dict[str, Any]]:
-    """Valida tipo, tamaño y lado mínimo; devuelve RGB uint8 y la descripción de la entrada."""
+def open_image(data: bytes) -> tuple[Image.Image, dict[str, Any]]:
+    """Valida tipo, tamaño y lado mínimo y devuelve la imagen PIL **sin decodificar** (la
+    etapa 1 del preprocesamiento usa ``draft`` para decodificar reducido) y la descripción de
+    la entrada. El llamador cierra la imagen."""
     if len(data) > MAX_BYTES:
         raise InputError(413, f"la imagen supera {MAX_BYTES // (1024 * 1024)} MB")
     try:
-        with Image.open(io.BytesIO(data)) as img:
-            fmt = img.format or ""
-            if fmt not in ACCEPTED_FORMATS:
-                raise InputError(
-                    415, f"formato {fmt or 'desconocido'} no aceptado; use JPEG, PNG o WebP"
-                )
-            width, height = img.size
-            if min(width, height) < MIN_SIDE:
-                raise InputError(422, f"lado mínimo {MIN_SIDE} px; la imagen mide {width}×{height}")
-            rgb = np.asarray(img.convert("RGB"))
+        img = Image.open(io.BytesIO(data))
     except UnidentifiedImageError as e:
         raise InputError(422, "no se pudo abrir el archivo como imagen") from e
+    fmt = img.format or ""
+    if fmt not in ACCEPTED_FORMATS:
+        img.close()
+        raise InputError(415, f"formato {fmt or 'desconocido'} no aceptado; use JPEG, PNG o WebP")
+    width, height = img.size
+    if min(width, height) < MIN_SIDE:
+        img.close()
+        raise InputError(422, f"lado mínimo {MIN_SIDE} px; la imagen mide {width}×{height}")
+    return img, {"width": int(width), "height": int(height), "format": fmt}
+
+
+def decode_image(data: bytes) -> tuple[np.ndarray, dict[str, Any]]:
+    """RGB uint8 completo (sin etapa 1); para pruebas y para imágenes ya ≤ 512 px."""
+    img, info = open_image(data)
+    try:
+        return np.asarray(img.convert("RGB")), info
     except OSError as e:  # imagen truncada o corrupta
         raise InputError(422, f"imagen ilegible: {e}") from e
-    return rgb, {"width": int(width), "height": int(height), "format": fmt}
+    finally:
+        img.close()
 
 
 class Predictor:
@@ -110,11 +121,18 @@ class Predictor:
         )
 
     def predict_bytes(self, data: bytes) -> Prediction:
+        """Cadena completa: bytes → PIL → etapa 1 (F1) → etapa 2 (entrenamiento) → ONNX."""
         t0 = time.perf_counter()
-        rgb, info = decode_image(data)
+        img, info = open_image(data)
+        try:
+            rgb = self.pre.stage1(img)  # decodifica (reducido si es grande) y baja a 512
+        except OSError as e:  # imagen truncada o corrupta
+            raise InputError(422, f"imagen ilegible: {e}") from e
+        finally:
+            img.close()
         decode_ms = (time.perf_counter() - t0) * 1000
         pred = self.predict_array(rgb, info)
-        pred.timings_ms = {"decode": decode_ms, **pred.timings_ms}
+        pred.timings_ms = {"decode_stage1": decode_ms, **pred.timings_ms}
         return pred
 
     def cam_upsampled(self, pred: Prediction) -> np.ndarray:

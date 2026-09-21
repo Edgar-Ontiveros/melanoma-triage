@@ -24,6 +24,8 @@ f6:
   intra_op_threads: 4
   seed: 20260904
   n_parity: 200
+  n_parity_originals: 100           # originales de data/raw (hasta 6,000 px) de validación
+  raw_images_dir: data/raw/isic2020/train
   tolerances:
     logit: 1.0e-4
     platt: 1.0e-6

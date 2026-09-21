@@ -6,8 +6,11 @@
   3. CAM desde features ONNX × cam_weights.npy vs melanoma.explain.cam_from_features sobre
      features de torch: correlación > 0.999 (los mapas nulos en ambos cuentan como iguales)
   4. decisión en τ95 idéntica en las 200
-  5. cadena completa de la API (bytes JPEG → PIL → numpy → ONNX → Platt) vs cadena de
+  5. cadena completa de la API (bytes JPEG de 512 px → PIL → cv2 → ONNX → Platt) vs cadena de
      entrenamiento (albumentations → torch): máx |Δ logit| < 1e-3 y decisiones idénticas
+  6. lo mismo desde 100 ORIGINALES de data/raw (hasta 6,000 px) de validación: la API (etapa 1
+     de F1 en memoria + etapa 2) contra resize_one de F1 a disco + cadena de entrenamiento.
+     Se reporta aparte de la prueba a 512 px.
 
 Uso: uv run python scripts/verify_bundle.py  → reports/f6_parity.json
 """
@@ -15,6 +18,7 @@ Uso: uv run python scripts/verify_bundle.py  → reports/f6_parity.json
 from __future__ import annotations
 
 import json
+import tempfile
 import time
 from pathlib import Path
 
@@ -28,6 +32,7 @@ from services.api.inference import Predictor
 from melanoma.data import read_manifest, resolve_paths
 from melanoma.data.datamodule import VAL_SPLIT, read_split_ids, verify_split_hashes
 from melanoma.data.dataset import ImageDataset
+from melanoma.data.resize import resize_one
 from melanoma.data.transforms import build_transforms
 from melanoma.eval import Platt
 from melanoma.eval.predict import load_checkpoint, sha256_file, split_records
@@ -96,6 +101,32 @@ def main(cfg: DictConfig) -> None:
         d_chain.append(abs(pred.logit - logit_t))
         dec_chain.append(pred.refer)
 
+    # 6: originales de data/raw → API (dos etapas) vs resize_one de F1 + cadena de entrenamiento
+    raw_dir = ROOT / cfg.f6.raw_images_dir
+    n_orig = int(cfg.f6.n_parity_originals)
+    orig_idx = np.sort(rng.choice(len(recs), size=n_orig, replace=False))
+    originals = recs.iloc[orig_idx].reset_index(drop=True)
+    s1 = bundle.preprocess["stage1"]
+    d_orig, dec_orig_ref, dec_orig_api, orig_sides, orig_bytes = [], [], [], [], []
+    with tempfile.TemporaryDirectory() as tmp:
+        for i in range(len(originals)):
+            iid = str(originals["image_id"][i])
+            src = raw_dir / f"{iid}.jpg"
+            dst = Path(tmp) / f"{iid}.jpg"
+            info = resize_one(src, dst, int(s1["long_side"]), int(s1["jpeg_quality"]))
+            ref_ds = ImageDataset(originals.iloc[[i]].reset_index(drop=True), tmp, transform)
+            _, logit_ref = extract_features(lit, ref_ds[0][0][None])
+            logit_ref = float(logit_ref[0])
+            data = src.read_bytes()
+            pred = predictor.predict_bytes(data)
+            d_orig.append(abs(pred.logit - logit_ref))
+            dec_orig_ref.append(bool(platt.apply(np.array([logit_ref]))[0] >= tau))
+            dec_orig_api.append(pred.refer)
+            orig_sides.append(max(pred.input_info["width"], pred.input_info["height"]))
+            orig_bytes.append(len(data))
+            del info
+    d_orig = np.array(d_orig)
+
     d_logit, d_platt, d_chain = np.array(d_logit), np.array(d_platt), np.array(d_chain)
     corr = np.array(cam_corr)
     result = {
@@ -142,10 +173,29 @@ def main(cfg: DictConfig) -> None:
             ),
             "decisions_identical": dec_torch == dec_chain,
         },
+        "full_chain_originals": {
+            "n": int(len(d_orig)),
+            "image_ids": originals["image_id"].tolist(),
+            "source": str(cfg.f6.raw_images_dir),
+            "long_side_min": int(min(orig_sides)),
+            "long_side_max": int(max(orig_sides)),
+            "bytes_max": int(max(orig_bytes)),
+            "stage1": s1,
+            "max_abs_diff_logit": float(d_orig.max()),
+            "mean_abs_diff_logit": float(d_orig.mean()),
+            "p95_abs_diff_logit": float(np.quantile(d_orig, 0.95)),
+            "tolerance": float(tol.full_chain_logit),
+            "pass": bool(d_orig.max() < tol.full_chain_logit),
+            "n_decisions_differ": int(
+                sum(a != b for a, b in zip(dec_orig_ref, dec_orig_api, strict=True))
+            ),
+            "decisions_identical": dec_orig_ref == dec_orig_api,
+        },
         "minutes": (time.perf_counter() - t0) / 60,
     }
     result["all_pass"] = all(
-        result[k]["pass"] for k in ("logit", "platt", "cam", "decision_tau95", "full_chain")
+        result[k]["pass"]
+        for k in ("logit", "platt", "cam", "decision_tau95", "full_chain", "full_chain_originals")
     )
     out = ROOT / cfg.f6.parity_json
     out.write_text(json.dumps(result, indent=2), encoding="utf-8")
@@ -154,6 +204,10 @@ def main(cfg: DictConfig) -> None:
     )
     print(
         f"cadena completa: logit máx |Δ| {d_chain.max():.2e} media {d_chain.mean():.2e} p95 {result['full_chain']['p95_abs_diff_logit']:.2e} (< {tol.full_chain_logit}) · decisiones distintas: {result['full_chain']['n_decisions_differ']}"
+    )
+    fo = result["full_chain_originals"]
+    print(
+        f"originales ({fo['n']}, lado largo {fo['long_side_min']}–{fo['long_side_max']}): logit máx |Δ| {fo['max_abs_diff_logit']:.2e} media {fo['mean_abs_diff_logit']:.2e} p95 {fo['p95_abs_diff_logit']:.2e} (< {tol.full_chain_logit}) · decisiones distintas: {fo['n_decisions_differ']}"
     )
     print(f"all_pass={result['all_pass']} → {out.relative_to(ROOT)} · {result['minutes']:.1f} min")
 

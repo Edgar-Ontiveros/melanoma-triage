@@ -18,9 +18,11 @@ from services.api.cam import upsample as api_upsample
 from services.api.inference import Predictor
 from services.api.preprocess import Preprocessor, resize_smallest_side
 
+from melanoma.data.resize import resize_one
 from melanoma.data.transforms import build_transforms
 from melanoma.explain import cam_from_features as ref_cam
 from melanoma.explain import upsample as ref_upsample
+from melanoma.explain.features import crop_transform
 from melanoma.models import build_model
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -131,26 +133,66 @@ def test_preprocess_from_json_only(test_bundle: Path) -> None:
 
 
 def test_preprocess_matches_training_transform(test_bundle: Path) -> None:
-    """El recorte de la API reproduce SmallestMaxSize + CenterCrop de albumentations (cv2
-    INTER_CUBIC) hasta el redondeo de unos pocos píxeles, y el tensor coincide con Normalize."""
+    """La etapa 2 de la API reproduce SmallestMaxSize + CenterCrop + Normalize de
+    albumentations exactamente (misma cv2.resize)."""
     spec = json.loads((test_bundle / "preprocess.json").read_text())
     _, data_config = build_model(
         "tf_efficientnetv2_s.in21k_ft_in1k", pretrained=False, num_classes=1, dropout=0.2
     )
     tf = build_transforms(data_config, 224, None, train=False, val_resize="center_crop")
-    for seed, (h, w) in enumerate(((512, 768), (768, 512), (300, 300), (1024, 1500))):
+    crop_tf = crop_transform(data_config, 224, "center_crop")
+    for seed, (h, w) in enumerate(((512, 768), (768, 512), (300, 300), (341, 512))):
         img = synthetic_rgb(h, w, seed)
         crop, x = Preprocessor(spec)(img)
-        ref = tf(image=img)["image"].numpy()[None]
-        assert np.abs(x - ref).max() < 0.02, (h, w)  # ±1 píxel / 255 / 0.5 ≈ 0.008
-        assert (np.abs(x - ref) > 1e-6).mean() < 0.001, (h, w)
+        assert np.array_equal(crop, crop_tf(image=img)["image"]), (h, w)
+        np.testing.assert_allclose(x, tf(image=img)["image"].numpy()[None], atol=1e-6)
+
+
+def test_stage1_matches_f1_resize(test_bundle: Path, tmp_path: Path) -> None:
+    """La etapa 1 en memoria reproduce resize_one de F1 (draft + Lanczos a 512 + JPEG 95)
+    bit a bit sobre un JPEG grande, y no toca una imagen con lado largo ≤ 512."""
+    spec = json.loads((test_bundle / "preprocess.json").read_text())
+    s1 = spec["stage1"]
+    assert s1 == {
+        "long_side": 512,
+        "filter": "lanczos",
+        "jpeg_quality": 95,
+        "draft": True,
+        "noop_if_long_side_leq": 512,
+        "source": s1["source"],
+    }
+    pre = Preprocessor(spec)
+    big = tmp_path / "big.jpg"
+    Image.fromarray(synthetic_rgb(2000, 3000, seed=3)).save(big, format="JPEG", quality=90)
+    ref_path = tmp_path / "ref.jpg"
+    resize_one(big, ref_path, s1["long_side"], s1["jpeg_quality"])
+    with Image.open(ref_path) as ref:
+        ref_rgb = np.asarray(ref.convert("RGB"))
+    with Image.open(big) as img:
+        api_rgb = pre.stage1(img)
+    assert api_rgb.shape == (341, 512, 3)
+    assert np.array_equal(api_rgb, ref_rgb)
+    # cadena completa desde bytes vs cadena de entrenamiento sobre el archivo de F1
+    predictor = Predictor(load_bundle(test_bundle), 2)
+    pred = predictor.predict_bytes(big.read_bytes())
+    ref_pred = predictor.predict_array(ref_rgb)
+    assert pred.logit == pytest.approx(ref_pred.logit, abs=1e-6)
+    # ≤ 512: la etapa 1 no hace nada (ni recomprime)
+    small = synthetic_rgb(341, 512, seed=4)
+    small_path = tmp_path / "small.png"
+    Image.fromarray(small).save(small_path)
+    with Image.open(small_path) as img:
+        assert np.array_equal(pre.stage1(img), small)
 
 
 def test_resize_keeps_aspect_and_rounds_like_albumentations() -> None:
+    import cv2
+
     img = np.zeros((300, 450, 3), dtype=np.uint8)
-    out = resize_smallest_side(img, 224)
+    out = resize_smallest_side(img, 224, cv2.INTER_CUBIC)
     assert out.shape == (224, 336, 3)
-    assert resize_smallest_side(np.zeros((224, 224, 3), dtype=np.uint8), 224).shape == (224, 224, 3)
+    same = resize_smallest_side(np.zeros((224, 224, 3), dtype=np.uint8), 224, cv2.INTER_CUBIC)
+    assert same.shape == (224, 224, 3)
 
 
 # ---------------------------------------------------------------- paridad y CAM

@@ -63,9 +63,27 @@ def model_version(git_sha: str, checkpoint_sha256: str) -> str:
     return f"{git_sha[:7]}-{checkpoint_sha256[:8]}"
 
 
-def preprocess_spec(data_config: dict[str, Any], image_size: int, val_resize: str) -> dict:
-    """Todo sale del ``data_config`` de timm salvo el lado (config de F3/F4) y la geometría."""
+def stage1_spec(long_side: int, jpeg_quality: int) -> dict:
+    """Etapa 1 = el redimensionado de F1 (``melanoma.data.resize.resize_one``): lado largo a
+    ``long_side`` con Lanczos de PIL, sin agrandar, JPEG a ``jpeg_quality``, con ``draft``.
+    Los números vienen del bloque ``data.resize`` de ``configs/data/isic2020.yaml``."""
     return {
+        "long_side": int(long_side),
+        "filter": "lanczos",
+        "jpeg_quality": int(jpeg_quality),
+        "draft": True,
+        "noop_if_long_side_leq": int(long_side),
+        "source": "configs/data/isic2020.yaml (data.resize) + melanoma.data.resize.resize_one",
+    }
+
+
+def preprocess_spec(
+    data_config: dict[str, Any], image_size: int, val_resize: str, stage1: dict
+) -> dict:
+    """Todo sale del ``data_config`` de timm salvo el lado (config de F3/F4), la geometría y
+    la etapa 1 (config de F1)."""
+    return {
+        "stage1": dict(stage1),
         "input_size": int(image_size),
         "interpolation": str(data_config["interpolation"]),
         "crop_pct": float(data_config.get("crop_pct", 1.0)),
@@ -202,6 +220,7 @@ def write_bundle(
     *,
     image_size: int,
     val_resize: str,
+    stage1: dict,
     opset: int,
     calibration: dict,
     thresholds: dict,
@@ -217,7 +236,7 @@ def write_bundle(
     w = clf.head.fc.weight.detach().cpu().numpy().reshape(-1).astype(np.float32)
     np.save(out_dir / "cam_weights.npy", w)
     files = {
-        "preprocess.json": preprocess_spec(data_config, image_size, val_resize),
+        "preprocess.json": preprocess_spec(data_config, image_size, val_resize, stage1),
         "calibration.json": calibration,
         "thresholds.json": thresholds,
         "metrics.json": metrics,

@@ -15,8 +15,9 @@ import argparse
 from pathlib import Path
 
 import torch
+from omegaconf import OmegaConf
 
-from melanoma.export.bundle import write_bundle
+from melanoma.export.bundle import stage1_spec, write_bundle
 from melanoma.models import build_model
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -78,6 +79,12 @@ SYNTHETIC_METRICS = {
 }
 
 
+def _stage1_from_config() -> dict:
+    """La etapa 1 real (F1): bloque ``resize`` de configs/data/isic2020.yaml."""
+    resize = OmegaConf.load(ROOT / "configs" / "data" / "isic2020.yaml")["resize"]
+    return stage1_spec(int(resize["long_side"]), int(resize["jpeg_quality"]))
+
+
 def build(
     out: Path,
     seed: int = 0,
@@ -98,6 +105,7 @@ def build(
         out,
         image_size=IMAGE_SIZE,
         val_resize="center_crop",
+        stage1=_stage1_from_config(),
         opset=OPSET,
         calibration=SYNTHETIC_CALIBRATION,
         thresholds=SYNTHETIC_THRESHOLDS,

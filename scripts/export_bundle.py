@@ -18,6 +18,7 @@ from melanoma.eval.predict import load_checkpoint, sha256_file
 from melanoma.export.bundle import (
     calibration_spec,
     metrics_spec,
+    stage1_spec,
     thresholds_spec,
     write_bundle,
 )
@@ -47,6 +48,7 @@ def main(cfg: DictConfig) -> None:
         out,
         image_size=int(cfg.data.image_size),
         val_resize=str(cfg.data.val_resize),
+        stage1=stage1_spec(int(cfg.data.resize.long_side), int(cfg.data.resize.jpeg_quality)),
         opset=int(cfg.f6.opset),
         calibration=calibration_spec(f4),
         thresholds=thresholds_spec(f4),
