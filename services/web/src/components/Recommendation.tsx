@@ -1,7 +1,7 @@
 import type { OperatingPoint } from "../api";
 import { recommendation } from "../lib/recommendation";
 
-/** Bloque 2: recomendación de triage. Texto fijo; números de operating_point (respuesta) y
+/** Bloque 2: recomendación de priorización. Texto fijo; números de operating_point (respuesta) y
  * del VPN del test (/model-info). */
 export default function Recommendation({
   refer,
@@ -21,7 +21,7 @@ export default function Recommendation({
   return (
     <section className="card" aria-labelledby="rec-title">
       <h2 id="rec-title" className="block-title">
-        2 · Recomendación de triage
+        2 · Recomendación de priorización
       </h2>
       <p className="rec-headline">{r.headline}</p>
       <p>{r.body}</p>

@@ -35,7 +35,7 @@ export default function DisclaimerModal({ disclaimer }: { disclaimer: string | n
         <h2 id="aviso-titulo">Antes de usar esta herramienta</h2>
         <p>
           {disclaimer ??
-            "Herramienta de apoyo al triage de melanoma con fines educativos. No es un diagnóstico y no sustituye la valoración de un dermatólogo."}
+            "Herramienta de apoyo a la priorización de lesiones con sospecha de melanoma, con fines educativos. No es un diagnóstico y no sustituye la valoración de un dermatólogo."}
         </p>
         <button ref={button} type="button" onClick={accept}>
           Entiendo

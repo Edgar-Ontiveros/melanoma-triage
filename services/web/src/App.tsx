@@ -67,7 +67,7 @@ export default function App() {
         <div className="container">
           <a href="/" className="brand" onClick={navigate("/")} style={{ color: "var(--accent)" }}>
             <LesionIcon />
-            <span style={{ color: "var(--text)" }}>Triage asistido de melanoma</span>
+            <span style={{ color: "var(--text)" }}>Detección asistida de melanoma</span>
           </a>
           <nav aria-label="Secciones">
             <a href="/" onClick={navigate("/")} aria-current={route === "/" ? "page" : undefined}>

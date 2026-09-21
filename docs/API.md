@@ -1,4 +1,4 @@
-# API de triage asistido (F6)
+# API de detección asistida de melanoma (F6)
 
 Servicio FastAPI + onnxruntime que sirve el modelo final (A1, EfficientNetV2-S a 224 px)
 **sin PyTorch**, con exactamente los números validados en F4 y el mapa de calor de F5
@@ -84,14 +84,14 @@ Respuesta (ejemplo real con el paquete `4e7ab61-e0ecf981`, imagen de 512 px; `pn
   "input": {"width": 512, "height": 288, "format": "JPEG"},
   "latency_ms": 46.1,
   "timings_ms": {"decode_stage1": 5.37, "preprocess": 3.27, "onnx": 28.81, "cam": 0.14, "render": 7.64},
-  "disclaimer": "Herramienta de apoyo al triage de melanoma en imágenes dermatoscópicas, con fines educativos y de investigación. No es un diagnóstico: …"
+  "disclaimer": "Herramienta de apoyo a la priorización (tamizaje) de lesiones con sospecha de melanoma en imágenes dermatoscópicas, con fines educativos y de investigación. No es un diagnóstico: …"
 }
 ```
 
 | Campo | Significado |
 |---|---|
 | `probability` | probabilidad **calibrada** (Platt de F4). La cruda no se devuelve nunca. |
-| `refer` | `probability >= threshold` con τ95. Booleano de triage («conviene referir»), no un diagnóstico. |
+| `refer` | `probability >= threshold` con τ95. Booleano de priorización («conviene referir»), no un diagnóstico. |
 | `threshold` | τ95 del paquete (0.0039): sensibilidad objetivo 0.95 sobre validación. |
 | `operating_point` | sensibilidad objetivo y sensibilidad/especificidad **medidas en el test** (F4, un solo acceso). |
 | `cam.status` | `"ok"`, o `"no_positive_evidence"` cuando ninguna celda del mapa es positiva (181 de 4,963 imágenes de validación en F5). En ese caso `grid` es todo ceros y `png_base64` es `null`: un mapa nulo nunca se normaliza para «que se vea algo». |

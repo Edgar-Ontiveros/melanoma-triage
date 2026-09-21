@@ -22,7 +22,7 @@ export default function Footer({
     <footer className="bottom">
       <div className="container">
         <p className="legal">
-          Apoyo al triage de melanoma en dermatoscopía, con fines educativos. No es un
+          Apoyo a la priorización de lesiones con sospecha de melanoma en dermatoscopía, con fines educativos. No es un
           diagnóstico, no detecta otros cánceres de piel, no sustituye a un dermatólogo y no tiene
           aprobación regulatoria. Las imágenes no se almacenan.{" "}
           <a href="/modelo" onClick={onModel}>

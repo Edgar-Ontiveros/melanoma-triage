@@ -105,7 +105,7 @@ export default function ModelPage({ state }: { state: ModelInfoState }) {
           1 · Qué es y qué no es
         </h2>
         <ul>
-          <li>Apoyo al triage de melanoma en imágenes dermatoscópicas: sugiere si conviene referir.</li>
+          <li>Apoyo a la priorización de lesiones con sospecha de melanoma en imágenes dermatoscópicas: sugiere si conviene referir.</li>
           <li>No detecta otros cánceres de piel ni otras enfermedades; no es un diagnóstico.</li>
           <li>Sin aprobación regulatoria (COFEPRIS, FDA, CE). Uso educativo y de investigación.</li>
         </ul>
@@ -163,7 +163,7 @@ export default function ModelPage({ state }: { state: ModelInfoState }) {
           </li>
           <li>
             Tesis de licenciatura de Edgar Eduardo Ontiveros Lara: clasificador educativo de lesiones
-            cutáneas para triage asistido. Código MIT en <a href={REPO}>{REPO}</a>.
+            cutáneas para detección asistida de melanoma. Código MIT en <a href={REPO}>{REPO}</a>.
           </li>
         </ul>
       </section>

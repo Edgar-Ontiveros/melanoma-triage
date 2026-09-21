@@ -1,4 +1,4 @@
-"""API de triage asistido (F6.3, F7.1): FastAPI + onnxruntime sobre el paquete de modelo, y la
+"""API de detección asistida de melanoma (F6.3, F7.1): FastAPI + onnxruntime sobre el paquete de modelo, y la
 interfaz web (build de Vite) servida como archivos estáticos.
 
 Endpoints bajo ``/api``: ``POST /api/predict`` (una imagen), ``GET /api/health``,
@@ -36,8 +36,9 @@ DEFAULT_WEB_DIST = _ROOT / "services" / "web" / "dist"
 DEFAULT_LIMITATIONS = _ROOT / "docs" / "f4_limitations.md"
 
 DISCLAIMER = (
-    "Herramienta de apoyo al triage de melanoma en imágenes dermatoscópicas, con fines "
-    "educativos y de investigación. No es un diagnóstico: indica si una lesión conviene "
+    "Herramienta de apoyo a la priorización (tamizaje) de lesiones con sospecha de melanoma en "
+    "imágenes dermatoscópicas, con fines educativos y de investigación. No es un diagnóstico: "
+    "indica si una lesión conviene "
     "referirse a valoración especializada en un punto de operación de alta sensibilidad y "
     "baja especificidad. No detecta otros cánceres de piel ni otras enfermedades. No "
     "sustituye la valoración de un dermatólogo. No cuenta con aprobación regulatoria "
@@ -126,7 +127,7 @@ def build_app(
 
     app = FastAPI(
         title="melanoma-triage API",
-        description="Triage asistido de melanoma (educativo, no diagnóstico).",
+        description="Detección asistida de melanoma (educativo, no diagnóstico).",
         version="F7",
         lifespan=lifespan,
         docs_url=f"{API_PREFIX}/docs",

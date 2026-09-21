@@ -4,7 +4,7 @@ Clasificador de lesiones cutáneas con redes convolucionales, desarrollado como 
 
 ## Qué es y qué no es
 
-Esto es una **herramienta educativa y de triage asistido**: un experimento de aprendizaje
+Esto es una **herramienta educativa de detección asistida de melanoma (apoyo a la priorización, no diagnóstico)**: un experimento de aprendizaje
 automático sobre imágenes dermatoscópicas públicas, con explicabilidad y una API de
 demostración.
 

@@ -1,4 +1,4 @@
-// Texto de la recomendación de triage (F7.2). El texto es fijo; los números se interpolan
+// Texto de la recomendación de priorización (F7.2). El texto es fijo; los números se interpolan
 // desde la respuesta de /predict (operating_point) y de /model-info (metrics). Nada aquí
 // conoce el umbral ni la prevalencia: si faltan, se dice «n/d» en vez de inventar.
 

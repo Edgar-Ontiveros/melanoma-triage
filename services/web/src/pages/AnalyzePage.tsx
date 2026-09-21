@@ -74,8 +74,7 @@ export default function AnalyzePage({ state }: { state: ModelInfoState }) {
     <>
       <h1>Analizar una dermatoscopía</h1>
       <p className="subtitle">
-        Suba una imagen y obtenga una probabilidad calibrada de melanoma, una recomendación de
-        triage y el mapa de lo que el modelo evaluó. Herramienta educativa: no es un diagnóstico.
+        Apoyo a la priorización de lesiones en dermatoscopía. No es un diagnóstico.
       </p>
 
       {showInput && (
