@@ -8,7 +8,8 @@ UV_RUN = uv run --no-sync
 # tests/test_makefile.py verifica que cada objetivo esté aquí.
 .PHONY: setup setup-gpu lint format test smoke ci docker-api docker-size clean \
 	data-verify data-manifest data-dedup data-splits data-resize data-eda data-all \
-	kaggle-dataset train baseline-b0 f2-report f3-report f4-report check-notebooks kaggle
+	kaggle-dataset train baseline-b0 f2-report f3-report f4-report check-notebooks kaggle \
+	f5-cam f5-overlap f5-artifacts f5-figures f5-report f5-all
 
 ## Entorno local (WSL/Ubuntu): core + train + dev con ruedas CPU del lockfile.
 setup:
@@ -79,6 +80,19 @@ f3-report:
 	$(UV_RUN) python scripts/f3_report.py
 f4-report:
 	$(UV_RUN) python scripts/f4_report.py
+## ---- F5: explicabilidad sobre validación (configs/f5.yaml). Orden: cam → overlap → artifacts →
+## figures → report; `f5-all` los encadena (~20 min de CPU).
+f5-cam:
+	$(UV_RUN) python scripts/f5_cam.py
+f5-overlap:
+	$(UV_RUN) python scripts/f5_overlap.py
+f5-artifacts:
+	$(UV_RUN) python scripts/f5_artifacts.py
+f5-figures:
+	$(UV_RUN) python scripts/f5_figures.py
+f5-report:
+	$(UV_RUN) python scripts/f5_report.py
+f5-all: f5-cam f5-overlap f5-artifacts f5-figures f5-report
 ## Ejecuta los notebooks de Kaggle en un sandbox local (venv limpio + clon + /kaggle/input sintético).
 check-notebooks:
 	$(UV_RUN) python scripts/check_notebooks.py

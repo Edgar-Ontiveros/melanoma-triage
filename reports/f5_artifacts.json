@@ -1,0 +1,655 @@
+{
+  "date": "2026-09-21",
+  "git_sha": "f08e8bc",
+  "checkpoint": {
+    "file": "tf_efficientnetv2_s-224-s0-e153979-04-0.0000.ckpt",
+    "sha256": "e0ecf981adaa125dd707d2e5e3b75cff003335e56aaa7356fca9e961d4710040"
+  },
+  "split_sha256": {
+    "train": "701333b2450c363b1ab1b5a9422d3d223d243e1b3af2d643b05f6b86f711968c",
+    "val": "b7f727d6cf70d7a12be136e3b7046b42c725eaf5541aadc0723fbac09941ffb1"
+  },
+  "tau_95": 0.0038890622237550752,
+  "platt": {
+    "a": 0.4845898727556983,
+    "b": -3.8073929308826067
+  },
+  "seed": 20260904,
+  "n_melanoma": 88,
+  "n_benign": 1000,
+  "n_benign_available": 4875,
+  "n_patients": 443,
+  "logit_max_abs_diff_vs_f4": 1.9073486328125e-06,
+  "conditions": [
+    "original",
+    "ruler",
+    "ink",
+    "hair",
+    "vignette",
+    "noise"
+  ],
+  "bootstrap": {
+    "n_resamples": 2000,
+    "unit": "patient",
+    "seed": 20260904
+  },
+  "results": {
+    "ruler": {
+      "label": "regla",
+      "benign": {
+        "n": 1000,
+        "delta": {
+          "n": 1000,
+          "mean": 0.0036399715280564775,
+          "median": 0.0018683884434594934,
+          "p05": -0.004818404486174628,
+          "p25": 0.00043260162523901726,
+          "p75": 0.005794450076249022,
+          "p95": 0.018429477648171377
+        },
+        "delta_mean_ci": {
+          "n": 1000,
+          "n_patients": 424,
+          "n_resamples": 2000,
+          "point": 0.0036399715280564775,
+          "lo": 0.003097113240894938,
+          "hi": 0.004205769650210529
+        },
+        "delta_median_ci": {
+          "n": 1000,
+          "n_patients": 424,
+          "n_resamples": 2000,
+          "point": 0.0018683884434594934,
+          "lo": 0.001535406198756777,
+          "hi": 0.002243524235113312
+        },
+        "frac_delta_positive": 0.829,
+        "frac_delta_positive_ci": {
+          "n": 1000,
+          "n_patients": 424,
+          "n_resamples": 2000,
+          "point": 0.829,
+          "lo": 0.8055542378241619,
+          "hi": 0.8534427059843539
+        },
+        "pixel_change_mean": 5.88396155679226,
+        "region_area_frac_mean": 0.08928571428571426,
+        "cam_in_region_original_mean": 0.1366928806062959,
+        "cam_in_region_perturbed_mean": 0.13467532996299053,
+        "cam_shift_ci": {
+          "n": 959,
+          "n_patients": 415,
+          "n_resamples": 2000,
+          "point": -0.006172356673161678,
+          "lo": -0.016255105090956287,
+          "hi": 0.003653236687830545
+        },
+        "n_not_referred_original": 404,
+        "n_cross_to_referred": 149,
+        "frac_cross_to_referred_ci": {
+          "n": 404,
+          "n_patients": 212,
+          "n_resamples": 2000,
+          "point": 0.3688118811881188,
+          "lo": 0.31807206839251845,
+          "hi": 0.4217171717171717
+        },
+        "frac_referred_original": 0.596,
+        "frac_referred_perturbed": 0.741
+      },
+      "melanoma": {
+        "n": 88,
+        "delta": {
+          "n": 88,
+          "mean": 0.005027125638455985,
+          "median": 0.0015132265052195393,
+          "p05": -0.028284032862540314,
+          "p25": -0.0031400390405047947,
+          "p75": 0.012239690346607032,
+          "p95": 0.04457525031908915
+        },
+        "delta_mean_ci": {
+          "n": 88,
+          "n_patients": 82,
+          "n_resamples": 2000,
+          "point": 0.005027125638455985,
+          "lo": 0.0007310031819704752,
+          "hi": 0.00936675936637121
+        },
+        "delta_median_ci": {
+          "n": 88,
+          "n_patients": 82,
+          "n_resamples": 2000,
+          "point": 0.0015132265052195393,
+          "lo": 2.1048185518997807e-05,
+          "hi": 0.004976560113041123
+        },
+        "frac_delta_positive": 0.6136363636363636,
+        "frac_delta_positive_ci": {
+          "n": 88,
+          "n_patients": 82,
+          "n_resamples": 2000,
+          "point": 0.6136363636363636,
+          "lo": 0.5111111111111111,
+          "hi": 0.7191011235955056
+        },
+        "pixel_change_mean": 7.5302217453718185,
+        "region_area_frac_mean": 0.08928571428571429,
+        "cam_in_region_original_mean": 0.09034872087691835,
+        "cam_in_region_perturbed_mean": 0.09243533986115801,
+        "cam_shift_ci": {
+          "n": 88,
+          "n_patients": 82,
+          "n_resamples": 2000,
+          "point": 0.0020866189842396396,
+          "lo": -0.01326636804147723,
+          "hi": 0.018904906110181797
+        },
+        "n_referred_original": 84,
+        "n_lose_referral": 0,
+        "frac_lose_referral_ci": {
+          "n": 84,
+          "n_patients": 78,
+          "n_resamples": 2000,
+          "point": 0.0,
+          "lo": 0.0,
+          "hi": 0.0
+        }
+      }
+    },
+    "ink": {
+      "label": "tinta",
+      "benign": {
+        "n": 1000,
+        "delta": {
+          "n": 1000,
+          "mean": 0.011100215886039539,
+          "median": 0.008248718099367721,
+          "p05": -0.004460235043593686,
+          "p25": 0.002809327455868569,
+          "p75": 0.016134305403599128,
+          "p95": 0.03731512686600551
+        },
+        "delta_mean_ci": {
+          "n": 1000,
+          "n_patients": 424,
+          "n_resamples": 2000,
+          "point": 0.011100215886039539,
+          "lo": 0.01010396864250539,
+          "hi": 0.012072636335990372
+        },
+        "delta_median_ci": {
+          "n": 1000,
+          "n_patients": 424,
+          "n_resamples": 2000,
+          "point": 0.008248718099367721,
+          "lo": 0.007555191886324382,
+          "hi": 0.009197125463647466
+        },
+        "frac_delta_positive": 0.896,
+        "frac_delta_positive_ci": {
+          "n": 1000,
+          "n_patients": 424,
+          "n_resamples": 2000,
+          "point": 0.896,
+          "lo": 0.8743638862093441,
+          "hi": 0.9163365115389833
+        },
+        "pixel_change_mean": 1.011133637279272,
+        "region_area_frac_mean": 0.012967813297193874,
+        "cam_in_region_original_mean": 0.011532281249359566,
+        "cam_in_region_perturbed_mean": 0.014973301406865588,
+        "cam_shift_ci": {
+          "n": 960,
+          "n_patients": 414,
+          "n_resamples": 2000,
+          "point": 0.003616668676621503,
+          "lo": 0.001958160605243902,
+          "hi": 0.005164488215597206
+        },
+        "n_not_referred_original": 404,
+        "n_cross_to_referred": 340,
+        "frac_cross_to_referred_ci": {
+          "n": 404,
+          "n_patients": 212,
+          "n_resamples": 2000,
+          "point": 0.8415841584158416,
+          "lo": 0.7966903073286052,
+          "hi": 0.8858762914334912
+        },
+        "frac_referred_original": 0.596,
+        "frac_referred_perturbed": 0.933
+      },
+      "melanoma": {
+        "n": 88,
+        "delta": {
+          "n": 88,
+          "mean": -0.00032173329464102484,
+          "median": 0.002438363489803614,
+          "p05": -0.04311744737689712,
+          "p25": -0.01489073789664797,
+          "p75": 0.014712358991314085,
+          "p95": 0.03884809275991358
+        },
+        "delta_mean_ci": {
+          "n": 88,
+          "n_patients": 82,
+          "n_resamples": 2000,
+          "point": -0.00032173329464102484,
+          "lo": -0.0060466003922451175,
+          "hi": 0.004445744221067388
+        },
+        "delta_median_ci": {
+          "n": 88,
+          "n_patients": 82,
+          "n_resamples": 2000,
+          "point": 0.002438363489803614,
+          "lo": -0.0018251717620830204,
+          "hi": 0.008597097627267883
+        },
+        "frac_delta_positive": 0.5568181818181818,
+        "frac_delta_positive_ci": {
+          "n": 88,
+          "n_patients": 82,
+          "n_resamples": 2000,
+          "point": 0.5568181818181818,
+          "lo": 0.4588235294117647,
+          "hi": 0.6590909090909091
+        },
+        "pixel_change_mean": 0.9409054361961104,
+        "region_area_frac_mean": 0.01299720438601577,
+        "cam_in_region_original_mean": 0.011350707261295173,
+        "cam_in_region_perturbed_mean": 0.014032321120489043,
+        "cam_shift_ci": {
+          "n": 88,
+          "n_patients": 82,
+          "n_resamples": 2000,
+          "point": 0.0026816138591938678,
+          "lo": 3.529936394354247e-05,
+          "hi": 0.005304603370202433
+        },
+        "n_referred_original": 84,
+        "n_lose_referral": 0,
+        "frac_lose_referral_ci": {
+          "n": 84,
+          "n_patients": 78,
+          "n_resamples": 2000,
+          "point": 0.0,
+          "lo": 0.0,
+          "hi": 0.0
+        }
+      }
+    },
+    "hair": {
+      "label": "vello",
+      "benign": {
+        "n": 1000,
+        "delta": {
+          "n": 1000,
+          "mean": -0.008856010649109621,
+          "median": -0.0005735304511537706,
+          "p05": -0.05604859654976255,
+          "p25": -0.010071739606411813,
+          "p75": 0.00212724579794607,
+          "p95": 0.006625406223366001
+        },
+        "delta_mean_ci": {
+          "n": 1000,
+          "n_patients": 424,
+          "n_resamples": 2000,
+          "point": -0.008856010649109621,
+          "lo": -0.010527566272614045,
+          "hi": -0.00739709357901944
+        },
+        "delta_median_ci": {
+          "n": 1000,
+          "n_patients": 424,
+          "n_resamples": 2000,
+          "point": -0.0005735304511537706,
+          "lo": -0.0010093902209290036,
+          "hi": -0.00014426468819133537
+        },
+        "frac_delta_positive": 0.454,
+        "frac_delta_positive_ci": {
+          "n": 1000,
+          "n_patients": 424,
+          "n_resamples": 2000,
+          "point": 0.454,
+          "lo": 0.41714195202896365,
+          "hi": 0.4895838747401247
+        },
+        "pixel_change_mean": 6.125377126932144,
+        "region_area_frac_mean": 0.07134048150510203,
+        "cam_in_region_original_mean": 0.05438956210106233,
+        "cam_in_region_perturbed_mean": 0.025108467845520656,
+        "cam_shift_ci": {
+          "n": 961,
+          "n_patients": 415,
+          "n_resamples": 2000,
+          "point": -0.028958092017690968,
+          "lo": -0.031175856207226967,
+          "hi": -0.026752133861288326
+        },
+        "n_not_referred_original": 404,
+        "n_cross_to_referred": 235,
+        "frac_cross_to_referred_ci": {
+          "n": 404,
+          "n_patients": 212,
+          "n_resamples": 2000,
+          "point": 0.5816831683168316,
+          "lo": 0.5306109974552169,
+          "hi": 0.6318500654022235
+        },
+        "frac_referred_original": 0.596,
+        "frac_referred_perturbed": 0.699
+      },
+      "melanoma": {
+        "n": 88,
+        "delta": {
+          "n": 88,
+          "mean": -0.06045053021965349,
+          "median": -0.046928497691699086,
+          "p05": -0.17069195875119106,
+          "p25": -0.08245323365422261,
+          "p75": -0.01226304663933598,
+          "p95": 0.0015128861172038534
+        },
+        "delta_mean_ci": {
+          "n": 88,
+          "n_patients": 82,
+          "n_resamples": 2000,
+          "point": -0.06045053021965349,
+          "lo": -0.07341662072090203,
+          "hi": -0.047916336897618504
+        },
+        "delta_median_ci": {
+          "n": 88,
+          "n_patients": 82,
+          "n_resamples": 2000,
+          "point": -0.046928497691699086,
+          "lo": -0.054731064757397474,
+          "hi": -0.028953035916513336
+        },
+        "frac_delta_positive": 0.07954545454545454,
+        "frac_delta_positive_ci": {
+          "n": 88,
+          "n_patients": 82,
+          "n_resamples": 2000,
+          "point": 0.07954545454545454,
+          "lo": 0.03225806451612903,
+          "hi": 0.13953488372093023
+        },
+        "pixel_change_mean": 5.629926451227882,
+        "region_area_frac_mean": 0.07188242839749535,
+        "cam_in_region_original_mean": 0.06931032240159092,
+        "cam_in_region_perturbed_mean": 0.02686810674583372,
+        "cam_shift_ci": {
+          "n": 88,
+          "n_patients": 82,
+          "n_resamples": 2000,
+          "point": -0.042442215655757204,
+          "lo": -0.047811876972375766,
+          "hi": -0.03666875416095314
+        },
+        "n_referred_original": 84,
+        "n_lose_referral": 16,
+        "frac_lose_referral_ci": {
+          "n": 84,
+          "n_patients": 78,
+          "n_resamples": 2000,
+          "point": 0.19047619047619047,
+          "lo": 0.10588235294117647,
+          "hi": 0.2804878048780488
+        }
+      }
+    },
+    "vignette": {
+      "label": "vi\u00f1eteado",
+      "benign": {
+        "n": 1000,
+        "delta": {
+          "n": 1000,
+          "mean": 0.007347309316780498,
+          "median": 0.0029363583878504497,
+          "p05": -0.007611576614349008,
+          "p25": 0.0004054637024363814,
+          "p75": 0.009689173191137185,
+          "p95": 0.03510852034809967
+        },
+        "delta_mean_ci": {
+          "n": 1000,
+          "n_patients": 424,
+          "n_resamples": 2000,
+          "point": 0.007347309316780498,
+          "lo": 0.006146273964732328,
+          "hi": 0.008653369676318861
+        },
+        "delta_median_ci": {
+          "n": 1000,
+          "n_patients": 424,
+          "n_resamples": 2000,
+          "point": 0.0029363583878504497,
+          "lo": 0.0024924474028137147,
+          "hi": 0.003593333182836983
+        },
+        "frac_delta_positive": 0.81,
+        "frac_delta_positive_ci": {
+          "n": 1000,
+          "n_patients": 424,
+          "n_resamples": 2000,
+          "point": 0.81,
+          "lo": 0.7835718198102175,
+          "hi": 0.8374631166294242
+        },
+        "pixel_change_mean": 16.292157850027085,
+        "region_area_frac_mean": 0.2460140306122449,
+        "cam_in_region_original_mean": 0.36734710975475743,
+        "cam_in_region_perturbed_mean": 0.40662699438854427,
+        "cam_shift_ci": {
+          "n": 959,
+          "n_patients": 413,
+          "n_resamples": 2000,
+          "point": 0.03697102123590907,
+          "lo": 0.02544849421675768,
+          "hi": 0.04820341827434545
+        },
+        "n_not_referred_original": 404,
+        "n_cross_to_referred": 196,
+        "frac_cross_to_referred_ci": {
+          "n": 404,
+          "n_patients": 212,
+          "n_resamples": 2000,
+          "point": 0.48514851485148514,
+          "lo": 0.42856342088404864,
+          "hi": 0.5425842806917353
+        },
+        "frac_referred_original": 0.596,
+        "frac_referred_perturbed": 0.776
+      },
+      "melanoma": {
+        "n": 88,
+        "delta": {
+          "n": 88,
+          "mean": 0.009169779747918376,
+          "median": 0.0057481245913135,
+          "p05": -0.030661548266565877,
+          "p25": -0.0012170958891020087,
+          "p75": 0.020119900048588057,
+          "p95": 0.06645981628042025
+        },
+        "delta_mean_ci": {
+          "n": 88,
+          "n_patients": 82,
+          "n_resamples": 2000,
+          "point": 0.009169779747918376,
+          "lo": 0.003149399849676318,
+          "hi": 0.015197493085870319
+        },
+        "delta_median_ci": {
+          "n": 88,
+          "n_patients": 82,
+          "n_resamples": 2000,
+          "point": 0.0057481245913135,
+          "lo": 0.002641415462356529,
+          "hi": 0.009540706880374977
+        },
+        "frac_delta_positive": 0.6931818181818182,
+        "frac_delta_positive_ci": {
+          "n": 88,
+          "n_patients": 82,
+          "n_resamples": 2000,
+          "point": 0.6931818181818182,
+          "lo": 0.5903614457831325,
+          "hi": 0.7912561576354676
+        },
+        "pixel_change_mean": 14.48901280489835,
+        "region_area_frac_mean": 0.2460140306122449,
+        "cam_in_region_original_mean": 0.250116023809128,
+        "cam_in_region_perturbed_mean": 0.2692171263001781,
+        "cam_shift_ci": {
+          "n": 88,
+          "n_patients": 82,
+          "n_resamples": 2000,
+          "point": 0.019101102491050053,
+          "lo": 0.005921584830196748,
+          "hi": 0.033563239332310486
+        },
+        "n_referred_original": 84,
+        "n_lose_referral": 2,
+        "frac_lose_referral_ci": {
+          "n": 84,
+          "n_patients": 78,
+          "n_resamples": 2000,
+          "point": 0.023809523809523808,
+          "lo": 0.0,
+          "hi": 0.06097560975609756
+        }
+      }
+    },
+    "noise": {
+      "label": "ruido (control)",
+      "benign": {
+        "n": 1000,
+        "delta": {
+          "n": 1000,
+          "mean": -0.00426662343684401,
+          "median": 0.0014982502106506363,
+          "p05": -0.04951324874745114,
+          "p25": -0.0049574560294322135,
+          "p75": 0.005678683457197155,
+          "p95": 0.016945612731110806
+        },
+        "delta_mean_ci": {
+          "n": 1000,
+          "n_patients": 424,
+          "n_resamples": 2000,
+          "point": -0.00426662343684401,
+          "lo": -0.005931671702684142,
+          "hi": -0.0027272617716816512
+        },
+        "delta_median_ci": {
+          "n": 1000,
+          "n_patients": 424,
+          "n_resamples": 2000,
+          "point": 0.0014982502106506363,
+          "lo": 0.0010341248662695678,
+          "hi": 0.0019230751291890785
+        },
+        "frac_delta_positive": 0.603,
+        "frac_delta_positive_ci": {
+          "n": 1000,
+          "n_patients": 424,
+          "n_resamples": 2000,
+          "point": 0.603,
+          "lo": 0.566377402369789,
+          "hi": 0.6393131159620521
+        },
+        "pixel_change_mean": 9.396495744228362,
+        "region_area_frac_mean": 1.0,
+        "cam_in_region_original_mean": 1.0,
+        "cam_in_region_perturbed_mean": 1.0,
+        "cam_shift_ci": {
+          "n": 955,
+          "n_patients": 415,
+          "n_resamples": 2000,
+          "point": -1.74380579784056e-18,
+          "lo": -3.648412920288103e-18,
+          "hi": 1.1290107518056497e-19
+        },
+        "n_not_referred_original": 404,
+        "n_cross_to_referred": 287,
+        "frac_cross_to_referred_ci": {
+          "n": 404,
+          "n_patients": 212,
+          "n_resamples": 2000,
+          "point": 0.7103960396039604,
+          "lo": 0.6595212215320911,
+          "hi": 0.7583614041308395
+        },
+        "frac_referred_original": 0.596,
+        "frac_referred_perturbed": 0.848
+      },
+      "melanoma": {
+        "n": 88,
+        "delta": {
+          "n": 88,
+          "mean": -0.05215377333118027,
+          "median": -0.040647949926279806,
+          "p05": -0.14972577266629447,
+          "p25": -0.07361273059680189,
+          "p75": -0.009887265319669276,
+          "p95": 0.003752598206690363
+        },
+        "delta_mean_ci": {
+          "n": 88,
+          "n_patients": 82,
+          "n_resamples": 2000,
+          "point": -0.05215377333118027,
+          "lo": -0.06343816472249166,
+          "hi": -0.0415542566210098
+        },
+        "delta_median_ci": {
+          "n": 88,
+          "n_patients": 82,
+          "n_resamples": 2000,
+          "point": -0.040647949926279806,
+          "lo": -0.05020097842262458,
+          "hi": -0.02907967367358331
+        },
+        "frac_delta_positive": 0.125,
+        "frac_delta_positive_ci": {
+          "n": 88,
+          "n_patients": 82,
+          "n_resamples": 2000,
+          "point": 0.125,
+          "lo": 0.06181530244690101,
+          "hi": 0.2
+        },
+        "pixel_change_mean": 9.396180906079032,
+        "region_area_frac_mean": 1.0,
+        "cam_in_region_original_mean": 1.0,
+        "cam_in_region_perturbed_mean": 1.0,
+        "cam_shift_ci": {
+          "n": 87,
+          "n_patients": 81,
+          "n_resamples": 2000,
+          "point": 2.5522368382187506e-18,
+          "lo": -5.35047240783208e-18,
+          "hi": 1.0702023539939927e-17
+        },
+        "n_referred_original": 84,
+        "n_lose_referral": 14,
+        "frac_lose_referral_ci": {
+          "n": 84,
+          "n_patients": 78,
+          "n_resamples": 2000,
+          "point": 0.16666666666666666,
+          "lo": 0.09411764705882353,
+          "hi": 0.25
+        }
+      }
+    }
+  },
+  "panel_image_id": "ISIC_0096201",
+  "minutes": 4.1484383380000205
+}

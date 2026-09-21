@@ -30,6 +30,7 @@ train = [
     "torchmetrics>=1.4",
     "scikit-learn>=1.5",
     "wandb>=0.18",
+    "grad-cam>=1.5",
 ]
 
 [dependency-groups]

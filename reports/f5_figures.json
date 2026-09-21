@@ -1,0 +1,128 @@
+{
+  "date": "2026-09-21",
+  "git_sha": "f08e8bc",
+  "seed": 20260904,
+  "grid": {
+    "TP": [
+      "ISIC_5037784",
+      "ISIC_6714082",
+      "ISIC_1132496"
+    ],
+    "FN": [
+      "ISIC_5533992",
+      "ISIC_5733748",
+      "ISIC_7658729"
+    ],
+    "FP": [
+      "ISIC_7330819",
+      "ISIC_5870557",
+      "ISIC_2499678"
+    ],
+    "TN": [
+      "ISIC_1265382",
+      "ISIC_6543121",
+      "ISIC_9075195"
+    ]
+  },
+  "rows": [
+    {
+      "image_id": "ISIC_5037784",
+      "group": "TP",
+      "target": 1,
+      "prob_platt": 0.1217348554347656,
+      "overlap": 0.4918774474324706,
+      "chance": 0.3010403380102041
+    },
+    {
+      "image_id": "ISIC_6714082",
+      "group": "TP",
+      "target": 1,
+      "prob_platt": 0.003889062223755,
+      "overlap": 0.0,
+      "chance": 0.1071428571428571
+    },
+    {
+      "image_id": "ISIC_1132496",
+      "group": "TP",
+      "target": 1,
+      "prob_platt": 0.0326756932970939,
+      "overlap": 0.1799046875773176,
+      "chance": 0.0487683354591836
+    },
+    {
+      "image_id": "ISIC_5533992",
+      "group": "FN",
+      "target": 1,
+      "prob_platt": 0.0037457630632411,
+      "overlap": 0.1737446317046271,
+      "chance": 0.4093191964285714
+    },
+    {
+      "image_id": "ISIC_5733748",
+      "group": "FN",
+      "target": 1,
+      "prob_platt": 0.0013303408626882,
+      "overlap": 0.0,
+      "chance": 0.1552734375
+    },
+    {
+      "image_id": "ISIC_7658729",
+      "group": "FN",
+      "target": 1,
+      "prob_platt": 0.00198878167358,
+      "overlap": 0.0,
+      "chance": 0.0398796237244898
+    },
+    {
+      "image_id": "ISIC_7330819",
+      "group": "FP",
+      "target": 0,
+      "prob_platt": 0.0897536949798192,
+      "overlap": 0.2787909871097682,
+      "chance": 0.1594587053571428
+    },
+    {
+      "image_id": "ISIC_5870557",
+      "group": "FP",
+      "target": 0,
+      "prob_platt": 0.0092103053386938,
+      "overlap": 0.0,
+      "chance": 0.0427096619897959
+    },
+    {
+      "image_id": "ISIC_2499678",
+      "group": "FP",
+      "target": 0,
+      "prob_platt": 0.0120008531660477,
+      "overlap": 0.0191975761104488,
+      "chance": 0.1993981186224489
+    },
+    {
+      "image_id": "ISIC_1265382",
+      "group": "TN",
+      "target": 0,
+      "prob_platt": 0.0005107615289998,
+      "overlap": 0.0,
+      "chance": 0.0341198979591836
+    },
+    {
+      "image_id": "ISIC_6543121",
+      "group": "TN",
+      "target": 0,
+      "prob_platt": 0.0023582160703534,
+      "overlap": 0.0141197387827637,
+      "chance": 0.2547831632653061
+    },
+    {
+      "image_id": "ISIC_9075195",
+      "group": "TN",
+      "target": 0,
+      "prob_platt": 0.0021364762980951,
+      "overlap": 0.0,
+      "chance": 0.055484693877551
+    }
+  ],
+  "figure": "reports/figures/f5_qualitative_grid.png",
+  "license": "ISIC 2020 Challenge Dataset, CC-BY-NC 4.0, https://doi.org/10.34970/2020-ds01",
+  "minutes": 0.03645105531665346
+}

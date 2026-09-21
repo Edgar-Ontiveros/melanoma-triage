@@ -1,0 +1,47 @@
+# F5 — explicabilidad sobre validación con el modelo final de F3 y la calibración de F4.
+# Mismo grupo de datos y mismo modelo que f4.yaml; nada del modelo ni de la calibración cambia.
+# Uso: uv run python scripts/f5_cam.py · f5_overlap.py · f5_artifacts.py · f5_report.py
+defaults:
+  - data: isic2020
+  - model: effnetv2s_384
+  - train: matrix
+  - _self_
+
+data:
+  env: local
+  image_size: 224
+  batch_size: 32
+  num_workers: 4
+
+f5:
+  checkpoint: data/models/tf_efficientnetv2_s-224-s0-e153979-04-0.0000.ckpt
+  checkpoint_manifest: reports/f3_final_model.json
+  calibration_json: reports/f4_calibration.json   # Platt y τ95 congelados en F4
+  val_predictions: reports/predictions/f4_val.csv # para comprobar que los logits coinciden
+  seed: 20260904
+  # F5.1 / F5.2
+  cams_npz: reports/f5_cams_val.npz               # CAM 7×7 de toda validación (fuera de git)
+  reuse_cams: false                               # true: no recalcular si el npz ya existe
+  cam_json: reports/f5_cam.json
+  n_equivalence: 50
+  equivalence_min_corr: 0.99
+  n_sanity: 200
+  sanity_threshold: 0.3                           # declarado de antemano (spec F5.2)
+  sanity_seeds: [0, 1, 2]
+  # F5.3
+  overlap_json: reports/f5_overlap.json
+  overlap_csv: reports/predictions/f5_overlap_val.csv
+  # F5.4
+  n_benign_sample: 1000
+  artifacts_json: reports/f5_artifacts.json
+  artifacts_csv: reports/predictions/f5_artifacts_val.csv
+  bootstrap_resamples: 2000
+  # F5.5 / F5.6
+  figures_dir: reports/figures
+  report_md: reports/f5_explainability.md
+
+hydra:
+  run:
+    dir: outputs/f5/${now:%Y-%m-%d}/${now:%H-%M-%S}
+  job:
+    chdir: false
