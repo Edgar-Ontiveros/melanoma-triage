@@ -53,3 +53,6 @@ data/models/
 .DS_Store
 # Corridas offline de W&B bajadas de Kaggle: se sincronizan con `kaggle_run.py sync-wandb`, no se versionan
 reports/runs/**/wandb/
+
+# Paquetes de modelo exportados (F6): el real se publica como release asset; el de prueba se regenera
+models/

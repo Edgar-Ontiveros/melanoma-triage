@@ -17,8 +17,8 @@ jobs:
         with:
           enable-cache: true
 
-      - name: Instalar entorno (core + train + dev, ruedas CPU)
-        run: uv sync --extra train --group dev --frozen
+      - name: Instalar entorno (core + train + dev + api, ruedas CPU)
+        run: uv sync --extra train --group dev --group api --frozen
 
       - name: ruff format --check
         run: uv run --no-sync ruff format --check .
@@ -37,3 +37,17 @@ jobs:
 
       - name: Tamaño de la imagen de la API (máx. 400 MB)
         run: python3 scripts/check_image_size.py melanoma-api 400
+
+      - name: Paquete de prueba (pesos aleatorios) para la imagen
+        run: uv run --no-sync python scripts/make_test_bundle.py --out models/test_bundle
+
+      - name: La imagen arranca, verifica el manifiesto y responde /health y /predict
+        run: |
+          docker run -d --name api -p 8000:8000 -v "$PWD/models/test_bundle:/bundle:ro" melanoma-api
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:8000/health; then ok=1; break; fi; sleep 2
+          done
+          [ "${ok:-0}" = 1 ] || { docker logs api; exit 1; }
+          uv run --no-sync python -c "from PIL import Image; import numpy as np; Image.fromarray(np.full((300,400,3),150,np.uint8)).save('/tmp/x.png')"
+          curl -fsS -F "file=@/tmp/x.png" http://127.0.0.1:8000/predict | python3 -c "import json,sys; b=json.load(sys.stdin); assert b['disclaimer'] and 0<=b['probability']<=1 and b['cam']['status'] in ('ok','no_positive_evidence'); print('predict OK', b['model_version'])"
+          docker rm -f api

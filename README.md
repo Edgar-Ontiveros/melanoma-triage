@@ -192,7 +192,7 @@ El entrenamiento corre en Kaggle. Ahí se adjunta la distribución oficial de la
 | F3 | Matriz de modelos, ablación de resolución, anclaje en literatura | Cerrada el 2026-09-18: 9/9 criterios; modelo final A1 = EfficientNetV2-S a 224 px, semilla 0 (`docs/specs/F3.md`, `reports/f3_matrix.md`) |
 | F4 | Evaluación clínica: test bloqueado, calibración, umbral, subgrupos, DDI | Pendiente |
 | F5 | Explicabilidad: CAM ≡ Grad-CAM (contrato numpy para F6), prueba de cordura, solapamiento con la lesión, artefactos por perturbación | Cerrada el 2026-09-21: 10/10 criterios (`docs/specs/F5.md`, `reports/f5_explainability.md`) |
-| F6 | Exportación ONNX y API | Pendiente |
+| F6 | Paquete de modelo (ONNX opset 17 + calibración + umbrales + pesos CAM + manifiesto SHA256), paridad con PyTorch, API FastAPI/onnxruntime sin torch, Docker < 400 MB | Cerrada el 2026-09-21: 10/10 criterios (`docs/specs/F6.md`, `docs/API.md`) |
 | F7 | Interfaz | Pendiente |
 | F8 | Despliegue | Pendiente |
 | F9 | Documento y defensa | Pendiente |

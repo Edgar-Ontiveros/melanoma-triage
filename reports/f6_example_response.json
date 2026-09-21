@@ -1,0 +1,173 @@
+{
+  "health": {
+    "status": "ok",
+    "model_version": "6c330a8-e0ecf981"
+  },
+  "predict": {
+    "model_version": "6c330a8-e0ecf981",
+    "probability": 0.015490515414014127,
+    "refer": true,
+    "threshold": 0.0038890622237550752,
+    "operating_point": {
+      "sensitivity_target": 0.95,
+      "sensitivity_test": 0.9651162790697675,
+      "specificity_test": 0.4283778552071235
+    },
+    "cam": {
+      "status": "ok",
+      "grid": [
+        [
+          0.21,
+          0.7,
+          0.92,
+          0.63,
+          0.37,
+          0.08,
+          0.0
+        ],
+        [
+          0.19,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.33
+        ],
+        [
+          0.29,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.2
+        ],
+        [
+          0.56,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.62,
+          0.57,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.19
+        ],
+        [
+          0.14,
+          0.36,
+          1.0,
+          0.19,
+          0.0,
+          0.09,
+          0.14
+        ],
+        [
+          0.01,
+          0.11,
+          0.28,
+          0.0,
+          0.25,
+          0.08,
+          0.0
+        ]
+      ],
+      "png_base64": "iVBORw0KGgoAAAANSUhEUgAAAOAAAADgCAIAAACV…"
+    },
+    "input": {
+      "width": 512,
+      "height": 288,
+      "format": "JPEG"
+    },
+    "latency_ms": 72.72,
+    "timings_ms": {
+      "decode": 8.48,
+      "preprocess": 20.42,
+      "onnx": 34.36,
+      "cam": 0.21,
+      "render": 9.09
+    },
+    "disclaimer": "Herramienta de apoyo al triage de melanoma en imágenes dermatoscópicas, con fines educativos y de investigación. No es un diagnóstico: indica si una lesión conviene referirse a valoración especializada en un punto de operación de alta sensibilidad y baja especificidad. No detecta otros cánceres de piel ni otras enfermedades. No sustituye la valoración de un dermatólogo. No cuenta con aprobación regulatoria (COFEPRIS, FDA, CE) y no debe usarse para tomar decisiones clínicas."
+  },
+  "model_info_keys": [
+    "calibration",
+    "disclaimer",
+    "manifest",
+    "metrics",
+    "model_version",
+    "preprocess",
+    "thresholds"
+  ],
+  "metrics": {
+    "split": "test",
+    "accessed_once": true,
+    "date": "2026-09-18T22:16:36+00:00",
+    "n_images": 5252,
+    "n_positives": 86,
+    "n_patients": 540,
+    "auroc": {
+      "point": 0.833932060250835,
+      "lo": 0.7947809740331295,
+      "hi": 0.8717371467876059
+    },
+    "auprc": {
+      "point": 0.09588974375998287,
+      "lo": 0.06475240033198705,
+      "hi": 0.1539726893593294
+    },
+    "prevalence": 0.016374714394516376,
+    "tau_95": {
+      "threshold": 0.0038890622237550752,
+      "sensitivity": 0.9651162790697675,
+      "specificity": 0.4283778552071235,
+      "ppv": 0.027338603425559948,
+      "npv": 0.9986462093862816,
+      "tp": 83,
+      "fn": 3,
+      "fp": 2953,
+      "tn": 2213
+    },
+    "ci": {
+      "level": 0.95,
+      "unit": "patient",
+      "n_resamples": 2000
+    },
+    "source": "reports/f4_test_results.json"
+  },
+  "thresholds": {
+    "operating": "tau_95",
+    "source": "reports/f4_calibration.json",
+    "tau_95": {
+      "tau": 0.0038890622237550752,
+      "sensitivity_target": 0.95,
+      "p05": 0.0013303408626882565,
+      "p95": 0.006300782775286484,
+      "validation": {
+        "sensitivity": 0.9545454545454546,
+        "specificity": 0.4,
+        "ppv": 0.027916251246261216,
+        "npv": 0.9979529170931423
+      }
+    },
+    "tau_90": {
+      "tau": 0.006630038044694367,
+      "sensitivity_target": 0.9,
+      "p05": 0.004007531655594818,
+      "p95": 0.011222446273893084,
+      "validation": {
+        "sensitivity": 0.8977272727272727,
+        "specificity": 0.5374358974358975,
+        "ppv": 0.03384747215081405,
+        "npv": 0.99657664511221
+      }
+    }
+  }
+}

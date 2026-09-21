@@ -1,0 +1,40 @@
+# F6 — exportación del paquete de modelo y verificación de paridad. Mismo modelo y datos que
+# f4.yaml / f5.yaml; nada del modelo cambia. Uso: uv run python scripts/export_bundle.py
+defaults:
+  - data: isic2020
+  - model: effnetv2s_384
+  - train: matrix
+  - _self_
+
+data:
+  env: local
+  image_size: 224
+  batch_size: 32
+  num_workers: 4
+
+f6:
+  checkpoint: data/models/tf_efficientnetv2_s-224-s0-e153979-04-0.0000.ckpt
+  checkpoint_manifest: reports/f3_final_model.json
+  calibration_json: reports/f4_calibration.json
+  test_results_json: reports/f4_test_results.json
+  val_predictions: reports/predictions/f4_val.csv
+  bundle_dir: models/bundle            # fuera de git; se publica como release asset
+  test_bundle_dir: models/test_bundle  # pesos aleatorios, para CI y Docker
+  opset: 17
+  intra_op_threads: 4
+  seed: 20260904
+  n_parity: 200
+  tolerances:
+    logit: 1.0e-4
+    platt: 1.0e-6
+    cam_corr: 0.999
+    full_chain_logit: 1.0e-3
+  parity_json: reports/f6_parity.json
+  latency_md: reports/f6_latency.md
+  bench_requests: 200
+
+hydra:
+  run:
+    dir: outputs/f6/${now:%Y-%m-%d}/${now:%H-%M-%S}
+  job:
+    chdir: false

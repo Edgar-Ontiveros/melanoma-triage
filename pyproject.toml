@@ -31,6 +31,8 @@ train = [
     "scikit-learn>=1.5",
     "wandb>=0.18",
     "grad-cam>=1.5",
+    "onnx>=1.17",
+    "onnxscript>=0.3",
 ]
 
 [dependency-groups]
@@ -61,7 +63,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/melanoma"]
+packages = ["src/melanoma", "services"]
 
 # Ruedas CPU de PyTorch en el lockfile. Para CUDA usar `make setup-gpu`,
 # que reinstala torch/torchvision desde el índice CUDA sin tocar el lockfile.
@@ -86,6 +88,9 @@ select = ["E", "F", "I", "UP", "B", "W"]
 testpaths = ["tests"]
 addopts = "-q"
 filterwarnings = ["ignore::DeprecationWarning"]
+# `local`: necesita el checkpoint real o el paquete exportado (models/bundle); se salta en CI
+# salvo que se pase --run-local (tests/conftest.py).
+markers = ["local: requiere el checkpoint real o models/bundle; se salta sin --run-local"]
 
 [tool.coverage.run]
 source = ["src/melanoma"]

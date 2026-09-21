@@ -34,3 +34,18 @@ def prepare_cfg() -> DictConfig:
     """Composición del pipeline de datos (`configs/prepare.yaml`, grupo `data: isic2020`)."""
     with initialize_config_dir(config_dir=str(CONFIGS), version_base="1.3"):
         return compose(config_name="prepare")
+
+
+def pytest_addoption(parser: pytest.Parser) -> None:
+    parser.addoption(
+        "--run-local", action="store_true", default=False, help="corre las pruebas @local"
+    )
+
+
+def pytest_collection_modifyitems(config: pytest.Config, items: list[pytest.Item]) -> None:
+    if config.getoption("--run-local"):
+        return
+    skip = pytest.mark.skip(reason="prueba local: necesita el checkpoint real (--run-local)")
+    for item in items:
+        if "local" in item.keywords:
+            item.add_marker(skip)

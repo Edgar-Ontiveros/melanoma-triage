@@ -9,11 +9,12 @@ UV_RUN = uv run --no-sync
 .PHONY: setup setup-gpu lint format test smoke ci docker-api docker-size clean \
 	data-verify data-manifest data-dedup data-splits data-resize data-eda data-all \
 	kaggle-dataset train baseline-b0 f2-report f3-report f4-report check-notebooks kaggle \
-	f5-cam f5-overlap f5-artifacts f5-figures f5-report f5-all
+	f5-cam f5-overlap f5-artifacts f5-figures f5-report f5-all \
+	export-bundle verify-bundle test-bundle bench-api api docker-run test-local
 
 ## Entorno local (WSL/Ubuntu): core + train + dev con ruedas CPU del lockfile.
 setup:
-	uv sync --extra train --group dev
+	uv sync --extra train --group dev --group api
 
 ## Instancia de entrenamiento: igual, pero reinstala torch/torchvision con ruedas CUDA.
 ## No toca uv.lock: las ruedas CUDA se instalan por encima del entorno sincronizado.
@@ -93,6 +94,26 @@ f5-figures:
 f5-report:
 	$(UV_RUN) python scripts/f5_report.py
 f5-all: f5-cam f5-overlap f5-artifacts f5-figures f5-report
+## ---- F6: paquete de modelo y API (configs/f6.yaml).
+## export-bundle exporta models/bundle/ desde el checkpoint real; verify-bundle mide la paridad
+## (reports/f6_parity.json); test-bundle genera models/test_bundle/ con pesos aleatorios (CI y
+## Docker); bench-api mide latencia (reports/f6_latency.md); api levanta uvicorn en local.
+export-bundle:
+	$(UV_RUN) python scripts/export_bundle.py
+verify-bundle:
+	$(UV_RUN) python scripts/verify_bundle.py
+test-bundle:
+	$(UV_RUN) python scripts/make_test_bundle.py --out models/test_bundle
+bench-api:
+	$(UV_RUN) python scripts/bench_api.py $(ARGS)
+api:
+	MODEL_BUNDLE_DIR=$${MODEL_BUNDLE_DIR:-models/bundle} $(UV_RUN) uvicorn services.api.main:app --host 127.0.0.1 --port 8000
+## Corre la imagen con un paquete montado en /bundle. Ej.: make docker-run BUNDLE=models/test_bundle
+docker-run:
+	docker run --rm -p 8000:8000 -v $(PWD)/$(or $(BUNDLE),models/bundle):/bundle:ro melanoma-api
+## Pruebas @local (checkpoint real y models/bundle).
+test-local:
+	$(UV_RUN) pytest --run-local -m local
 ## Ejecuta los notebooks de Kaggle en un sandbox local (venv limpio + clon + /kaggle/input sintético).
 check-notebooks:
 	$(UV_RUN) python scripts/check_notebooks.py
