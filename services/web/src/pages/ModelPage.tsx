@@ -159,8 +159,8 @@ export default function ModelPage({ state }: { state: ModelInfoState }) {
             sus imágenes no se reproducen en esta interfaz ni en el repositorio.
           </li>
           <li>
-            Tesis de licenciatura de Edgar Ontiveros: clasificador educativo de lesiones cutáneas
-            para triage asistido. Código MIT en <a href={REPO}>{REPO}</a>.
+            Tesis de licenciatura de Edgar Eduardo Ontiveros Lara: clasificador educativo de lesiones
+            cutáneas para triage asistido. Código MIT en <a href={REPO}>{REPO}</a>.
           </li>
         </ul>
       </section>
@@ -211,6 +211,13 @@ export default function ModelPage({ state }: { state: ModelInfoState }) {
         ) : (
           <p className="muted">{state.loading ? "Cargando…" : "Ficha del modelo no disponible."}</p>
         )}
+        <p className="thesis">
+          <img src="/escudo-color.png" alt="Escudo de la Universidad Autónoma de Chihuahua" width={44} height={44} />
+          <span>
+            Proyecto de tesis de licenciatura — Edgar Eduardo Ontiveros Lara, matrícula a335951.
+            Facultad de Ingeniería, Universidad Autónoma de Chihuahua, 2026.
+          </span>
+        </p>
       </section>
     </>
   );
