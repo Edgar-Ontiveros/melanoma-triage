@@ -10,7 +10,8 @@ UV_RUN = uv run --no-sync
 	data-verify data-manifest data-dedup data-splits data-resize data-eda data-all \
 	kaggle-dataset train baseline-b0 f2-report f3-report f4-report check-notebooks kaggle \
 	f5-cam f5-overlap f5-artifacts f5-figures f5-report f5-all \
-	export-bundle verify-bundle test-bundle bench-api api docker-run test-local
+	export-bundle verify-bundle test-bundle bench-api api docker-run test-local \
+	web-install web-dev web-lint web-test web-build web
 
 ## Entorno local (WSL/Ubuntu): core + train + dev con ruedas CPU del lockfile.
 setup:
@@ -36,7 +37,7 @@ smoke:
 	$(UV_RUN) python scripts/smoke_train.py
 
 ## Lo mismo que corre GitHub Actions (menos el build de Docker, ver docker-api).
-ci: lint test smoke
+ci: web lint test smoke
 
 ## Imagen de la API. Requiere Docker con integración WSL activa.
 docker-api:
@@ -107,13 +108,25 @@ test-bundle:
 bench-api:
 	$(UV_RUN) python scripts/bench_api.py $(ARGS)
 api:
-	MODEL_BUNDLE_DIR=$${MODEL_BUNDLE_DIR:-models/bundle} $(UV_RUN) uvicorn services.api.main:app --host 127.0.0.1 --port 8000
+	MODEL_BUNDLE_DIR=$${MODEL_BUNDLE_DIR:-models/bundle} $(UV_RUN) uvicorn services.api.main:app --host 127.0.0.1 --port 8000  # sirve la web si existe services/web/dist
 ## Corre la imagen con un paquete montado en /bundle. Ej.: make docker-run BUNDLE=models/test_bundle
 docker-run:
 	docker run --rm -p 8000:8000 -v $(PWD)/$(or $(BUNDLE),models/bundle):/bundle:ro melanoma-api
 ## Pruebas @local (checkpoint real y models/bundle).
 test-local:
 	$(UV_RUN) pytest --run-local -m local
+## ---- F7: interfaz (services/web, Vite + React + TS). `web` = lint + pruebas + build (lo que corre CI).
+web-install:
+	cd services/web && npm ci --no-audit --no-fund
+web-dev:
+	cd services/web && npm run dev
+web-lint:
+	cd services/web && npm run lint
+web-test:
+	cd services/web && npm test
+web-build:
+	cd services/web && npm run build
+web: web-lint web-test web-build
 ## Ejecuta los notebooks de Kaggle en un sandbox local (venv limpio + clon + /kaggle/input sintético).
 check-notebooks:
 	$(UV_RUN) python scripts/check_notebooks.py

@@ -1,0 +1,462 @@
+/* Interfaz clínica sobria (F7). Sin fuentes externas: pila del sistema. Un solo color de
+   acento; nada de rojo/verde para la probabilidad. Contraste AA como mínimo. */
+:root {
+  --bg: #ffffff;
+  --surface: #f5f6f8;
+  --border: #d0d5dc;
+  --text: #16202a;
+  --muted: #4a5561;
+  --accent: #1f4e79;
+  --accent-soft: #dbe6f2;
+  --warn-bg: #fff4d6;
+  --warn-border: #d9a400;
+  --err-bg: #fbe9e7;
+  --err-border: #b3261e;
+  --radius: 6px;
+  --max: 960px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family:
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    Roboto,
+    "Helvetica Neue",
+    Arial,
+    sans-serif;
+  font-size: 17px;
+  line-height: 1.5;
+}
+
+a {
+  color: var(--accent);
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: #fff;
+  padding: 0.55rem 1rem;
+  border-radius: var(--radius);
+  min-height: 44px;
+}
+
+button.secondary {
+  background: #fff;
+  color: var(--accent);
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+[tabindex]:focus-visible {
+  outline: 3px solid #ffbf47;
+  outline-offset: 2px;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.container {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 1rem 2rem;
+}
+
+header.top {
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+
+header.top .container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  padding-top: 0.8rem;
+  padding-bottom: 0.8rem;
+}
+
+header.top h1 {
+  font-size: 1.15rem;
+  margin: 0;
+}
+
+header.top nav a {
+  margin-left: 1rem;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+header.top nav a[aria-current="page"] {
+  text-decoration: underline;
+}
+
+main {
+  padding-top: 1.2rem;
+}
+
+h2 {
+  font-size: 1.25rem;
+  margin: 1.6rem 0 0.6rem;
+}
+
+h3 {
+  font-size: 1.05rem;
+  margin: 1.2rem 0 0.4rem;
+}
+
+p {
+  margin: 0.4rem 0;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.small {
+  font-size: 0.9rem;
+}
+
+.card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem;
+  background: #fff;
+  margin: 0.8rem 0;
+}
+
+.notice {
+  border: 1px solid var(--warn-border);
+  background: var(--warn-bg);
+  border-radius: var(--radius);
+  padding: 0.8rem 1rem;
+  margin: 0.8rem 0;
+}
+
+.error {
+  border: 1px solid var(--err-border);
+  background: var(--err-bg);
+  border-radius: var(--radius);
+  padding: 0.8rem 1rem;
+  margin: 0.8rem 0;
+}
+
+/* ---- entrada */
+.dropzone {
+  border: 2px dashed var(--border);
+  border-radius: var(--radius);
+  padding: 1.4rem 1rem;
+  text-align: center;
+  background: var(--surface);
+}
+
+.dropzone.active {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.dropzone input[type="file"] {
+  display: block;
+  margin: 0.6rem auto 0;
+}
+
+.preview {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.preview img {
+  max-width: 280px;
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+
+.examples {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 0.8rem;
+}
+
+.examples button.example {
+  display: block;
+  width: 100%;
+  padding: 0;
+  background: #fff;
+  color: var(--text);
+  border: 1px solid var(--border);
+  text-align: left;
+  overflow: hidden;
+}
+
+.examples button.example img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+}
+
+.examples button.example span {
+  display: block;
+  padding: 0.4rem 0.5rem;
+  font-size: 0.85rem;
+}
+
+.examples code {
+  font-size: 0.8rem;
+}
+
+/* ---- resultado */
+.prob-big {
+  font-size: 3rem;
+  font-weight: 700;
+  line-height: 1.1;
+  margin: 0.2rem 0;
+}
+
+.logbar {
+  position: relative;
+  height: 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  margin: 2.2rem 0 1.8rem;
+}
+
+.logbar .fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  background: var(--accent);
+  border-radius: 7px 0 0 7px;
+}
+
+.logbar .mark {
+  position: absolute;
+  top: -8px;
+  bottom: -8px;
+  width: 2px;
+  background: var(--text);
+}
+
+.logbar .mark-label {
+  position: absolute;
+  top: -1.9rem;
+  transform: translateX(-50%);
+  font-size: 0.78rem;
+  white-space: nowrap;
+  color: var(--muted);
+}
+
+.logbar .mark-label.below {
+  top: auto;
+  bottom: -1.7rem;
+}
+
+.logbar .axis {
+  position: absolute;
+  bottom: -1.7rem;
+  font-size: 0.75rem;
+  color: var(--muted);
+  transform: translateX(-50%);
+}
+
+.rec-headline {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin: 0 0 0.3rem;
+}
+
+.cam-wrap {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+.cam-img {
+  position: relative;
+  width: 100%;
+  max-width: 336px;
+  aspect-ratio: 1 / 1;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: #000;
+}
+
+.cam-img img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  image-rendering: auto;
+}
+
+.cam-controls {
+  flex: 1 1 220px;
+}
+
+.cam-controls label {
+  display: block;
+  margin-bottom: 0.4rem;
+}
+
+.cam-controls input[type="range"] {
+  width: 100%;
+}
+
+details summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+
+pre {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.8rem;
+  overflow: auto;
+  font-size: 0.8rem;
+  max-height: 24rem;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 0.6rem 0;
+}
+
+th,
+td {
+  border: 1px solid var(--border);
+  padding: 0.45rem 0.6rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+th {
+  background: var(--surface);
+}
+
+td.num {
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* ---- modal */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(22, 32, 42, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  z-index: 10;
+}
+
+.modal {
+  background: #fff;
+  border-radius: var(--radius);
+  max-width: 640px;
+  width: 100%;
+  padding: 1.2rem 1.4rem;
+  max-height: 90vh;
+  overflow: auto;
+}
+
+.modal h2 {
+  margin-top: 0;
+}
+
+/* ---- pie */
+footer.bottom {
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+  margin-top: 2rem;
+}
+
+footer.bottom .container {
+  padding-top: 0.9rem;
+  padding-bottom: 0.9rem;
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
+.spinner {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  border: 2px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+  vertical-align: -0.15em;
+  margin-right: 0.4rem;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spinner {
+    animation: none;
+  }
+}
+
+.limitations h1,
+.limitations h2,
+.limitations h3 {
+  font-size: 1.05rem;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+@media (max-width: 600px) {
+  body {
+    font-size: 16px;
+  }
+  .prob-big {
+    font-size: 2.4rem;
+  }
+  header.top nav a {
+    margin-left: 0;
+    margin-right: 1rem;
+  }
+}

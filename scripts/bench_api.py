@@ -47,10 +47,10 @@ def run_in_process(
         stages: dict[str, list[float]] = {}
         first = None
         for _ in range(5):  # calentamiento
-            client.post("/predict", files={"file": ("x.jpg", data, "image/jpeg")})
+            client.post("/api/predict", files={"file": ("x.jpg", data, "image/jpeg")})
         for _ in range(n):
             t0 = time.perf_counter()
-            r = client.post("/predict", files={"file": ("x.jpg", data, "image/jpeg")})
+            r = client.post("/api/predict", files={"file": ("x.jpg", data, "image/jpeg")})
             totals.append((time.perf_counter() - t0) * 1000)
             body = r.json()
             first = first or body
@@ -66,10 +66,10 @@ def run_http(url: str, data: bytes, n: int) -> tuple[list[float], dict[str, list
     totals, stages, first = [], {}, None
     with httpx.Client(base_url=url, timeout=30) as client:
         for _ in range(5):
-            client.post("/predict", files={"file": ("x.jpg", data, "image/jpeg")})
+            client.post("/api/predict", files={"file": ("x.jpg", data, "image/jpeg")})
         for _ in range(n):
             t0 = time.perf_counter()
-            r = client.post("/predict", files={"file": ("x.jpg", data, "image/jpeg")})
+            r = client.post("/api/predict", files={"file": ("x.jpg", data, "image/jpeg")})
             totals.append((time.perf_counter() - t0) * 1000)
             body = r.json()
             first = first or body

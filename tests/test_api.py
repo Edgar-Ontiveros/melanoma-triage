@@ -46,10 +46,10 @@ def client(test_bundle: Path):  # noqa: F811
 
 
 def test_health_and_model_info(client: TestClient) -> None:
-    r = client.get("/health")
+    r = client.get("/api/health")
     assert r.status_code == 200 and r.json()["status"] == "ok"
     version = r.json()["model_version"]
-    info = client.get("/model-info").json()
+    info = client.get("/api/model-info").json()
     assert info["model_version"] == version
     assert set(info["manifest"]["files"]) >= {"model.onnx", "cam_weights.npy"}
     for key in ("auroc", "auprc"):
@@ -60,7 +60,9 @@ def test_health_and_model_info(client: TestClient) -> None:
 
 
 def test_predict_contract(client: TestClient) -> None:
-    r = client.post("/predict", files={"file": ("x.jpg", encode(synthetic_rgb()), "image/jpeg")})
+    r = client.post(
+        "/api/predict", files={"file": ("x.jpg", encode(synthetic_rgb()), "image/jpeg")}
+    )
     assert r.status_code == 200, r.text
     body = r.json()
     assert REQUIRED <= set(body)
@@ -82,6 +84,8 @@ def test_predict_contract(client: TestClient) -> None:
             assert im.size == (224, 224) and im.format == "PNG"
     else:
         assert cam["png_base64"] is None
+    with Image.open(io.BytesIO(base64.b64decode(cam["crop_png_base64"]))) as im:
+        assert im.size == (224, 224) and im.format == "PNG"  # el recorte sin mapa, siempre
     assert {"decode_stage1", "preprocess", "onnx", "cam", "render"} <= set(body["timings_ms"])
     assert "logit" not in body and "prob_raw" not in body  # nunca la probabilidad cruda
 
@@ -89,7 +93,7 @@ def test_predict_contract(client: TestClient) -> None:
 def test_predict_accepts_png_and_webp(client: TestClient) -> None:
     for fmt, mime in (("PNG", "image/png"), ("WEBP", "image/webp")):
         r = client.post(
-            "/predict", files={"file": ("x", encode(synthetic_rgb(300, 300), fmt), mime)}
+            "/api/predict", files={"file": ("x", encode(synthetic_rgb(300, 300), fmt), mime)}
         )
         assert r.status_code == 200, (fmt, r.text)
         assert r.json()["input"]["format"] == fmt
@@ -98,40 +102,45 @@ def test_predict_accepts_png_and_webp(client: TestClient) -> None:
 def test_predict_no_positive_evidence(negative_bundle: Path) -> None:  # noqa: F811
     with TestClient(build_app(negative_bundle, intra_op_threads=2)) as c:
         body = c.post(
-            "/predict", files={"file": ("x.jpg", encode(synthetic_rgb()), "image/jpeg")}
+            "/api/predict", files={"file": ("x.jpg", encode(synthetic_rgb()), "image/jpeg")}
         ).json()
     assert body["cam"]["status"] == "no_positive_evidence"
     assert body["cam"]["png_base64"] is None
+    assert body["cam"]["crop_png_base64"]  # el recorte sí, sin mapa
     assert not any(v for row in body["cam"]["grid"] for v in row)
     assert body["refer"] is False
-    assert "render" not in body["timings_ms"] or body["timings_ms"]["render"] < 1.0
 
 
 def test_predict_rejects_bad_input(client: TestClient) -> None:
     files = lambda data, name="x.bin", mime="application/octet-stream": {"file": (name, data, mime)}  # noqa: E731
     assert (
         client.post(
-            "/predict", files=files(encode(synthetic_rgb(128, 128), "GIF"), "x.gif", "image/gif")
+            "/api/predict",
+            files=files(encode(synthetic_rgb(128, 128), "GIF"), "x.gif", "image/gif"),
         ).status_code
         == 415
     )
     assert (
         client.post(
-            "/predict", files=files(encode(synthetic_rgb(128, 128), "BMP"), "x.bmp", "image/bmp")
+            "/api/predict",
+            files=files(encode(synthetic_rgb(128, 128), "BMP"), "x.bmp", "image/bmp"),
         ).status_code
         == 415
     )
-    assert client.post("/predict", files=files(b"\x00" * (10 * 1024 * 1024 + 1))).status_code == 413
+    assert (
+        client.post("/api/predict", files=files(b"\x00" * (10 * 1024 * 1024 + 1))).status_code
+        == 413
+    )
     assert (
         client.post(
-            "/predict", files=files(encode(synthetic_rgb(40, 40), "PNG"), "s.png", "image/png")
+            "/api/predict", files=files(encode(synthetic_rgb(40, 40), "PNG"), "s.png", "image/png")
         ).status_code
         == 422
     )
-    r = client.post("/predict", files=files(b"esto no es una imagen"))
+    r = client.post("/api/predict", files=files(b"esto no es una imagen"))
     assert r.status_code == 422 and "imagen" in r.json()["detail"]
-    assert client.post("/predict", files=files(b"")).status_code == 422
-    assert client.post("/predict").status_code == 422  # sin archivo
+    assert client.post("/api/predict", files=files(b"")).status_code == 422
+    assert client.post("/api/predict").status_code == 422  # sin archivo
 
 
 def test_app_refuses_to_start_with_tampered_bundle(test_bundle: Path, tmp_path: Path) -> None:  # noqa: F811

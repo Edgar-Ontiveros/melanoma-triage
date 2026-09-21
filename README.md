@@ -104,7 +104,7 @@ paciente, historial por época, colapsos, SHA del commit y de los splits), `curv
 configs/             Configuración Hydra: data/, model/, train/, experiment/ y composiciones raíz (config, prepare, smoke, baseline_b0)
 src/melanoma/        Paquete Python: data (manifiesto, dedup, splits, resize), models (fábrica timm), train, eval, explain, export, utils
 services/api/        API de inferencia FastAPI + onnxruntime (grupo `api`, sin torch ni core) y su Dockerfile
-apps/web/            Frontend (fase posterior)
+services/web/        Interfaz web (F7: Vite + React + TS), servida por la API
 data/manifests/      isic2020.csv, una fila por imagen con SHA256 (versionado)
 data/splits/         train.txt, val.txt, test.txt y SHA256SUMS (versionados)
 data/raw/, data/processed/   Imágenes originales y redimensionadas (NO versionadas)
@@ -193,7 +193,7 @@ El entrenamiento corre en Kaggle. Ahí se adjunta la distribución oficial de la
 | F4 | Evaluación clínica: test bloqueado, calibración, umbral, subgrupos, DDI | Pendiente |
 | F5 | Explicabilidad: CAM ≡ Grad-CAM (contrato numpy para F6), prueba de cordura, solapamiento con la lesión, artefactos por perturbación | Cerrada el 2026-09-21: 10/10 criterios (`docs/specs/F5.md`, `reports/f5_explainability.md`) |
 | F6 | Paquete de modelo (ONNX opset 17 + calibración + umbrales + pesos CAM + manifiesto SHA256), paridad con PyTorch, API FastAPI/onnxruntime sin torch, Docker 152 MB; preprocesamiento en dos etapas con paridad exacta hasta con originales de 6,000 px | Cerrada el 2026-09-21: 10/10 criterios (`docs/specs/F6.md`, `docs/API.md`) |
-| F7 | Interfaz | Pendiente |
+| F7 | Interfaz web (Vite + React + TS) servida por la API: análisis con probabilidad calibrada, tasa base, recomendación, CAM y ficha del modelo | Hecha el 2026-09-21; cierre bloqueado por `docs/f4_limitations.md` (`docs/specs/F7.md`) |
 | F8 | Despliegue | Pendiente |
 | F9 | Documento y defensa | Pendiente |
 

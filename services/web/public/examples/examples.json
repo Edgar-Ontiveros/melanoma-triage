@@ -1,0 +1,9 @@
+{
+  "attribution": "Imágenes del ISIC 2020 Challenge Dataset (International Skin Imaging Collaboration), licencia CC-BY-NC 4.0, https://doi.org/10.34970/2020-ds01. Split de validación de este proyecto; ninguna imagen de DDI.",
+  "items": [
+    {"image_id": "ISIC_5037784", "file": "examples/ISIC_5037784.jpg", "truth": "melanoma", "note": "melanoma confirmado por histopatología; el modelo lo refiere"},
+    {"image_id": "ISIC_5533992", "file": "examples/ISIC_5533992.jpg", "truth": "melanoma", "note": "melanoma confirmado que el modelo NO refiere: un falso negativo de validación"},
+    {"image_id": "ISIC_1265382", "file": "examples/ISIC_1265382.jpg", "truth": "benigna", "note": "lesión benigna que el modelo no refiere"},
+    {"image_id": "ISIC_7330819", "file": "examples/ISIC_7330819.jpg", "truth": "benigna", "note": "lesión benigna que el modelo sí refiere: un falso positivo de validación"}
+  ]
+}

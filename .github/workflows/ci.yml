@@ -20,6 +20,20 @@ jobs:
       - name: Instalar entorno (core + train + dev + api, ruedas CPU)
         run: uv sync --extra train --group dev --group api --frozen
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: services/web/package-lock.json
+
+      - name: Interfaz: npm ci, lint, pruebas y build
+        working-directory: services/web
+        run: |
+          npm ci --no-audit --no-fund
+          npm run lint
+          npm test
+          npm run build
+
       - name: ruff format --check
         run: uv run --no-sync ruff format --check .
 
@@ -45,9 +59,11 @@ jobs:
         run: |
           docker run -d --name api -p 8000:8000 -v "$PWD/models/test_bundle:/bundle:ro" melanoma-api
           for i in $(seq 1 30); do
-            if curl -fsS http://127.0.0.1:8000/health; then ok=1; break; fi; sleep 2
+            if curl -fsS http://127.0.0.1:8000/api/health; then ok=1; break; fi; sleep 2
           done
           [ "${ok:-0}" = 1 ] || { docker logs api; exit 1; }
           uv run --no-sync python -c "from PIL import Image; import numpy as np; Image.fromarray(np.full((300,400,3),150,np.uint8)).save('/tmp/x.png')"
-          curl -fsS -F "file=@/tmp/x.png" http://127.0.0.1:8000/predict | python3 -c "import json,sys; b=json.load(sys.stdin); assert b['disclaimer'] and 0<=b['probability']<=1 and b['cam']['status'] in ('ok','no_positive_evidence'); print('predict OK', b['model_version'])"
+          curl -fsS -F "file=@/tmp/x.png" http://127.0.0.1:8000/api/predict | python3 -c "import json,sys; b=json.load(sys.stdin); assert b['disclaimer'] and 0<=b['probability']<=1 and b['cam']['status'] in ('ok','no_positive_evidence'); print('predict OK', b['model_version'])"
+          curl -fsS http://127.0.0.1:8000/ | grep -q '<div id="root">' && echo 'SPA OK'
+          curl -fsS http://127.0.0.1:8000/modelo | grep -q '<div id="root">' && echo 'SPA /modelo OK'
           docker rm -f api

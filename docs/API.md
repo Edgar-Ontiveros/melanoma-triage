@@ -50,12 +50,16 @@ Documentación interactiva en `/docs` (OpenAPI).
 
 ## Endpoints
 
-### `POST /predict`
+Desde F7 todos los endpoints viven bajo el prefijo **`/api`** (la raíz `/` sirve la interfaz web;
+cualquier ruta fuera de `/api` devuelve `index.html`, así `/modelo` funciona al recargar). La
+documentación OpenAPI está en `/api/docs`.
+
+### `POST /api/predict`
 
 Multipart con un único campo `file` (JPEG, PNG o WebP; ≤ 10 MB; lado mínimo 64 px).
 
 ```bash
-curl -s -F "file=@data/processed/isic2020_512/ISIC_0096201.jpg" http://127.0.0.1:8000/predict
+curl -s -F "file=@data/processed/isic2020_512/ISIC_0096201.jpg" http://127.0.0.1:8000/api/predict
 ```
 
 Respuesta (ejemplo real con el paquete `4e7ab61-e0ecf981`, imagen de 512 px; `png_base64` y `grid` recortados; con el original de 1872 × 1053 px de la misma lesión la probabilidad es idéntica, 0.015491):
@@ -74,7 +78,8 @@ Respuesta (ejemplo real con el paquete `4e7ab61-e0ecf981`, imagen de 512 px; `pn
   "cam": {
     "status": "ok",
     "grid": [[0.21, 0.70, 0.92, 0.63, 0.37, 0.08, 0.0], "… 7 filas × 7 columnas, valores en [0, 1], máximo 1"],
-    "png_base64": "iVBORw0KGgoAAAANSUhEUgAAAOAAAADgCAIAAACV…"
+    "png_base64": "iVBORw0KGgoAAAANSUhEUgAAAOAAAADgCAIAAACV…",
+    "crop_png_base64": "iVBORw0KGgoAAAANSUhEUgAAAOAAAADgCAIAAACV…"
   },
   "input": {"width": 512, "height": 288, "format": "JPEG"},
   "latency_ms": 46.1,
@@ -92,6 +97,7 @@ Respuesta (ejemplo real con el paquete `4e7ab61-e0ecf981`, imagen de 512 px; `pn
 | `cam.status` | `"ok"`, o `"no_positive_evidence"` cuando ninguna celda del mapa es positiva (181 de 4,963 imágenes de validación en F5). En ese caso `grid` es todo ceros y `png_base64` es `null`: un mapa nulo nunca se normaliza para «que se vea algo». |
 | `cam.grid` | CAM 7 × 7 = `ReLU(Σ_k w_k · A_k) / máx`, calculado en numpy a partir de `features` y `cam_weights.npy` (equivalente a Grad-CAM, verificado en F5). |
 | `cam.png_base64` | el mapa interpolado a 224 × 224 y superpuesto sobre **el recorte que vio el modelo** (lado corto a 224 + recorte central), no sobre la imagen original. PNG en base64. |
+| `cam.crop_png_base64` | el mismo recorte sin mapa (PNG en base64); siempre presente. La interfaz lo usa para la vista «sin mapa» y para el caso sin evidencia positiva. |
 | `input` | dimensiones y formato del archivo recibido. |
 | `latency_ms`, `timings_ms` | tiempo dentro del endpoint y desglose: `decode_stage1` (decodificar + etapa 1), `preprocess` (etapa 2), `onnx`, `cam`, `render` (PNG). |
 | `disclaimer` | texto fijo en español; va en **cada** respuesta. |
@@ -106,12 +112,12 @@ Errores:
 
 Un solo archivo por petición; sin lotes.
 
-### `GET /health`
+### `GET /api/health`
 
 `{"status": "ok", "model_version": "4e7ab61-e0ecf981"}`. 503 si el paquete no cargó.
 Es el `HEALTHCHECK` de la imagen Docker.
 
-### `GET /model-info`
+### `GET /api/model-info`
 
 La API se describe a sí misma: `manifest.json` completo, `metrics.json` (métricas del test
 con intervalos), `thresholds.json`, `calibration.json`, `preprocess.json` y el `disclaimer`.
@@ -124,6 +130,20 @@ Con el paquete actual:
 | Sensibilidad en τ95 | 0.965 (83 de 86) |
 | Especificidad en τ95 | 0.428 |
 | VPP / VPN en τ95 | 0.027 / 0.9986 |
+
+### `GET /api/limitations`
+
+Devuelve `docs/f4_limitations.md` (`markdown`, `source`, `n_sections`) para la ficha del modelo
+de la interfaz. Si el archivo no existe responde 404 con «pendiente»: la ficha lo muestra como
+tal y `tests/test_web.py::test_limitations_present` falla hasta que el autor lo escriba. Ruta
+configurable con `LIMITATIONS_MD`.
+
+## Interfaz web (F7)
+
+El build de Vite (`services/web/dist`, `WEB_DIST_DIR`) se sirve desde la misma aplicación:
+`/` es la pantalla de análisis y `/modelo` la ficha del modelo. La interfaz no tiene ningún
+número del modelo: todo sale de `/api/predict`, `/api/model-info` y `/api/limitations`
+(`tests/test_web.py::test_web_no_model_constants`). Un solo contenedor, un solo puerto.
 
 ## Preprocesamiento en dos etapas
 
