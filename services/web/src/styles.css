@@ -680,10 +680,11 @@ footer.bottom .credit {
   margin: 0;
 }
 
-footer.bottom .credit img {
+footer.bottom .credit svg {
   width: 18px;
   height: 18px;
   flex: none;
+  color: var(--muted);
 }
 
 footer.bottom .credit a {
