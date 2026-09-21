@@ -1,5 +1,5 @@
-"""API de detección asistida de melanoma (F6.3, F7.1): FastAPI + onnxruntime sobre el paquete de modelo, y la
-interfaz web (build de Vite) servida como archivos estáticos.
+"""API de detección asistida de melanoma (F6.3, F7.1): FastAPI + onnxruntime sobre el paquete
+de modelo, y la interfaz web (build de Vite) servida como archivos estáticos.
 
 Endpoints bajo ``/api``: ``POST /api/predict`` (una imagen), ``GET /api/health``,
 ``GET /api/model-info``, ``GET /api/limitations`` (docs/f4_limitations.md en Markdown).
