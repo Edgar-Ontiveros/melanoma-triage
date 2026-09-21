@@ -45,8 +45,8 @@ export default function Examples({
   if (!data) return null;
 
   return (
-    <div>
-      <h3>O pruebe con un ejemplo</h3>
+    <section aria-labelledby="ejemplos-title">
+      <h2 id="ejemplos-title">O pruebe con un ejemplo</h2>
       <div className="examples">
         {data.items.map((ex) => (
           <button
@@ -57,16 +57,21 @@ export default function Examples({
             onClick={() => pick(ex)}
             title={ex.note}
           >
-            <img src={`/${ex.file}`} alt={`Dermatoscopía ${ex.image_id}, lesión ${ex.truth} confirmada`} />
-            <span>
+            <img
+              className="thumb"
+              src={`/${ex.file}`}
+              alt={`Dermatoscopía ${ex.image_id}, lesión ${ex.truth} confirmada`}
+            />
+            <span className="meta">
               <code>{ex.image_id}</code>
-              <br />
-              {ex.truth === "melanoma" ? "Melanoma confirmado" : "Benigna confirmada"}
+              <span className="pill">
+                {ex.truth === "melanoma" ? "Melanoma confirmado" : "Benigna confirmada"}
+              </span>
             </span>
           </button>
         ))}
       </div>
-      <p className="small muted">{data.attribution}</p>
-    </div>
+      <p className="attribution">{data.attribution}</p>
+    </section>
   );
 }

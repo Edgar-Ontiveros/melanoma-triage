@@ -20,8 +20,8 @@ export default function Recommendation({
   });
   return (
     <section className="card" aria-labelledby="rec-title">
-      <h2 id="rec-title" style={{ marginTop: 0 }}>
-        2. Recomendación de triage
+      <h2 id="rec-title" className="block-title">
+        2 · Recomendación de triage
       </h2>
       <p className="rec-headline">{r.headline}</p>
       <p>{r.body}</p>

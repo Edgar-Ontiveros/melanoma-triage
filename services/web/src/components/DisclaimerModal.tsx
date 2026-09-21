@@ -37,9 +37,6 @@ export default function DisclaimerModal({ disclaimer }: { disclaimer: string | n
           {disclaimer ??
             "Herramienta de apoyo al triage de melanoma con fines educativos. No es un diagnóstico y no sustituye la valoración de un dermatólogo."}
         </p>
-        <p className="small muted">
-          Las imágenes se envían al servicio, se analizan en memoria y no se almacenan.
-        </p>
         <button ref={button} type="button" onClick={accept}>
           Entiendo
         </button>

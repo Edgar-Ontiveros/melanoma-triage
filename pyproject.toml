@@ -57,6 +57,7 @@ dev = [
     "pre-commit>=3.8",
     "kaggle>=1.6",
     "nbformat>=5.10",
+    "playwright>=1.48",
 ]
 
 [build-system]

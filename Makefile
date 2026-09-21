@@ -11,7 +11,7 @@ UV_RUN = uv run --no-sync
 	kaggle-dataset train baseline-b0 f2-report f3-report f4-report check-notebooks kaggle \
 	f5-cam f5-overlap f5-artifacts f5-figures f5-report f5-all \
 	export-bundle verify-bundle test-bundle bench-api api docker-run test-local \
-	web-install web-dev web-lint web-test web-build web
+	web-install web-dev web-lint web-test web-build web f7-screenshots
 
 ## Entorno local (WSL/Ubuntu): core + train + dev con ruedas CPU del lockfile.
 setup:
@@ -127,6 +127,13 @@ web-test:
 web-build:
 	cd services/web && npm run build
 web: web-lint web-test web-build
+## Capturas de la interfaz (reports/figures/f7_ui_*.png) contra una API levantada en BASE_URL.
+## En WSL sin las bibliotecas de Chromium se corre dentro de la imagen oficial de Playwright:
+##   make f7-screenshots BASE_URL=http://host.docker.internal:8020
+f7-screenshots:
+	docker run --rm --add-host=host.docker.internal:host-gateway -v "$(PWD):/work" -w /work \
+	  mcr.microsoft.com/playwright/python:v1.49.0-jammy \
+	  bash -c "pip install -q playwright==1.49.0 && python3 scripts/f7_screenshots.py --base-url $(or $(BASE_URL),http://host.docker.internal:8000)"
 ## Ejecuta los notebooks de Kaggle en un sandbox local (venv limpio + clon + /kaggle/input sintético).
 check-notebooks:
 	$(UV_RUN) python scripts/check_notebooks.py

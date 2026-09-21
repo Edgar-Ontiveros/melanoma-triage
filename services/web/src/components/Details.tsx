@@ -14,7 +14,9 @@ export default function Details({ result }: { result: PredictResponse }) {
   return (
     <section className="card">
       <details>
-        <summary>4. Detalles técnicos</summary>
+        <summary className="block-title" style={{ marginBottom: 0 }}>
+          4 · Detalles técnicos
+        </summary>
         <table>
           <tbody>
             <tr>

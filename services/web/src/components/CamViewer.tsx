@@ -17,8 +17,8 @@ export default function CamViewer({ cam }: { cam: CamOut }) {
 
   return (
     <section className="card" aria-labelledby="cam-title">
-      <h2 id="cam-title" style={{ marginTop: 0 }}>
-        3. Mapa de activación
+      <h2 id="cam-title" className="block-title">
+        3 · Mapa de activación
       </h2>
       <div className="cam-wrap">
         <div className="cam-img">

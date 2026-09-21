@@ -95,12 +95,15 @@ export default function ModelPage({ state }: { state: ModelInfoState }) {
   const info = state.info;
   return (
     <>
-      <h2 style={{ marginTop: 0 }}>Ficha del modelo</h2>
+      <h1>Ficha del modelo</h1>
+      <p className="subtitle">
+        Qué es este sistema, cómo se midió, cómo leer su probabilidad y qué no puede hacer.
+      </p>
 
       <section className="card" aria-labelledby="s1">
-        <h3 id="s1" style={{ marginTop: 0 }}>
-          1. Qué es y qué no es
-        </h3>
+        <h2 id="s1" className="block-title">
+          1 · Qué es y qué no es
+        </h2>
         <ul>
           <li>Apoyo al triage de melanoma en imágenes dermatoscópicas: sugiere si conviene referir.</li>
           <li>No detecta otros cánceres de piel ni otras enfermedades; no es un diagnóstico.</li>
@@ -109,9 +112,9 @@ export default function ModelPage({ state }: { state: ModelInfoState }) {
       </section>
 
       <section className="card" aria-labelledby="s2">
-        <h3 id="s2" style={{ marginTop: 0 }}>
-          2. Desempeño validado
-        </h3>
+        <h2 id="s2" className="block-title">
+          2 · Desempeño validado
+        </h2>
         {info ? (
           <Performance info={info} />
         ) : state.loading ? (
@@ -122,9 +125,9 @@ export default function ModelPage({ state }: { state: ModelInfoState }) {
       </section>
 
       <section className="card" aria-labelledby="s3">
-        <h3 id="s3" style={{ marginTop: 0 }}>
-          3. Cómo leer la probabilidad
-        </h3>
+        <h2 id="s3" className="block-title">
+          3 · Cómo leer la probabilidad
+        </h2>
         <p>
           La probabilidad que muestra la pantalla de análisis está calibrada
           {info ? ` (${info.calibration.method === "platt" ? "escalado de Platt" : info.calibration.method}, ajustado sobre ${formatInt(info.calibration.n_images)} imágenes de validación con ${info.calibration.n_positives} melanomas)` : ""}
@@ -136,16 +139,16 @@ export default function ModelPage({ state }: { state: ModelInfoState }) {
       </section>
 
       <section className="card" aria-labelledby="s4">
-        <h3 id="s4" style={{ marginTop: 0 }}>
-          4. Limitaciones
-        </h3>
+        <h2 id="s4" className="block-title">
+          4 · Limitaciones
+        </h2>
         <LimitationsSection />
       </section>
 
       <section className="card" aria-labelledby="s5">
-        <h3 id="s5" style={{ marginTop: 0 }}>
-          5. Datos y licencias
-        </h3>
+        <h2 id="s5" className="block-title">
+          5 · Datos y licencias
+        </h2>
         <ul>
           <li>
             Entrenamiento y evaluación: ISIC 2020 Challenge Dataset (International Skin Imaging
@@ -166,9 +169,9 @@ export default function ModelPage({ state }: { state: ModelInfoState }) {
       </section>
 
       <section className="card" aria-labelledby="s6">
-        <h3 id="s6" style={{ marginTop: 0 }}>
-          6. Versión
-        </h3>
+        <h2 id="s6" className="block-title">
+          6 · Versión
+        </h2>
         {info ? (
           <table>
             <tbody>

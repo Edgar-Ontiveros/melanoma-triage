@@ -1,7 +1,8 @@
 import { formatPercent, logPosition, probabilityLine } from "../lib/format";
 
 /** Bloque 1: probabilidad calibrada en grande, tasa base y razón, barra logarítmica de 0,1 %
- * a 100 % con dos marcas (tasa base y umbral). Un solo color; nada de semáforo. */
+ * a 100 % con dos marcas (tasa base y umbral) y el valor actual como punto. Un solo color;
+ * nada de semáforo. */
 export default function ProbabilityBlock({
   probability,
   threshold,
@@ -12,18 +13,19 @@ export default function ProbabilityBlock({
   prevalence: number | null;
 }) {
   const ticks = [1 / 1000, 1 / 100, 1 / 10, 1];
+  const pos = logPosition(probability) * 100;
   return (
     <section className="card" aria-labelledby="prob-title">
-      <h2 id="prob-title" style={{ marginTop: 0 }}>
-        1. Probabilidad calibrada de melanoma
+      <h2 id="prob-title" className="block-title">
+        1 · Probabilidad calibrada de melanoma
       </h2>
       <p className="prob-big" aria-live="polite">
         {formatPercent(probability)}
       </p>
-      <p>
+      <p className="prob-line">
         {prevalence !== null
-          ? probabilityLine(probability, prevalence)
-          : `${formatPercent(probability)} — tasa base no disponible`}
+          ? probabilityLine(probability, prevalence).replace(/^[^—]+— /, "— ")
+          : "— tasa base no disponible"}
       </p>
       <div
         className="logbar"
@@ -32,7 +34,7 @@ export default function ProbabilityBlock({
           prevalence !== null ? `, tasa base ${formatPercent(prevalence)}` : ""
         }`}
       >
-        <div className="fill" style={{ width: `${logPosition(probability) * 100}%` }} />
+        <div className="fill" style={{ width: `${pos}%` }} />
         {prevalence !== null && (
           <>
             <div className="mark" style={{ left: `${logPosition(prevalence) * 100}%` }} />
@@ -45,13 +47,18 @@ export default function ProbabilityBlock({
         <div className="mark-label below" style={{ left: `${logPosition(threshold) * 100}%` }}>
           umbral {formatPercent(threshold, 2)}
         </div>
-        {ticks.map((t) => (
-          <span key={t} className="axis" style={{ left: `${logPosition(t) * 100}%`, bottom: "-2.9rem" }}>
+        <div className="dot" style={{ left: `${pos}%` }} />
+        {ticks.map((t, i) => (
+          <span
+            key={t}
+            className={`axis${i === 0 ? " first" : i === ticks.length - 1 ? " last" : ""}`}
+            style={{ left: `${logPosition(t) * 100}%` }}
+          >
             {formatPercent(t, t < 1 / 100 ? 1 : 0)}
           </span>
         ))}
       </div>
-      <p className="small muted" style={{ marginTop: "2.6rem" }}>
+      <p className="caption" style={{ marginTop: 0 }}>
         Probabilidad calibrada sobre validación: de cada 100 lesiones con esta puntuación, esta es
         la cantidad que resultó melanoma. La tasa base es la prevalencia del conjunto de prueba.
       </p>

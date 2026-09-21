@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import { ApiError, modelInfo, type ModelInfo } from "./api";
 import DisclaimerModal from "./components/DisclaimerModal";
 import Footer from "./components/Footer";
+import { LesionIcon } from "./components/Icons";
 import AnalyzePage from "./pages/AnalyzePage";
 import ModelPage from "./pages/ModelPage";
 
@@ -64,7 +65,10 @@ export default function App() {
       <DisclaimerModal disclaimer={info?.disclaimer ?? null} />
       <header className="top">
         <div className="container">
-          <h1>Triage asistido de melanoma</h1>
+          <a href="/" className="brand" onClick={navigate("/")} style={{ color: "var(--accent)" }}>
+            <LesionIcon />
+            <span style={{ color: "var(--text)" }}>Triage asistido de melanoma</span>
+          </a>
           <nav aria-label="Secciones">
             <a href="/" onClick={navigate("/")} aria-current={route === "/" ? "page" : undefined}>
               Análisis
@@ -82,7 +86,7 @@ export default function App() {
       <main className="container" id="main">
         {route === "/modelo" ? <ModelPage state={infoState} /> : <AnalyzePage state={infoState} />}
       </main>
-      <Footer onModel={navigate("/modelo")} />
+      <Footer onModel={navigate("/modelo")} modelVersion={info?.model_version ?? null} />
     </>
   );
 }

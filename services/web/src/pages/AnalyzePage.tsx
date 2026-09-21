@@ -8,6 +8,7 @@ import ErrorBox from "../components/ErrorBox";
 import Examples, { type Example } from "../components/Examples";
 import ProbabilityBlock from "../components/ProbabilityBlock";
 import Recommendation from "../components/Recommendation";
+import Skeleton from "../components/Skeleton";
 import Uploader from "../components/Uploader";
 import { formatSeconds } from "../lib/format";
 
@@ -34,9 +35,12 @@ export default function AnalyzePage({ state }: { state: ModelInfoState }) {
     return () => window.clearInterval(id);
   }, [loading]);
 
-  useEffect(() => () => {
-    if (pending) URL.revokeObjectURL(pending.previewUrl);
-  }, [pending]);
+  useEffect(
+    () => () => {
+      if (pending) URL.revokeObjectURL(pending.previewUrl);
+    },
+    [pending],
+  );
 
   const analyze = async (p: Pending) => {
     setLoading(true);
@@ -57,45 +61,59 @@ export default function AnalyzePage({ state }: { state: ModelInfoState }) {
     void analyze(p);
   };
 
+  const reset = () => {
+    setPending(null);
+    setResult(null);
+    setError(null);
+  };
+
   const metrics = state.info?.metrics ?? null;
+  const showInput = !pending;
 
   return (
     <>
-      <p className="muted">
-        Suba una dermatoscopía y obtenga una probabilidad calibrada de melanoma, una recomendación
-        de triage y el mapa de lo que el modelo evaluó. Herramienta educativa: no es un
-        diagnóstico.
+      <h1>Analizar una dermatoscopía</h1>
+      <p className="subtitle">
+        Suba una imagen y obtenga una probabilidad calibrada de melanoma, una recomendación de
+        triage y el mapa de lo que el modelo evaluó. Herramienta educativa: no es un diagnóstico.
       </p>
 
-      <Uploader onFile={(f) => submit(f, f.name, null)} disabled={loading} />
-      <Examples onPick={(ex, blob) => submit(blob, `${ex.image_id}.jpg`, ex)} disabled={loading} />
+      {showInput && (
+        <>
+          <Uploader onFile={(f) => submit(f, f.name, null)} disabled={loading} />
+          <Examples onPick={(ex, blob) => submit(blob, `${ex.image_id}.jpg`, ex)} disabled={loading} />
+        </>
+      )}
 
       {pending && (
         <section className="card" aria-labelledby="entrada-title">
-          <h2 id="entrada-title" style={{ marginTop: 0 }}>
+          <h2 id="entrada-title" className="sr-only">
             Imagen enviada
           </h2>
-          <div className="preview">
+          <div className="result-bar">
             <img src={pending.previewUrl} alt={`Vista previa de ${pending.name}`} />
-            <div>
-              <p>
-                <code>{pending.name}</code>
-              </p>
+            <div className="name">
+              <code>{pending.name}</code>
               {pending.example && (
-                <p className="small">
+                <p className="caption" style={{ margin: "4px 0 0" }}>
                   Ejemplo de validación de ISIC 2020 (CC-BY-NC): {pending.example.note}.
                 </p>
               )}
               {loading && (
-                <p aria-live="polite">
+                <p className="small muted" aria-live="polite" style={{ margin: "4px 0 0" }}>
                   <span className="spinner" aria-hidden="true" />
                   Analizando… {formatSeconds(elapsed)}
                 </p>
               )}
             </div>
+            <button type="button" className="secondary" onClick={reset} disabled={loading}>
+              Analizar otra
+            </button>
           </div>
         </section>
       )}
+
+      {loading && <Skeleton />}
 
       {error !== null && pending && <ErrorBox error={error} onRetry={() => void analyze(pending)} />}
 
@@ -113,7 +131,7 @@ export default function AnalyzePage({ state }: { state: ModelInfoState }) {
           />
           <CamViewer cam={result.cam} />
           <Details result={result} />
-          <p className="small muted">{result.disclaimer}</p>
+          <p className="caption">{result.disclaimer}</p>
         </>
       )}
     </>
