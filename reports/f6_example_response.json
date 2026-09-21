@@ -1,10 +1,6 @@
 {
-  "health": {
-    "status": "ok",
-    "model_version": "6c330a8-e0ecf981"
-  },
-  "predict": {
-    "model_version": "6c330a8-e0ecf981",
+  "predict_512": {
+    "model_version": "4e7ab61-e0ecf981",
     "probability": 0.015490515414014127,
     "refer": true,
     "threshold": 0.0038890622237550752,
@@ -87,15 +83,113 @@
       "height": 288,
       "format": "JPEG"
     },
-    "latency_ms": 72.72,
+    "latency_ms": 45.31,
     "timings_ms": {
-      "decode": 8.48,
-      "preprocess": 20.42,
-      "onnx": 34.36,
-      "cam": 0.21,
-      "render": 9.09
+      "decode_stage1": 5.37,
+      "preprocess": 3.27,
+      "onnx": 28.81,
+      "cam": 0.14,
+      "render": 7.64
     },
     "disclaimer": "Herramienta de apoyo al triage de melanoma en imágenes dermatoscópicas, con fines educativos y de investigación. No es un diagnóstico: indica si una lesión conviene referirse a valoración especializada en un punto de operación de alta sensibilidad y baja especificidad. No detecta otros cánceres de piel ni otras enfermedades. No sustituye la valoración de un dermatólogo. No cuenta con aprobación regulatoria (COFEPRIS, FDA, CE) y no debe usarse para tomar decisiones clínicas."
+  },
+  "predict_original": {
+    "model_version": "4e7ab61-e0ecf981",
+    "probability": 0.015490515414014127,
+    "refer": true,
+    "threshold": 0.0038890622237550752,
+    "operating_point": {
+      "sensitivity_target": 0.95,
+      "sensitivity_test": 0.9651162790697675,
+      "specificity_test": 0.4283778552071235
+    },
+    "cam": {
+      "status": "ok",
+      "grid": [
+        [
+          0.21,
+          0.7,
+          0.92,
+          0.63,
+          0.37,
+          0.08,
+          0.0
+        ],
+        [
+          0.19,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.33
+        ],
+        [
+          0.29,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.2
+        ],
+        [
+          0.56,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.62,
+          0.57,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.19
+        ],
+        [
+          0.14,
+          0.36,
+          1.0,
+          0.19,
+          0.0,
+          0.09,
+          0.14
+        ],
+        [
+          0.01,
+          0.11,
+          0.28,
+          0.0,
+          0.25,
+          0.08,
+          0.0
+        ]
+      ],
+      "png_base64": "iVBORw0KGgoAAAANSUhEUgAAAOAAAADgCAIAAACV…"
+    },
+    "input": {
+      "width": 1872,
+      "height": 1053,
+      "format": "JPEG"
+    },
+    "latency_ms": 49.66,
+    "timings_ms": {
+      "decode_stage1": 10.41,
+      "preprocess": 1.01,
+      "onnx": 31.55,
+      "cam": 0.18,
+      "render": 6.43
+    },
+    "disclaimer": "Herramienta de apoyo al triage de melanoma en imágenes dermatoscópicas, con fines educativos y de investigación. No es un diagnóstico: indica si una lesión conviene referirse a valoración especializada en un punto de operación de alta sensibilidad y baja especificidad. No detecta otros cánceres de piel ni otras enfermedades. No sustituye la valoración de un dermatólogo. No cuenta con aprobación regulatoria (COFEPRIS, FDA, CE) y no debe usarse para tomar decisiones clínicas."
+  },
+  "health": {
+    "status": "ok",
+    "model_version": "4e7ab61-e0ecf981"
   },
   "model_info_keys": [
     "calibration",
@@ -169,5 +263,37 @@
         "npv": 0.99657664511221
       }
     }
+  },
+  "preprocess": {
+    "stage1": {
+      "long_side": 512,
+      "filter": "lanczos",
+      "jpeg_quality": 95,
+      "draft": true,
+      "noop_if_long_side_leq": 512,
+      "source": "configs/data/isic2020.yaml (data.resize) + melanoma.data.resize.resize_one"
+    },
+    "input_size": 224,
+    "interpolation": "bicubic",
+    "crop_pct": 1.0,
+    "mean": [
+      0.5,
+      0.5,
+      0.5
+    ],
+    "std": [
+      0.5,
+      0.5,
+      0.5
+    ],
+    "val_resize": "center_crop",
+    "pixel_max": 255.0,
+    "channel_order": "RGB",
+    "layout": "NCHW",
+    "backbone_input_size": [
+      3,
+      300,
+      300
+    ]
   }
 }
